@@ -1,4 +1,4 @@
-package com.diamondLounge.entity;
+package com.diamondLounge.entity.db;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

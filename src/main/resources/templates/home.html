@@ -4,23 +4,37 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/styles.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <script type="text/javascript" src="/timetableScript.js"></script>
+    <script src="/scheduleScript.js" type="text/javascript"></script>
+    <script src="/updateURLparams.js" type="text/javascript"></script>
     <title>Timetable</title>
 </head>
 <body>
-    <nav>
-        <a th:href="@{/home}"><img src="/logo.svg" class="logo" alt="Diamond Lounge" height="50" width="125"></a>
-        <a th:href="@{/home}" class="nav-element">Timetable</a>
-        <a th:href="@{/settings}" class="nav-element">Settings</a>
-        <form th:action="@{/logout}" method="post">
-            <input class="nav-element" type="submit" value="Log out"/>
-        </form>
-    </nav>
+<nav>
+    <a th:href="@{/home}"><img alt="Diamond Lounge" class="logo" height="50" src="/logo.svg" width="125"></a>
+    <a class="nav-element" th:href="@{/home}">Timetable</a>
+    <a class="nav-element" th:href="@{/settings}">Settings</a>
+    <form method="post" th:action="@{/logout}">
+        <input class="nav-element" type="submit" value="Log out"/>
+    </form>
+</nav>
 
-    <section class="content">
-        <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-    </section>
+<section class="content">
+    <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+    <form method="get">
+        <button class="btn-basic week-btn" th:onclick="'java:buttonClicked(-1);'" type="button">
+            PREVIOUS WEEK
+        </button>
+        <button class="btn-basic week-btn" th:onclick="'java:buttonClicked(1);'" type="button">
+            NEXT WEEK
+        </button>
+    </form>
+    <br>
+    <form method="POST" th:action="@{/generateSchedule}">
+        <button class="btn-basic week-btn" type="submit">
+            GENERATE SCHEDULE
+        </button>
+    </form>
 
-    <script src="built/bundle.js"></script>
+</section>
 </body>
 </html>

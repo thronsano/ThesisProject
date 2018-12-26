@@ -1,8 +1,8 @@
 package com.diamondLounge.security;
 
 import com.diamondLounge.MVC.model.UserModel;
-import com.diamondLounge.entity.Authority;
-import com.diamondLounge.entity.User;
+import com.diamondLounge.entity.db.Authority;
+import com.diamondLounge.entity.db.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.core.userdetails.UserDetails;

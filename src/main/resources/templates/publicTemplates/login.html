@@ -20,11 +20,11 @@
             <button type="submit" th:href="@{/home}" class="btn-login btn-basic center-horizontal">LOGIN</button>
         </form>
 
-        <div class="login-info">
+        <section class="login-info">
             <div th:if="${param.error}">
                 Invalid email or password
             </div>
-            <div th:if="${param.logout}" class="alert alert-success">
+            <div th:if="${param.logout}">
                 You have been logged out
             </div>
             <div th:if="${userCreated}" class="alert alert-success">
@@ -33,7 +33,7 @@
             <div th:if="${passwordChanged}" class="alert alert-success">
                 You have successfully reset your password
             </div>
-        </div>
+        </section>
 
         <section class="register-forgot-box register-forgot-strings">
             <a th:href="@{/register}" class="register-forgot-strings" style="float: left;">Register</a>

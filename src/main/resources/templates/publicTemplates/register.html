@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+    <link href="/styles.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
+<body class="front">
+<section class="inside-content-box" style="top:45%">
+    <a th:href="@{/home}"><img alt="Diamond Lounge" class="logo" height="250" src="/logo.svg" width="450"></a>
+
+    <form method="post" th:action="@{/register}">
+        <div><input class="input-field center-horizontal" name="username" placeholder="Name" required type="text"/>
+        </div>
+        <div><input class="input-field center-horizontal" name="email" placeholder="E-mail" required type="email"/>
+        </div>
+        <div><input class="input-field center-horizontal" name="password" placeholder="Password" required
+                    type="password"/>
+        </div>
+        <div>
+            <input class="input-field center-horizontal" name="password2" placeholder="Confirm password" required
+                   type="password"/>
+        </div>
+        <button class="btn-login btn-basic center-horizontal" type="submit">REGISTER</button>
+    </form>
+
+    <section class="login-info">
+        <div class="error-message" th:text="${error}"></div>
+    </section>
+</section>
+</body>
+</html>

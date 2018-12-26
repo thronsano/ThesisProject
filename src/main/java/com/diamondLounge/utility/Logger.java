@@ -10,7 +10,7 @@ public final class Logger {
     public static final String RESET = "\u001B[0m";
 
     private Logger() {
-        //Simulate static class
+        // Hide implicit constructor
     }
 
     public static void logError(String message) {

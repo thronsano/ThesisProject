@@ -1,4 +1,7 @@
 package com.diamondLounge.exceptions;
 
-public class DiamondLoungeException {
+public class DiamondLoungeException extends Exception {
+    public DiamondLoungeException(String message) {
+        super(message);
+    }
 }

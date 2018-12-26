@@ -1,4 +1,4 @@
-package com.diamondLounge.entity;
+package com.diamondLounge.entity.db;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -26,24 +26,19 @@ public class User {
     @NotBlank
     @Size(max = 50)
     @Column
-    private String name;
-
-    @NotBlank
-    @Size(max = 50)
-    @Column
-    private String surname;
+    private String username;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
 
-    public User(String email, String password, String name, String surname) {
+    public User(String email, String password, String username) {
         this.email = email;
         this.password = password;
-        this.name = name;
-        this.surname = surname;
+        this.username = username;
     }
 
-    public User(){}
+    public User() {
+    }
 
     public String getEmail() {
         return email;
@@ -61,20 +56,12 @@ public class User {
         this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Set<Authority> getAuthorities() {

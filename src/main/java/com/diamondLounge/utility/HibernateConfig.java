@@ -1,8 +1,6 @@
 package com.diamondLounge.utility;
 
-import com.diamondLounge.entity.Authority;
-import com.diamondLounge.entity.ResetToken;
-import com.diamondLounge.entity.User;
+import com.diamondLounge.entity.db.*;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +22,7 @@ import static org.hibernate.cfg.Environment.*;
 @EnableTransactionManagement
 public class HibernateConfig {
 
-    //insert classes you want to map in hibernate here
-    private static final Class[] ANNOTATED_CLASSES = new Class[]{User.class, Authority.class, ResetToken.class};
+    private static final Class[] ANNOTATED_CLASSES = new Class[]{User.class, Authority.class, ResetToken.class, Employee.class, Wage.class};
 
     @Autowired
     Environment env;
@@ -71,6 +68,7 @@ public class HibernateConfig {
     public HibernateTransactionManager getTransactionManager() {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(getSessionFactory().getObject());
+
         return transactionManager;
     }
 }

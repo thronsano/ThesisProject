@@ -7,6 +7,7 @@ function getURLParameter(sParam) {
             return sParameterName[1];
         }
     }
+    return null;
 }
 
 function updateURLparameters(page, key, value) {

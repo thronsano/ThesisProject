@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="/styles.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <title>Settings</title>
+</head>
+<body>
+<nav>
+    <a th:href="@{/home}"><img alt="Diamond Lounge" class="logo" height="50" src="/logo.svg" width="125"></a>
+    <a class="nav-element" th:href="@{/home}">Timetable</a>
+    <a class="nav-element" th:href="@{/settings}">Settings</a>
+    <form method="post" th:action="@{/logout}">
+        <input class="nav-element" type="submit" value="Log out"/>
+    </form>
+</nav>
+
+<section class="content" method="GET" th:action="@{/settings}">
+    <h1>Settings</h1>
+    <button class="btn-basic" th:onclick="'javascript:editInformationClicked();'"
+            type="submit">
+        EDIT ACCOUNT INFORMATION
+    </button>
+    <br>
+    <button class="btn-basic" th:onclick="'javascript:changePasswordClicked();'"
+            type="submit">
+        CHANGE PASSWORD
+    </button>
+
+    <section class="login-info">
+        <div class="error-message" th:text="${error}"></div>
+        <div class="error-message" th:if="${userEdited}">
+            Information saved!
+        </div>
+        <div class="error-message" th:if="${passwordChanged}">
+            Password is changed!
+        </div>
+    </section>
+</section>
+
+</body>
+<script>
+    function editInformationClicked() {
+        location.href = "/settings/editAccountInformation";
+    }
+
+    function changePasswordClicked() {
+        location.href = "/settings/changePassword";
+    }
+</script>
+</html>

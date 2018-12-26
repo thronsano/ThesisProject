@@ -1,19 +1,24 @@
 package com.diamondLounge.MVC.model;
 
-import com.diamondLounge.entity.Authority;
-import com.diamondLounge.entity.ResetToken;
-import com.diamondLounge.entity.User;
+import com.diamondLounge.entity.db.Authority;
+import com.diamondLounge.entity.db.ResetToken;
+import com.diamondLounge.entity.db.User;
+import com.diamondLounge.exceptions.DiamondLoungeException;
+import com.diamondLounge.exceptions.UsernamePasswordException;
 import com.diamondLounge.security.mailing.EmailService;
-import com.diamondLounge.utility.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.InputMismatchException;
 import java.util.UUID;
+
+import static com.diamondLounge.utility.Logger.logError;
 
 @Repository
 public class UserModel {
@@ -39,7 +44,7 @@ public class UserModel {
         }
     }
 
-    public boolean saveUsersPassword(User user) {
+    private void saveUsersPassword(User user) throws UsernamePasswordException {
         Session session = sessionFactory.openSession();
 
         try {
@@ -47,17 +52,15 @@ public class UserModel {
             User userToUpdate = session.get(User.class, user.getEmail());
             userToUpdate.setPassword(user.getPassword());
         } catch (Exception e) {
-            Logger.logError("Exception during saving user into database");
-            return false;
+            logError("Exception during saving user into database");
+            throw new UsernamePasswordException(e.getMessage());
         } finally {
             session.getTransaction().commit();
             session.close();
         }
-
-        return true;
     }
 
-    public boolean saveNewUser(User user, Authority authority) {
+    private void saveNewUser(User user, Authority authority) throws UsernamePasswordException {
         Session session = sessionFactory.openSession();
 
         try {
@@ -68,40 +71,35 @@ public class UserModel {
             session.beginTransaction();
             session.save(authority);
         } catch (Exception e) {
-            Logger.logError("Exception during adding new user into database");
-            return false;
+            logError("Exception during adding new user into database");
+            logError(e.getMessage());
+            throw new UsernamePasswordException(e.getMessage());
         } finally {
             session.getTransaction().commit();
             session.close();
         }
-
-        return true;
     }
 
-    public String createUser(String email, String password, String password2, String name, String surname, PasswordEncoder passwordEncoder) {
+    public void createUser(String email, String password, String confirmPassword, String username, PasswordEncoder passwordEncoder) throws UsernamePasswordException {
         if (getUserByEmail(email) != null)
-            return "emailError";
+            throw new UsernamePasswordException("Username already taken!");
 
-        if (validateString(email) && validateString(password) && validateString(name) && validateString(surname)) {
-            if (password.equals(password2)) {
-                password = passwordEncoder.encode(password);
-                User user = new User(email, password, name, surname);
+        if (validateString(email) && validateString(password) && validateString(username)) {
+            if (password.equals(confirmPassword)) {
+                String hashedPassword = passwordEncoder.encode(password);
+                User user = new User(email, hashedPassword, username);
                 Authority authority = new Authority(user);
 
-                if (saveNewUser(user, authority)) {
-                    return "correct";
-                } else {
-                    return "databaseError";
-                }
+                saveNewUser(user, authority);
             } else {
-                return "passwordError";
+                throw new UsernamePasswordException("Passwords do not match!");
             }
         } else {
-            return "dataError";
+            throw new UsernamePasswordException("Passwords do not match!");
         }
     }
 
-    public String resetPasswordFromToken(String token, String password, String confirmPassword, PasswordEncoder passwordEncoder) {
+    public void resetPasswordFromToken(String token, String password, String confirmPassword, PasswordEncoder passwordEncoder) throws UsernamePasswordException {
         User user;
         ResetToken resetToken;
 
@@ -113,44 +111,35 @@ public class UserModel {
                 if (password.equals(confirmPassword)) {
                     user.setPassword(passwordEncoder.encode(password));
                     resetTokenModel.deleteResetToken(user.getEmail());
-                    if (saveUsersPassword(user)) {
-                        return "correct";
-                    } else {
-                        return "databaseError";
-                    }
-                } else {
-                    return "differentPasswordsError";
+                    saveUsersPassword(user);
                 }
             } else {
-                return "userError";
+                throw new UsernamePasswordException("User doesn't exist!");
             }
         } else {
-            return "tokenLostError";
+            throw new UsernamePasswordException("Token was lost!");
         }
     }
 
-    public String sendResetToken(String userEmail, HttpServletRequest request) {
+    public void sendResetToken(String userEmail, HttpServletRequest request) throws DiamondLoungeException {
         User user = getUserByEmail(userEmail);
 
         if (user == null) {
-            return "userError";
+            throw new UsernamePasswordException("User doesn't exist!");
         } else {
-            // Generate random 36-character string token for reset password
             ResetToken resetToken = new ResetToken(userEmail, UUID.randomUUID().toString());
             resetTokenModel.addResetToken(resetToken);
-
             String appUrl = request.getScheme() + "://" + request.getServerName();
 
             // Email message
             SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
-            passwordResetEmail.setFrom("email@email.com");
+            passwordResetEmail.setFrom(emailService.getServerEmail());
             passwordResetEmail.setTo(user.getEmail());
             passwordResetEmail.setSubject("Password Reset Request");
             passwordResetEmail.setText("To reset your password, click the link below:\n" + appUrl + ":8080"
                     + "/reset?token=" + resetToken.getResetToken());
 
             emailService.sendEmail(passwordResetEmail);
-            return "correct";
         }
     }
 
@@ -158,17 +147,13 @@ public class UserModel {
         return text != null && !text.isEmpty();
     }
 
-    public String editUser(String hiddenEmail, String name, String surname) {
-        User user = new User(hiddenEmail, "", name, surname);
-
-        if (editUserInDatabase(user)) {
-            return "correct";
-        } else {
-            return "databaseError";
-        }
+    public void editUser(String username) throws DiamondLoungeException {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = new User(email, "", username);
+        editUserInDatabase(user);
     }
 
-    private boolean editUserInDatabase(User user) {
+    private void editUserInDatabase(User user) throws DiamondLoungeException {
         Session session = sessionFactory.openSession();
 
         try {
@@ -176,44 +161,35 @@ public class UserModel {
             User updateUser = session.get(User.class, user.getEmail());
 
             updateUser.setEmail(user.getEmail());
-            updateUser.setName(user.getName());
-            updateUser.setSurname(user.getSurname());
+            updateUser.setUsername(user.getUsername());
         } catch (Exception e) {
-            Logger.logError("Exception during saving user into database");
-            return false;
+            logError("Exception during saving user into database");
+            throw new DiamondLoungeException("Exception during saving user into database");
         } finally {
             session.getTransaction().commit();
             session.close();
         }
-
-        return true;
     }
 
-    public String changePassword(String email, String currentPassword, String newPassword, String confirmNewPassword, PasswordEncoder passwordEncoder) {
+    public void changePassword(String currentPassword, String newPassword, String confirmNewPassword, PasswordEncoder passwordEncoder) throws UsernamePasswordException {
         User user;
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if (checkPassword(email, currentPassword, passwordEncoder)) {
             if (newPassword.equals(confirmNewPassword)) {
                 newPassword = passwordEncoder.encode(newPassword);
-                user = new User(email, newPassword, "", "");
-                if (saveUsersPassword(user)) {
-                    return "correct";
-                } else {
-                    return "databaseError";
-                }
+                user = new User(email, newPassword, "");
+                saveUsersPassword(user);
             } else {
-                return "differentPasswordError";
+                throw new InputMismatchException("Passwords do not match!");
             }
-        } else
-            return "passwordError";
+        } else {
+            throw new UsernamePasswordException("Wrong password!");
+        }
     }
 
     private boolean checkPassword(String email, String password, PasswordEncoder passwordEncoder) {
         User user = getUserByEmail(email);
-
-        if (passwordEncoder.matches(password, user.getPassword()))
-            return true;
-        else
-            return false;
+        return passwordEncoder.matches(password, user.getPassword());
     }
 }

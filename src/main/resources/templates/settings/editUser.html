@@ -23,9 +23,8 @@
 
         <form th:action="@{/settings/editAccountInformation}" method="post">
             Name:
-            <div><input type="text" class="input-field" name="name" th:value="${user.name}"placeholder="Name"/></div>
-            Surname:
-            <div><input type="text" class="input-field" name="surname" th:value="${user.surname}" placeholder="Surname"/></div>
+            <div><input class="input-field" name="username" placeholder="Name" th:value="${user.username}" type="text"/>
+            </div>
             <div><input type="hidden" class="input-field" name="hiddenEmail" th:value="${user.email}"/></div>
 
             <button type="submit" class="btn-login btn-basic">SAVE</button>

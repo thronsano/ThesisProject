@@ -45,4 +45,8 @@ public class EmailServiceImpl implements EmailService {
     public void sendEmail(SimpleMailMessage email) {
         mailSender.send(email);
     }
+
+    public String getServerEmail() {
+        return env.getProperty("email.host");
+    }
 }

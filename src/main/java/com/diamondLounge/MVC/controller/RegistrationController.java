@@ -1,7 +1,7 @@
 package com.diamondLounge.MVC.controller;
 
 import com.diamondLounge.MVC.model.UserModel;
-import com.diamondLounge.exceptions.RegistrationException;
+import com.diamondLounge.exceptions.UsernamePasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -22,7 +22,7 @@ public class RegistrationController {
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public ModelAndView getRegisterPage(ModelAndView modelAndView) {
-        modelAndView.setViewName("register");
+        modelAndView.setViewName("publicTemplates/register");
         return modelAndView;
     }
 
@@ -39,9 +39,9 @@ public class RegistrationController {
             userModel.createUser(email, password, password2, username, passwordEncoder);
             redirectAttributes.addFlashAttribute("userCreated", true);
             modelAndView.setViewName("redirect:/");
-        } catch (RegistrationException ex) {
+        } catch (UsernamePasswordException ex) {
             modelAndView.addObject("error", ex.getMessage());
-            modelAndView.setViewName("register");
+            modelAndView.setViewName("publicTemplates/register");
         }
 
         return modelAndView;

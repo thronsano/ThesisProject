@@ -1,6 +1,7 @@
 package com.diamondLounge.MVC.controller;
 
 import com.diamondLounge.MVC.model.UserModel;
+import com.diamondLounge.exceptions.DiamondLoungeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -23,33 +24,30 @@ public class PasswordController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Display forgotPassword page
     @RequestMapping(value = "/forgot", method = RequestMethod.GET)
     public ModelAndView displayForgotPasswordPage() {
-        return new ModelAndView("forgotPassword");
+        return new ModelAndView("publicTemplates/forgotPassword");
     }
 
-    // Process form submission from forgotPassword page
     @RequestMapping(value = "/forgot", method = RequestMethod.POST)
-    public ModelAndView processForgotPasswordForm(ModelAndView modelAndView, @RequestParam("email") String userEmail, HttpServletRequest request) {
-
-        String result = userModel.sendResetToken(userEmail, request);
-
-        if (result.equals("correct")) {
+    public ModelAndView processForgotPasswordForm(ModelAndView modelAndView,
+                                                  @RequestParam("email") String userEmail,
+                                                  HttpServletRequest request) {
+        try {
+            userModel.sendResetToken(userEmail, request);
             modelAndView.addObject("successEmail", true);
-        } else {
-            modelAndView.addObject("error", result);
+        } catch (DiamondLoungeException e) {
+            modelAndView.addObject("error", e.getMessage());
         }
-        modelAndView.setViewName("forgotPassword");
 
+        modelAndView.setViewName("publicTemplates/forgotPassword");
         return modelAndView;
-
     }
 
     @RequestMapping(value = "/reset", method = RequestMethod.GET)
     public ModelAndView displayResetPasswordPage(ModelAndView modelAndView) {
 
-        modelAndView.setViewName("resetPassword");
+        modelAndView.setViewName("publicTemplates/resetPassword");
         return modelAndView;
     }
 
@@ -60,13 +58,13 @@ public class PasswordController {
                                        @RequestParam("confirm") String confirmPassword,
                                        RedirectAttributes redir) {
 
-        String result = userModel.resetPasswordFromToken(token, password, confirmPassword, passwordEncoder);
-        if (result.equals("correct")) {
+        try {
+            userModel.resetPasswordFromToken(token, password, confirmPassword, passwordEncoder);
             redir.addFlashAttribute("passwordChanged", true);
             modelAndView.setViewName("redirect:/");
-        } else {
-            modelAndView.addObject("error", result);
-            modelAndView.setViewName("resetPassword");
+        } catch (DiamondLoungeException e) {
+            redir.addFlashAttribute("error", e.getMessage());
+            modelAndView.setViewName("publicTemplates/resetPassword");
         }
         return modelAndView;
     }
@@ -74,7 +72,7 @@ public class PasswordController {
     // Going to reset page without a token redirects to login page
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ModelAndView handleMissingParams(MissingServletRequestParameterException ex) {
-        return new ModelAndView("redirect:login");
+        return new ModelAndView("redirect:publicTemplates/login");
     }
 }
 

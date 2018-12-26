@@ -1,7 +1,7 @@
 package com.diamondLounge.exceptions;
 
-public class UserPasswordException extends DiamondLoungeException {
-    public RegistrationException(String s) {
+public class UsernamePasswordException extends DiamondLoungeException {
+    public UsernamePasswordException(String s) {
         super(s);
     }
 }
