@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <title>Settings</title>
+</head>
+<body>
+    <nav>
+        <a th:href="@{/home}"><img src="/logo.svg" class="logo" alt="Diamond Lounge" height="50" width="125"></a>
+        <a th:href="@{/home}" class="nav-element">Timetable</a>
+        <a th:href="@{/settings}" class="nav-element">Settings</a>
+        <form th:action="@{/logout}" method="post">
+            <input class="nav-element" type="submit" value="Log out"/>
+        </form>
+    </nav>
+
+    <section class="content" th:action="@{/settings}" method="GET">
+        <h1>Settings</h1>
+        <button type="submit" class="btn-basic" th:onclick="'javascript:editInformationClicked(\'' + ${user.email} + '\');'">EDIT INFORMATION</button>
+        <br>
+        <button type="submit" class="btn-basic" th:onclick="'javascript:changePasswordClicked(\'' + ${user.email} + '\');'">CHANGE PASSWORD</button>
+
+        <section class="login-info">
+            <div class="error-message" th:if="${error}=='dataError'">
+                Incorrect data!
+            </div>
+            <div class="error-message" th:if="${error}=='databaseError'">
+                Try again!
+            </div>
+            <div class="error-message" th:if="${error}=='passwordError'">
+                Current password is incorrect!
+            </div>
+            <div class="error-message" th:if="${error}=='differentPasswordError'">
+                Passwords aren't identical!
+            </div>
+            <div class="error-message" th:if="${userEdited}">
+                Information saved!
+            </div>
+            <div class="error-message" th:if="${passwordChanged}">
+                Password is changed!
+            </div>
+        </section>
+    </section>
+
+</body>
+<script>
+    function editInformationClicked(value) {
+        location.href = "/settings/editAccountInformation?email=" + value;
+    }
+    function changePasswordClicked(value) {
+        location.href = "/settings/changePassword?email=" + value;
+    }
+</script>
+</html>

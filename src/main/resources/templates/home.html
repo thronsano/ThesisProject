@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script type="text/javascript" src="/timetableScript.js"></script>
+    <title>Timetable</title>
+</head>
+<body>
+    <nav>
+        <a th:href="@{/home}"><img src="/logo.svg" class="logo" alt="Diamond Lounge" height="50" width="125"></a>
+        <a th:href="@{/home}" class="nav-element">Timetable</a>
+        <a th:href="@{/settings}" class="nav-element">Settings</a>
+        <form th:action="@{/logout}" method="post">
+            <input class="nav-element" type="submit" value="Log out"/>
+        </form>
+    </nav>
+
+    <section class="content">
+        <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+    </section>
+
+    <script src="built/bundle.js"></script>
+</body>
+</html>

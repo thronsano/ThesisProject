@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Account Information</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
+<body class="front">
+
+
+<nav>
+    <a th:href="@{/home}"><img src="/logo.svg" class="logo" alt="Diamond Lounge" height="50" width="125"></a>
+    <a th:href="@{/home}" class="nav-element">Timetable</a>
+    <a th:href="@{/settings}" class="nav-element">Settings</a>
+    <form th:action="@{/logout}" method="post">
+        <input class="nav-element" type="submit" value="Log out"/>
+    </form>
+</nav>
+
+    <section class="content" th:if="${user}!=null">
+        <h2>Edit account information</h2>
+        <br>
+
+        <form th:action="@{/settings/editAccountInformation}" method="post">
+            Name:
+            <div><input type="text" class="input-field" name="name" th:value="${user.name}"placeholder="Name"/></div>
+            Surname:
+            <div><input type="text" class="input-field" name="surname" th:value="${user.surname}" placeholder="Surname"/></div>
+            <div><input type="hidden" class="input-field" name="hiddenEmail" th:value="${user.email}"/></div>
+
+            <button type="submit" class="btn-login btn-basic">SAVE</button>
+        </form>
+    </section>
+</body>
+</html>

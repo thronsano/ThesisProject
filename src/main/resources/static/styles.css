@@ -1,0 +1,250 @@
+/**
+    background-color:  #dde144;     ACCENT LIME
+    background-color:  #`;     ACCENT VLUE
+    background-color:  #282828;     GRAY DARK BG
+    background-color:  #606060;     GRAY LIGHT BG
+**/
+
+html {
+    height: 100%;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    color: white;
+    height: 100%;
+    background: url("bg.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-color: rgba(0, 0, 0, 0.65);
+    background-blend-mode: multiply;
+}
+
+.logo {
+    margin: 25px;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+
+}
+
+.inside-content-box {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.center-horizontal {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.input-field {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 5px;
+    background-color: white;
+    border: 2px solid transparent;
+    display: block;
+    width: 250px;
+    transition: 0.2s;
+}
+
+.input-field-small {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 5px;
+    background-color: white;
+    border: 2px solid transparent;
+    display: block;
+    width: 150px;
+    transition: 0.2s;
+}
+
+.input-field-xs {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 10px;
+    border-radius: 5px;
+    background-color: white;
+    border: 2px solid transparent;
+    display: block;
+    width: 60px;
+    transition: 0.2s;
+}
+
+.input-field-xs input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.input-field:focus {
+    border: 2px #36adcf solid;
+}
+
+.front {
+    height: 100%;
+    animation: fadein 1s;
+    position: relative;
+}
+
+.btn-basic {
+    padding: 7px 10px;
+    display: block;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    background-color: #282828;
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: none;
+    color: white;
+    text-decoration: none;
+    transition: 0.25s;
+    cursor: pointer;
+}
+
+.btn-login {
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    margin-top: 30px;
+    width: 250px;
+}
+
+.btn-remove {
+    display: inline;
+}
+
+.btn-basic:hover {
+    background-color: #36adcf;
+}
+
+.register-forgot-box {
+    display: inline-block;
+    width: 270px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+}
+
+.register-forgot-strings {
+    color: white;
+    font-style: italic;
+    text-decoration: underline;
+}
+
+.login-info {
+    margin-top: 5px;
+    font-style: italic;
+    color: lightgrey;
+}
+
+nav {
+    box-sizing: border-box;
+    padding: 20px;
+    position: fixed;
+    height: 100%;
+    width: 200px;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: black;
+    overflow-x: hidden;
+    opacity: 0.6;
+    transition: 0.30s;
+}
+
+nav:hover {
+    opacity: 1;
+    transition: 0.50s;
+}
+
+nav input {
+    cursor: pointer;
+}
+
+.nav-element {
+    display: block;
+    text-decoration: none;
+    font-size: 25px;
+    color: #606060;
+    padding: 6px 6px 6px 32px;
+    background-color: transparent;
+    border: 0px;
+    transition: 0.25s;
+}
+
+.nav-element:hover {
+    color: #36adcf;
+}
+
+.content {
+    margin-left: 215px;
+}
+
+table {
+    border-spacing: 0px;
+}
+
+th {
+    background-color: #282828;
+    padding: 5px;
+}
+
+td {
+    padding: 15px;
+    cursor: pointer;
+}
+
+tr:nth-child(even) {
+    background-color: #282828;
+}
+
+tr:nth-child(odd) {
+    background-color: #1c1c1c;
+}
+
+tbody tr:hover {
+    background-color: #36adcf;
+    transition: 0.25s;
+}
+
+.home-table {
+}
+
+.previous-week {
+    display: inline-block;
+}
+
+.next-week {
+    display: inline-block;
+}
+
+#myProgress {
+    width: 50%;
+    height: 30px;
+    background-color: #1c1c1c;
+}
+
+#myBar {
+    width: 0%;
+    height: 30px;
+    background-color: #36adcf;
+}
+
+.error-message {
+    color: #36adcf;
+}
