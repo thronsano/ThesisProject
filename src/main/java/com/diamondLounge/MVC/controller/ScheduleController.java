@@ -29,5 +29,4 @@ public class ScheduleController {
         modelAndView.setViewName("home");
         return modelAndView;
     }
-
 }

@@ -1,4 +1,4 @@
-package com.diamondLounge.utility;
+package com.diamondLounge.security.configs;
 
 import com.diamondLounge.entity.db.*;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;

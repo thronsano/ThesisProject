@@ -10,25 +10,40 @@
 
 <nav>
     <a th:href="@{/home}"><img src="/logo.svg" class="logo" alt="Diamond Lounge" height="50" width="125"></a>
-    <a th:href="@{/home}" class="nav-element">Timetable</a>
+    <a class="nav-element" th:href="@{/home}">Schedule</a>
     <a th:href="@{/settings}" class="nav-element">Settings</a>
     <form th:action="@{/logout}" method="post">
         <input class="nav-element" type="submit" value="Log out"/>
     </form>
 </nav>
 
-    <section class="content" th:if="${user}!=null">
-        <h2>Edit account information</h2>
-        <br>
-
+<section class="content row" th:if="${user}!=null">
+    <div class="column">
+        <h2>Edit username</h2>
         <form th:action="@{/settings/editAccountInformation}" method="post">
             Name:
             <div><input class="input-field" name="username" placeholder="Name" th:value="${user.username}" type="text"/>
             </div>
-            <div><input type="hidden" class="input-field" name="hiddenEmail" th:value="${user.email}"/></div>
-
             <button type="submit" class="btn-login btn-basic">SAVE</button>
         </form>
-    </section>
+    </div>
+
+    <div class="column">
+        <h2>Change password</h2>
+        <form method="post" th:action="@{/settings/changePassword}">
+            Current password:
+            <div><input class="input-field" name="currentPassword" placeholder="Password" type="password"/></div>
+
+            New password:
+            <div><input class="input-field" name="newPassword" placeholder="New password" type="password"/></div>
+
+            Confirm new password:
+            <div><input class="input-field" name="confirmNewPassword" placeholder="Confirm new password"
+                        type="password"/></div>
+
+            <button class="btn-login btn-basic" type="submit">CONFIRM</button>
+        </form>
+    </div>
+</section>
 </body>
 </html>

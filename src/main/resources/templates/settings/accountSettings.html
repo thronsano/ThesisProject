@@ -9,25 +9,27 @@
 <body>
 <nav>
     <a th:href="@{/home}"><img alt="Diamond Lounge" class="logo" height="50" src="/logo.svg" width="125"></a>
-    <a class="nav-element" th:href="@{/home}">Timetable</a>
+    <a class="nav-element" th:href="@{/home}">Schedule</a>
     <a class="nav-element" th:href="@{/settings}">Settings</a>
     <form method="post" th:action="@{/logout}">
         <input class="nav-element" type="submit" value="Log out"/>
     </form>
 </nav>
 
-<section class="content" method="GET" th:action="@{/settings}">
+<section class="content">
     <h1>Settings</h1>
-    <button class="btn-basic" th:onclick="'javascript:editInformationClicked();'"
-            type="submit">
-        EDIT ACCOUNT INFORMATION
-    </button>
+    <form method="GET" th:action="@{/settings/editAccountInformation}">
+        <button class="btn-basic" th:type="submit">
+            EDIT ACCOUNT INFORMATION
+        </button>
+    </form>
     <br>
-    <button class="btn-basic" th:onclick="'javascript:changePasswordClicked();'"
-            type="submit">
-        CHANGE PASSWORD
-    </button>
-
+    <form method="GET" th:action="@{/settings/editBusinessInformation}">
+        <button class="btn-basic" th:type="submit">
+            EDIT BUSINESS INFORMATION
+        </button>
+    </form>
+    <br>
     <section class="login-info">
         <div class="error-message" th:text="${error}"></div>
         <div class="error-message" th:if="${userEdited}">
@@ -38,15 +40,5 @@
         </div>
     </section>
 </section>
-
 </body>
-<script>
-    function editInformationClicked() {
-        location.href = "/settings/editAccountInformation";
-    }
-
-    function changePasswordClicked() {
-        location.href = "/settings/changePassword";
-    }
-</script>
 </html>

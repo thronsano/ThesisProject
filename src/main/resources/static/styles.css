@@ -187,13 +187,20 @@ nav input {
     transition: 0.25s;
 }
 
-
 .nav-element:hover {
     color: #36adcf;
 }
 
 .content {
     margin-left: 215px;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 50%;
 }
 
 table {
