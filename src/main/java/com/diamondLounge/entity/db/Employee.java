@@ -3,6 +3,8 @@ package com.diamondLounge.entity.db;
 import javax.persistence.*;
 import java.util.Set;
 
+import static javax.persistence.CascadeType.ALL;
+
 @Entity
 @Table(name = "employees")
 public class Employee {
@@ -21,7 +23,7 @@ public class Employee {
     private String localization;
 
     @Column
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = ALL, orphanRemoval = true)
     private Set<Wage> wages;
 
     public Employee() {

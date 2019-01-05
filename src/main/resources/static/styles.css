@@ -195,12 +195,22 @@ nav input {
     margin-left: 215px;
 }
 
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-gap: 10px;
+}
+
 .row {
     display: flex;
 }
 
-.column {
+.columnHalfSpace {
     flex: 50%;
+}
+
+.columnThirdOfSpace {
+    flex: 33%;
 }
 
 table {
@@ -230,7 +240,8 @@ tbody tr:hover {
     transition: 0.25s;
 }
 
-.home-table {
+.businessTopMargin {
+
 }
 
 .week-btn {

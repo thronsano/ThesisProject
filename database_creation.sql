@@ -34,11 +34,9 @@ CREATE TABLE employees (
 
 CREATE TABLE wages (
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	employee_id INT NOT NULL,
 	hourlyWage DECIMAL(7,2) NOT NULL,
 	startDate DATETIME NOT NULL,
-	endDate DATETIME,
-	CONSTRAINT fk_wages_employees FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE
+	endDate DATETIME
 );
 
 create table shops (
@@ -69,12 +67,12 @@ INSERT INTO employees (name, timeFactor, localization) VALUES ('Pracownik Trzy',
 INSERT INTO employees (name, timeFactor, localization) VALUES ('Pracownik Cztery', 1, 'KRK');
 INSERT INTO employees (name, timeFactor, localization) VALUES ('Pracownik Piec', 1, 'KRK');
 
-INSERT INTO wages (employee_id, hourlyWage, startDate) values (1, 11.50, '2018-06-10 11:00:00');
-INSERT INTO wages (employee_id, hourlyWage, startDate) values (2, 11.50, '2018-06-10 11:00:00');
-INSERT INTO wages (employee_id, hourlyWage, startDate, endDate) values (3, 11.50, '2018-06-10 11:00:00', '2018-06-11 11:00:00');
-INSERT INTO wages (employee_id, hourlyWage, startDate) values (3, 20.50, '2018-06-12 11:00:00');
-INSERT INTO wages (employee_id, hourlyWage, startDate) values (4, 11.50, '2018-06-12 11:00:00');
-INSERT INTO wages (employee_id, hourlyWage, startDate) values (5, 11.50, '2018-06-12 11:00:00');
+# INSERT INTO wages (employee_id, hourlyWage, startDate) values (1, 11.50, '2018-06-10 11:00:00');
+# INSERT INTO wages (employee_id, hourlyWage, startDate) values (2, 11.50, '2018-06-10 11:00:00');
+# INSERT INTO wages (employee_id, hourlyWage, startDate, endDate) values (3, 11.50, '2018-06-10 11:00:00', '2018-06-11 11:00:00');
+# INSERT INTO wages (employee_id, hourlyWage, startDate) values (3, 20.50, '2018-06-12 11:00:00');
+# INSERT INTO wages (employee_id, hourlyWage, startDate) values (4, 11.50, '2018-06-12 11:00:00');
+# INSERT INTO wages (employee_id, hourlyWage, startDate) values (5, 11.50, '2018-06-12 11:00:00');
 
 insert into shops (name, localization, openingTime, closingTime, requiredStaff) values ('Shop one', 'KRK', '09:00', '17:00', 2);
 insert into shops (name, localization, openingTime, closingTime, requiredStaff) values ('Shop two', 'KRK', '10:00', '12:00', 1);

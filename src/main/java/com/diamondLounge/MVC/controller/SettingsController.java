@@ -1,13 +1,14 @@
 package com.diamondLounge.MVC.controller;
 
 import com.diamondLounge.MVC.model.EmployeeModel;
+import com.diamondLounge.MVC.model.ScheduleModel;
 import com.diamondLounge.MVC.model.UserModel;
 import com.diamondLounge.entity.db.User;
-import com.diamondLounge.exceptions.DiamondLoungeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,6 +31,9 @@ public class SettingsController {
     EmployeeModel employeeModel;
 
     @Autowired
+    private ScheduleModel scheduleModel;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     @RequestMapping(value = "/editAccountInformation", method = GET)
@@ -44,7 +48,16 @@ public class SettingsController {
     }
 
     @RequestMapping(value = "/editBusinessInformation", method = GET)
-    public ModelAndView getEditBusiness(ModelAndView modelAndView) {
+    public ModelAndView getEditBusiness(Model model,
+                                        ModelAndView modelAndView,
+                                        RedirectAttributes redirectAttributes) {
+        try {
+            model.addAttribute("shopList", scheduleModel.getShopList());
+            model.addAttribute("employeeList", employeeModel.getAllEmployees());
+        } catch (Exception e) {
+            handleError(modelAndView, redirectAttributes, e.getMessage());
+        }
+
         modelAndView.setViewName("settings/businessInformation");
         return modelAndView;
     }
@@ -57,12 +70,11 @@ public class SettingsController {
         try {
             userModel.editUser(username);
             redirectAttributes.addFlashAttribute("userEdited", true);
-            modelAndView.setViewName("redirect:/settings");
-        } catch (DiamondLoungeException e) {
+        } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e.getMessage());
-            modelAndView.setViewName("redirect:/settings");
         }
 
+        modelAndView.setViewName("redirect:/settings");
         return modelAndView;
     }
 
@@ -76,50 +88,34 @@ public class SettingsController {
         try {
             userModel.changePassword(currentPassword, newPassword, confirmNewPassword, passwordEncoder);
             redirectAttributes.addFlashAttribute("passwordChanged", true);
-            modelAndView.setViewName("redirect:/settings");
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e.getMessage());
-            modelAndView.setViewName("redirect:/settings");
         }
 
+        modelAndView.setViewName("redirect:/settings");
         return modelAndView;
     }
 
     @RequestMapping(value = "/addEmployee", method = POST)
-    public ModelAndView postAddEmployee(
+    public String postAddEmployee(
             @RequestParam("name") String name,
             @RequestParam("timeFactor") float timeFactor,
             @RequestParam("localization") String localization,
             @RequestParam("wage") long wage,
             ModelAndView modelAndView,
             RedirectAttributes redirectAttributes) {
-
         try {
             employeeModel.addEmployee(name, timeFactor, localization, BigDecimal.valueOf(wage));
-        } catch (DiamondLoungeException e) {
+        } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e.getMessage());
-            modelAndView.setViewName("redirect:/settings");
         }
 
-        return modelAndView;
+        return "redirect:/settings/editBusinessInformation";
     }
 
     private void handleError(ModelAndView modelAndView, RedirectAttributes redirectAttributes, String message) {
         logWarning(message);
         redirectAttributes.addFlashAttribute("error", message);
         modelAndView.addObject("error", message);
-    }
-
-    @RequestMapping(value = "/getAllEmployees", method = GET)
-    public ModelAndView getAllEmployees(
-            ModelAndView modelAndView,
-            RedirectAttributes redirectAttributes) {
-        try {
-            modelAndView.addObject("employees", employeeModel.getAllEmployees());
-        } catch (DiamondLoungeException e) {
-            handleError(modelAndView, redirectAttributes, e.getMessage());
-        }
-
-        return modelAndView;
     }
 }

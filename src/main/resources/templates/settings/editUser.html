@@ -2,33 +2,31 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Edit Account Information</title>
-    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link href="/styles.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
-<body class="front">
-
-
+<body>
 <nav>
-    <a th:href="@{/home}"><img src="/logo.svg" class="logo" alt="Diamond Lounge" height="50" width="125"></a>
+    <a th:href="@{/home}"><img alt="Diamond Lounge" class="logo" height="50" src="/logo.svg" width="125"></a>
     <a class="nav-element" th:href="@{/home}">Schedule</a>
-    <a th:href="@{/settings}" class="nav-element">Settings</a>
-    <form th:action="@{/logout}" method="post">
+    <a class="nav-element" th:href="@{/settings}">Settings</a>
+    <form method="post" th:action="@{/logout}">
         <input class="nav-element" type="submit" value="Log out"/>
     </form>
 </nav>
 
 <section class="content row" th:if="${user}!=null">
-    <div class="column">
+    <div class="columnHalfSpace">
         <h2>Edit username</h2>
-        <form th:action="@{/settings/editAccountInformation}" method="post">
+        <form method="post" th:action="@{/settings/editAccountInformation}">
             Name:
             <div><input class="input-field" name="username" placeholder="Name" th:value="${user.username}" type="text"/>
             </div>
-            <button type="submit" class="btn-login btn-basic">SAVE</button>
+            <button class="btn-login btn-basic" type="submit">SAVE</button>
         </form>
     </div>
 
-    <div class="column">
+    <div class="columnHalfSpace">
         <h2>Change password</h2>
         <form method="post" th:action="@{/settings/changePassword}">
             Current password:

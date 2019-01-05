@@ -1,5 +1,6 @@
 package com.diamondLounge.MVC.model;
 
+import com.diamondLounge.entity.db.Shop;
 import com.diamondLounge.entity.model.ShopWorkDay;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -30,5 +31,18 @@ public class ScheduleModel {
 
     public void generateSchedule() {
 
+    }
+
+    public List<Shop> getShopList() {
+        Session session = sessionFactory.openSession();
+
+        try {
+            session.beginTransaction();
+            Query query = session.createQuery("from Shop");
+            return query.list();
+        } finally {
+            session.getTransaction().commit();
+            session.close();
+        }
     }
 }

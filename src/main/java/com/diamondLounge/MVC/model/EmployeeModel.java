@@ -45,7 +45,7 @@ public class EmployeeModel {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
-            Query query = session.createQuery("from Employees");
+            Query query = session.createQuery("from Employee");
             return query.list();
         } catch (Exception ex) {
             logWarning(ex.getMessage());
