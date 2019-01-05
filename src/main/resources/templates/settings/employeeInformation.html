@@ -14,9 +14,8 @@
             <div class="error-message" th:text="${error}"></div>
         </section>
     </div>
-
     <div class="row" style="grid-row: 2">
-        <div class="columnThirdOfSpace">
+        <div class="columnHalfSpace">
             <h2>Add Employee</h2>
             <form method="post" th:action="@{/employees/addEmployee}">
                 Name:
@@ -36,7 +35,7 @@
                 <button class="btn-login btn-basic" type="submit">ADD</button>
             </form>
         </div>
-        <div class="columnThirdOfSpace" th:if="${selectedEmployee}!=null">
+        <div class="columnHalfSpace" th:if="${selectedEmployee}!=null">
             <h2>Edit Employee</h2>
             <form method="post" th:action="@{/employees/editEmployee}">
                 <input hidden name="id" th:value="${selectedEmployee.id}"/>
@@ -59,7 +58,9 @@
                 <button class="btn-login btn-basic" type="submit">SAVE</button>
             </form>
         </div>
-        <div class="columnThirdOfSpace">
+    </div>
+    <div class="row" style="grid-row: 3">
+        <div class="columnHalfSpace">
             <h2>Employee List</h2>
             Employees:
             <form>
@@ -78,6 +79,27 @@
                         <td th:text="${employee.timeFactor}"></td>
                         <td th:text="${employee.localization}"></td>
                         <td th:text="${employee.currentWage.hourlyWage}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <div class="columnHalfSpace" th:if="${selectedEmployee != null}">
+            <h2>Wages List</h2>
+            Historical wages for selected employee:
+            <form>
+                <table>
+                    <thead>
+                    <th>Hourly wage</th>
+                    <th>Start date</th>
+                    <th>End date</th>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="wage : ${selectedEmployee.sortedWages}">
+                        <td th:text="${wage.hourlyWage}"></td>
+                        <td th:text="${#temporals.format(wage.startDate, 'dd-MM-yyyy HH:mm')}"></td>
+                        <td th:text="${#temporals.format(wage.endDate, 'dd-MM-yyyy HH:mm')}"></td>
                     </tr>
                     </tbody>
                 </table>

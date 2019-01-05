@@ -2,6 +2,9 @@ package com.diamondLounge.entity.model;
 
 import com.diamondLounge.entity.db.Employee;
 import com.diamondLounge.entity.db.Wage;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Ordering;
 
 import java.util.Set;
 
@@ -63,6 +66,11 @@ public class EmployeeImpl {
 
     public Set<Wage> getWages() {
         return wages;
+    }
+
+    public ImmutableList<Wage> getSortedWages() {
+        Ordering<Wage> wageOrdering = Ordering.natural().onResultOf(Wage::getStartDate);
+        return ImmutableSortedSet.orderedBy(wageOrdering).addAll(getWages()).build().asList();
     }
 
     public void setWages(Set<Wage> wages) {

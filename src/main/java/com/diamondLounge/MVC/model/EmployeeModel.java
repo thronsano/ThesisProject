@@ -29,18 +29,7 @@ public class EmployeeModel {
     public void addEmployee(String name, float timeFactor, String localization, BigDecimal wage) throws DiamondLoungeException {
         Set<Wage> wages = newHashSet(new Wage(wage, now(), null));
         Employee employee = new Employee(name, timeFactor, localization, wages);
-        Session session = sessionFactory.openSession();
-
-        try {
-            session.beginTransaction();
-            session.save(employee);
-        } catch (Exception ex) {
-            logWarning(ex.getMessage());
-            throw new DiamondLoungeException(ex.getMessage());
-        } finally {
-            session.getTransaction().commit();
-            session.close();
-        }
+        persistEmployee(employee);
     }
 
     public List<EmployeeImpl> getAllEmployees() throws DiamondLoungeException {
@@ -96,6 +85,10 @@ public class EmployeeModel {
             employee.getWages().add(new Wage(wage, now, null));
         }
 
+        persistEmployee(employee);
+    }
+
+    private void persistEmployee(Employee employee) throws DiamondLoungeException {
         Session session = sessionFactory.openSession();
 
         try {
