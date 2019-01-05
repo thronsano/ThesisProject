@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/styles.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script src="/updateURLParams.js" type="text/javascript"></script>
     <script src="/scheduleScript.js" type="text/javascript"></script>
-    <script src="/updateURLparams.js" type="text/javascript"></script>
     <title>Schedule</title>
 </head>
 <body>
-<nav>
+<nav th:fragment="menuBar">
     <a th:href="@{/home}"><img alt="Diamond Lounge" class="logo" height="50" src="/logo.svg" width="125"></a>
     <a class="nav-element" th:href="@{/home}">Schedule</a>
     <a class="nav-element" th:href="@{/settings}">Settings</a>
@@ -34,7 +34,6 @@
             GENERATE SCHEDULE
         </button>
     </form>
-
 </section>
 </body>
 </html>

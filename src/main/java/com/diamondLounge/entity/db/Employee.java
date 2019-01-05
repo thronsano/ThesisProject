@@ -1,9 +1,11 @@
 package com.diamondLounge.entity.db;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 
 @Entity
 @Table(name = "employees")
@@ -23,8 +25,8 @@ public class Employee {
     private String localization;
 
     @Column
-    @OneToMany(cascade = ALL, orphanRemoval = true)
-    private Set<Wage> wages;
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    private Set<Wage> wages = new HashSet<>();
 
     public Employee() {
     }

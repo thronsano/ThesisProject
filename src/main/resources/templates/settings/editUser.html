@@ -6,15 +6,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
 <body>
-<nav>
-    <a th:href="@{/home}"><img alt="Diamond Lounge" class="logo" height="50" src="/logo.svg" width="125"></a>
-    <a class="nav-element" th:href="@{/home}">Schedule</a>
-    <a class="nav-element" th:href="@{/settings}">Settings</a>
-    <form method="post" th:action="@{/logout}">
-        <input class="nav-element" type="submit" value="Log out"/>
-    </form>
-</nav>
-
+<nav th:include="home :: menuBar"></nav>
 <section class="content row" th:if="${user}!=null">
     <div class="columnHalfSpace">
         <h2>Edit username</h2>

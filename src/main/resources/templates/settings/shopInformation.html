@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Business Information</title>
+    <link href="/styles.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
+<body>
+<nav th:include="home :: menuBar"></nav>
+<section class="content grid-container">
+    <div class="row" style="grid-row: 1">
+        <section class="login-info">
+            <div class="error-message" th:text="${error}"></div>
+        </section>
+    </div>
+    <div class="row" style="grid-row: 2">
+        <div class="columnHalfSpace">
+            <h2>Add shop</h2>
+            <form method="post" th:action="@{/settings/addShop}">
+                TO BE IMPLEMENTED
+            </form>
+        </div>
+        <div class="columnHalfSpace">
+            <h2>Shop List</h2>
+            Shops:
+            <form>
+                <table>
+                    <thead>
+                    <th>Name</th>
+                    <th>Localization</th>
+                    <th>Opening time</th>
+                    <th>Closing time</th>
+                    <th>Required staff</th>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="shop : ${shopList}"
+                        th:onclick="'javascript:updateParams(\'' + ${shop.id} + '\');'">
+                        <td th:text="${shop.name}"></td>
+                        <td th:text="${shop.localization}"></td>
+                        <td th:text="${shop.openingTime}"></td>
+                        <td th:text="${shop.closingTime}"></td>
+                        <td th:text="${shop.requiredStaff}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>

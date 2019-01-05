@@ -211,6 +211,7 @@ nav input {
 
 .columnThirdOfSpace {
     flex: 33%;
+    margin: 0 1rem 0 0;
 }
 
 table {
@@ -225,6 +226,7 @@ th {
 td {
     padding: 15px;
     cursor: pointer;
+    text-align: center;
 }
 
 tr:nth-child(even) {

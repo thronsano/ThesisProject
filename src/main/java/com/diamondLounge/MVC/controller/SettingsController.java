@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
-
-import static com.diamondLounge.utility.Logger.logWarning;
+import static com.diamondLounge.MVC.controller.Utils.ErrorHandlerForControllers.handleError;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -37,7 +35,7 @@ public class SettingsController {
     PasswordEncoder passwordEncoder;
 
     @RequestMapping(value = "/editAccountInformation", method = GET)
-    public ModelAndView getEditUser(ModelAndView modelAndView) {
+    public ModelAndView getEditUserPage(ModelAndView modelAndView) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userModel.getUserByEmail(email);
 
@@ -47,25 +45,25 @@ public class SettingsController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/editBusinessInformation", method = GET)
-    public ModelAndView getEditBusiness(Model model,
+
+    @RequestMapping(value = "/editShopInformation", method = GET)
+    public ModelAndView getEditShopPage(Model model,
                                         ModelAndView modelAndView,
                                         RedirectAttributes redirectAttributes) {
         try {
             model.addAttribute("shopList", scheduleModel.getShopList());
-            model.addAttribute("employeeList", employeeModel.getAllEmployees());
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e.getMessage());
         }
 
-        modelAndView.setViewName("settings/businessInformation");
+        modelAndView.setViewName("settings/shopInformation");
         return modelAndView;
     }
 
     @RequestMapping(value = "/editAccountInformation", method = POST)
-    public ModelAndView postEditUser(@RequestParam("username") String username,
-                                     ModelAndView modelAndView,
-                                     RedirectAttributes redirectAttributes) {
+    public ModelAndView editUser(@RequestParam("username") String username,
+                                 ModelAndView modelAndView,
+                                 RedirectAttributes redirectAttributes) {
 
         try {
             userModel.editUser(username);
@@ -79,11 +77,11 @@ public class SettingsController {
     }
 
     @RequestMapping(value = "/changePassword", method = POST)
-    public ModelAndView postChangePassword(@RequestParam("currentPassword") String currentPassword,
-                                           @RequestParam("newPassword") String newPassword,
-                                           @RequestParam("confirmNewPassword") String confirmNewPassword,
-                                           ModelAndView modelAndView,
-                                           RedirectAttributes redirectAttributes) {
+    public ModelAndView changePassword(@RequestParam("currentPassword") String currentPassword,
+                                       @RequestParam("newPassword") String newPassword,
+                                       @RequestParam("confirmNewPassword") String confirmNewPassword,
+                                       ModelAndView modelAndView,
+                                       RedirectAttributes redirectAttributes) {
 
         try {
             userModel.changePassword(currentPassword, newPassword, confirmNewPassword, passwordEncoder);
@@ -94,28 +92,5 @@ public class SettingsController {
 
         modelAndView.setViewName("redirect:/settings");
         return modelAndView;
-    }
-
-    @RequestMapping(value = "/addEmployee", method = POST)
-    public String postAddEmployee(
-            @RequestParam("name") String name,
-            @RequestParam("timeFactor") float timeFactor,
-            @RequestParam("localization") String localization,
-            @RequestParam("wage") long wage,
-            ModelAndView modelAndView,
-            RedirectAttributes redirectAttributes) {
-        try {
-            employeeModel.addEmployee(name, timeFactor, localization, BigDecimal.valueOf(wage));
-        } catch (Exception e) {
-            handleError(modelAndView, redirectAttributes, e.getMessage());
-        }
-
-        return "redirect:/settings/editBusinessInformation";
-    }
-
-    private void handleError(ModelAndView modelAndView, RedirectAttributes redirectAttributes, String message) {
-        logWarning(message);
-        redirectAttributes.addFlashAttribute("error", message);
-        modelAndView.addObject("error", message);
     }
 }

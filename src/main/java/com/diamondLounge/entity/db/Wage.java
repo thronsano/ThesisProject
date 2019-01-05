@@ -4,6 +4,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import static java.math.RoundingMode.FLOOR;
+
 @Entity
 @Table(name = "wages")
 public class Wage {
@@ -13,7 +15,7 @@ public class Wage {
     private int id;
 
     @Column
-    private BigDecimal hourlyWage;
+    private BigDecimal hourlyWage = new BigDecimal(0);
 
     @Column
     private LocalDateTime startDate;
@@ -60,5 +62,9 @@ public class Wage {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public boolean hasTheSameValue(BigDecimal hourlyWage) {
+        return hourlyWage.setScale(2, FLOOR).equals(this.hourlyWage.setScale(2, FLOOR));
     }
 }
