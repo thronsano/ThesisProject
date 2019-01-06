@@ -1,6 +1,5 @@
 /**
-    background-color:  #dde144;     ACCENT LIME
-    background-color:  #`;     ACCENT VLUE
+    background-color:  #36adcf;     ACCENT BLUE
     background-color:  #282828;     GRAY DARK BG
     background-color:  #606060;     GRAY LIGHT BG
 **/
@@ -183,7 +182,7 @@ nav input {
     color: #606060;
     padding: 6px 6px 6px 32px;
     background-color: transparent;
-    border: 0px;
+    border: 0;
     transition: 0.25s;
 }
 
@@ -207,20 +206,21 @@ nav input {
 
 .columnHalfSpace {
     flex: 50%;
+    margin: 0 2rem 0 0;
 }
 
 .columnThirdOfSpace {
     flex: 33%;
-    margin: 0 1rem 0 0;
+    margin: 0 2rem 0 0;
 }
 
 table {
-    border-spacing: 0px;
+    border-spacing: 0;
 }
 
 th {
     background-color: #282828;
-    padding: 5px;
+    padding: 10px;
 }
 
 td {
@@ -257,11 +257,16 @@ tbody tr:hover {
 }
 
 #myBar {
-    width: 0%;
+    width: 0;
     height: 30px;
     background-color: #36adcf;
 }
 
 .error-message {
     color: #36adcf;
+}
+
+.error-header {
+    font-size: 45px;
+    font-weight: 900;
 }

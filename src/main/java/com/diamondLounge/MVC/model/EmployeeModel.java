@@ -5,9 +5,7 @@ import com.diamondLounge.entity.db.Wage;
 import com.diamondLounge.entity.model.EmployeeImpl;
 import com.diamondLounge.exceptions.DiamondLoungeException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -21,15 +19,12 @@ import static com.google.common.collect.Sets.newHashSet;
 import static java.time.LocalDateTime.now;
 
 @Repository
-public class EmployeeModel {
-
-    @Autowired
-    SessionFactory sessionFactory;
+public class EmployeeModel extends PersistenceModel {
 
     public void addEmployee(String name, float timeFactor, String localization, BigDecimal wage) throws DiamondLoungeException {
         Set<Wage> wages = newHashSet(new Wage(wage, now(), null));
         Employee employee = new Employee(name, timeFactor, localization, wages);
-        persistEmployee(employee);
+        persistObject(employee);
     }
 
     public List<EmployeeImpl> getAllEmployees() throws DiamondLoungeException {
@@ -85,21 +80,6 @@ public class EmployeeModel {
             employee.getWages().add(new Wage(wage, now, null));
         }
 
-        persistEmployee(employee);
-    }
-
-    private void persistEmployee(Employee employee) throws DiamondLoungeException {
-        Session session = sessionFactory.openSession();
-
-        try {
-            session.beginTransaction();
-            session.saveOrUpdate(employee);
-        } catch (Exception ex) {
-            logWarning(ex.getMessage());
-            throw new DiamondLoungeException(ex.getMessage());
-        } finally {
-            session.getTransaction().commit();
-            session.close();
-        }
+        persistObject(employee);
     }
 }

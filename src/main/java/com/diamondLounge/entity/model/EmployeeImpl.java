@@ -69,7 +69,7 @@ public class EmployeeImpl {
     }
 
     public ImmutableList<Wage> getSortedWages() {
-        Ordering<Wage> wageOrdering = Ordering.natural().onResultOf(Wage::getStartDate);
+        Ordering<Wage> wageOrdering = Ordering.natural().reverse().onResultOf(Wage::getStartDate);
         return ImmutableSortedSet.orderedBy(wageOrdering).addAll(getWages()).build().asList();
     }
 

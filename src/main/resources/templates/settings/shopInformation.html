@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Business Information</title>
+    <title>Shop Information</title>
     <link href="/styles.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script src="/updateURLParams.js" type="text/javascript"></script>
 </head>
 <body>
 <nav th:include="home :: menuBar"></nav>
@@ -16,10 +17,62 @@
     <div class="row" style="grid-row: 2">
         <div class="columnHalfSpace">
             <h2>Add shop</h2>
-            <form method="post" th:action="@{/settings/addShop}">
-                TO BE IMPLEMENTED
+            <form method="post" th:action="@{/shops/addShop}">
+                Name:
+                <div><input class="input-field" name="name" placeholder="Name" required type="text"/></div>
+
+                Localization:
+                <div><input class="input-field" name="localization" placeholder="Localization" required type="text"/>
+                </div>
+
+                Opening time:
+                <div><input class="input-field" name="openingTime" placeholder="Opening time" required type="time"/>
+                </div>
+
+                Closing time:
+                <div><input class="input-field" name="closingTime" placeholder="Closing time" required type="time"/>
+                </div>
+
+                Required staff:
+                <div><input class="input-field" max="999999" min="0" name="requiredStaff"
+                            placeholder="Required staff" required type="number"/></div>
+
+                <button class="btn-login btn-basic" type="submit">ADD</button>
             </form>
         </div>
+        <div class="columnHalfSpace" th:if="${selectedShop}!=null">
+            <h2>Edit Shop</h2>
+            <form method="post" th:action="@{/shops/editShop}">
+                <input hidden name="id" th:value="${selectedShop.id}"/>
+
+                Name:
+                <div><input class="input-field" name="name" placeholder="Name" required
+                            th:value="${selectedShop.name}" type="text"/></div>
+
+                Localization:
+                <div><input class="input-field" name="localization" placeholder="Localization" required
+                            th:value="${selectedShop.localization}" type="text"/></div>
+
+                Opening time:
+                <div><input class="input-field" name="openingTime" placeholder="Opening time" required
+                            th:value="${selectedShop.openingTime}"
+                            type="time"/></div>
+
+                Closing time:
+                <div><input class="input-field" name="closingTime" placeholder="Closing time" required
+                            th:value="${selectedShop.closingTime}"
+                            type="time"/></div>
+
+                Required staff:
+                <div><input class="input-field" max="999999" min="0" name="requiredStaff"
+                            placeholder="Required staff" required th:value="${selectedShop.requiredStaff}"
+                            type="number"/></div>
+
+                <button class="btn-login btn-basic" type="submit">SAVE</button>
+            </form>
+        </div>
+    </div>
+    <div class="row" style="grid-row: 3">
         <div class="columnHalfSpace">
             <h2>Shop List</h2>
             Shops:
@@ -35,7 +88,7 @@
 
                     <tbody>
                     <tr th:each="shop : ${shopList}"
-                        th:onclick="'javascript:updateParams(\'' + ${shop.id} + '\');'">
+                        th:onclick="'javascript:updateParams(\'shops/editShopInformation\', \'selectedShop\', \'' + ${shop.id} + '\');'">
                         <td th:text="${shop.name}"></td>
                         <td th:text="${shop.localization}"></td>
                         <td th:text="${shop.openingTime}"></td>

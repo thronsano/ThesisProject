@@ -1,14 +1,12 @@
 package com.diamondLounge.MVC.controller;
 
 import com.diamondLounge.MVC.model.EmployeeModel;
-import com.diamondLounge.MVC.model.ScheduleModel;
 import com.diamondLounge.MVC.model.UserModel;
 import com.diamondLounge.entity.db.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,9 +27,6 @@ public class SettingsController {
     EmployeeModel employeeModel;
 
     @Autowired
-    private ScheduleModel scheduleModel;
-
-    @Autowired
     PasswordEncoder passwordEncoder;
 
     @RequestMapping(value = "/editAccountInformation", method = GET)
@@ -45,20 +40,6 @@ public class SettingsController {
         return modelAndView;
     }
 
-
-    @RequestMapping(value = "/editShopInformation", method = GET)
-    public ModelAndView getEditShopPage(Model model,
-                                        ModelAndView modelAndView,
-                                        RedirectAttributes redirectAttributes) {
-        try {
-            model.addAttribute("shopList", scheduleModel.getShopList());
-        } catch (Exception e) {
-            handleError(modelAndView, redirectAttributes, e.getMessage());
-        }
-
-        modelAndView.setViewName("settings/shopInformation");
-        return modelAndView;
-    }
 
     @RequestMapping(value = "/editAccountInformation", method = POST)
     public ModelAndView editUser(@RequestParam("username") String username,

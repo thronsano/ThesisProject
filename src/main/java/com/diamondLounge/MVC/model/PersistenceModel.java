@@ -1,34 +1,30 @@
 package com.diamondLounge.MVC.model;
 
-import com.diamondLounge.entity.model.ShopWorkDay;
+import com.diamondLounge.exceptions.DiamondLoungeException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import static com.diamondLounge.utility.Logger.logWarning;
 
 @Repository
-public class ScheduleModel {
-
+public class PersistenceModel {
     @Autowired
-    private SessionFactory sessionFactory;
+    SessionFactory sessionFactory;
 
-    public List<ShopWorkDay> getShopWorkDays() {
+    void persistObject(Object obj) throws DiamondLoungeException {
         Session session = sessionFactory.openSession();
 
         try {
             session.beginTransaction();
-            Query query = session.createQuery("from ShopWorkDay");
-            return query.list();
+            session.saveOrUpdate(obj);
+        } catch (Exception ex) {
+            logWarning(ex.getMessage());
+            throw new DiamondLoungeException(ex.getMessage());
         } finally {
             session.getTransaction().commit();
             session.close();
         }
-    }
-
-    public void generateSchedule() {
-
     }
 }

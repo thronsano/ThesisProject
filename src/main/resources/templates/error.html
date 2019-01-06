@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="/styles.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <title>Error page</title>
+</head>
+<body class="front">
+<section class="inside-content-box">
+    <a th:href="@{/home}"><img alt="Diamond Lounge" class="logo center-horizontal" height="250" src="/logo.svg"
+                               width="450"></a>
+    <div class="error-header">ERROR
+        <div class="error-message" th:text="${errorCode}"></div>
+    </div>
+    <br>
+    <h3><p>Woops. Something went wrong</p>
+        <p>Click the logo above to go to the home page.</p></h3>
+</section>
+</body>
+</html>
