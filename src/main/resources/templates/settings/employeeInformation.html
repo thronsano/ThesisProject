@@ -25,8 +25,8 @@
                 <div><input class="input-field" max="9.99" min="0.01" name="timeFactor" placeholder="Time factor"
                             required step="0.01" type="number"/></div>
 
-                Localization:
-                <div><input class="input-field" name="localization" placeholder="Localization" required type="text"/>
+                Location:
+                <div><input class="input-field" name="location" placeholder="Location" required type="text"/>
                 </div>
 
                 Wage:
@@ -47,9 +47,9 @@
                 <div><input class="input-field" max="9.99" min="0.01" name="timeFactor" placeholder="Time factor"
                             required step="0.01" th:value="${selectedEmployee.timeFactor}" type="number"/></div>
 
-                Localization:
-                <div><input class="input-field" name="localization" placeholder="Localization" required
-                            th:value="${selectedEmployee.localization}" type="text"/></div>
+                Location:
+                <div><input class="input-field" name="location" placeholder="Location" required
+                            th:value="${selectedEmployee.location}" type="text"/></div>
 
                 Wage:
                 <div><input class="input-field" max="99999.99" min="0.01" name="wage" placeholder="Wage" required
@@ -68,7 +68,7 @@
                     <thead>
                     <th>Name</th>
                     <th>Time factor</th>
-                    <th>Localization</th>
+                    <th>Location</th>
                     <th>Current wage</th>
                     </thead>
 
@@ -77,7 +77,7 @@
                         th:onclick="'javascript:updateParams(\'employees/editEmployeeInformation\', \'selectedEmployee\', \'' + ${employee.id} + '\');'">
                         <td th:text="${employee.name}"></td>
                         <td th:text="${employee.timeFactor}"></td>
-                        <td th:text="${employee.localization}"></td>
+                        <td th:text="${employee.location}"></td>
                         <td th:text="${employee.currentWage.hourlyWage}"></td>
                     </tr>
                     </tbody>

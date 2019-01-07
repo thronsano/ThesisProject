@@ -1,4 +1,4 @@
-package com.diamondLounge.security.configs;
+package com.diamondLounge.settings.configs;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;

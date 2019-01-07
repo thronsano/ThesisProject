@@ -2,8 +2,8 @@ package com.diamondLounge.MVC.model;
 
 import com.diamondLounge.entity.db.Employee;
 import com.diamondLounge.entity.db.Wage;
+import com.diamondLounge.entity.exceptions.DiamondLoungeException;
 import com.diamondLounge.entity.model.EmployeeImpl;
-import com.diamondLounge.exceptions.DiamondLoungeException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
@@ -21,9 +21,9 @@ import static java.time.LocalDateTime.now;
 @Repository
 public class EmployeeModel extends PersistenceModel {
 
-    public void addEmployee(String name, float timeFactor, String localization, BigDecimal wage) throws DiamondLoungeException {
+    public void addEmployee(String name, float timeFactor, String location, BigDecimal wage) throws DiamondLoungeException {
         Set<Wage> wages = newHashSet(new Wage(wage, now(), null));
-        Employee employee = new Employee(name, timeFactor, localization, wages);
+        Employee employee = new Employee(name, timeFactor, location, wages);
         persistObject(employee);
     }
 
@@ -50,7 +50,8 @@ public class EmployeeModel extends PersistenceModel {
         return new EmployeeImpl(getEmployeeById(selectedEmployee));
     }
 
-    private Employee getEmployeeById(int selectedEmployee) throws DiamondLoungeException {
+
+    Employee getEmployeeById(int selectedEmployee) throws DiamondLoungeException {
         Session session = sessionFactory.openSession();
         try {
             session.beginTransaction();
@@ -66,11 +67,11 @@ public class EmployeeModel extends PersistenceModel {
         }
     }
 
-    public void editEmployee(int id, String name, float timeFactor, String localization, BigDecimal wage) throws DiamondLoungeException {
+    public void editEmployee(int id, String name, float timeFactor, String location, BigDecimal wage) throws DiamondLoungeException {
         Employee employee = getEmployeeById(id);
         employee.setName(name);
         employee.setTimeFactor(timeFactor);
-        employee.setLocalization(localization);
+        employee.setLocation(location);
 
         Wage currentWage = employee.getWages().stream().filter(x -> x.getEndDate() == null).findAny().orElse(null);
 

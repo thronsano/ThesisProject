@@ -1,4 +1,4 @@
-package com.diamondLounge.security.mailing;
+package com.diamondLounge.settings.security.mailing;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

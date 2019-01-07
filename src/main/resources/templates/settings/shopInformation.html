@@ -21,8 +21,8 @@
                 Name:
                 <div><input class="input-field" name="name" placeholder="Name" required type="text"/></div>
 
-                Localization:
-                <div><input class="input-field" name="localization" placeholder="Localization" required type="text"/>
+                Location:
+                <div><input class="input-field" name="location" placeholder="Location" required type="text"/>
                 </div>
 
                 Opening time:
@@ -49,9 +49,9 @@
                 <div><input class="input-field" name="name" placeholder="Name" required
                             th:value="${selectedShop.name}" type="text"/></div>
 
-                Localization:
-                <div><input class="input-field" name="localization" placeholder="Localization" required
-                            th:value="${selectedShop.localization}" type="text"/></div>
+                Location:
+                <div><input class="input-field" name="location" placeholder="Location" required
+                            th:value="${selectedShop.location}" type="text"/></div>
 
                 Opening time:
                 <div><input class="input-field" name="openingTime" placeholder="Opening time" required
@@ -80,7 +80,7 @@
                 <table>
                     <thead>
                     <th>Name</th>
-                    <th>Localization</th>
+                    <th>Location</th>
                     <th>Opening time</th>
                     <th>Closing time</th>
                     <th>Required staff</th>
@@ -90,7 +90,7 @@
                     <tr th:each="shop : ${shopList}"
                         th:onclick="'javascript:updateParams(\'shops/editShopInformation\', \'selectedShop\', \'' + ${shop.id} + '\');'">
                         <td th:text="${shop.name}"></td>
-                        <td th:text="${shop.localization}"></td>
+                        <td th:text="${shop.location}"></td>
                         <td th:text="${shop.openingTime}"></td>
                         <td th:text="${shop.closingTime}"></td>
                         <td th:text="${shop.requiredStaff}"></td>

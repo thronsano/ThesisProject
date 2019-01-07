@@ -50,7 +50,7 @@ public class SettingsController {
             userModel.editUser(username);
             redirectAttributes.addFlashAttribute("userEdited", true);
         } catch (Exception e) {
-            handleError(modelAndView, redirectAttributes, e.getMessage());
+            handleError(modelAndView, redirectAttributes, e);
         }
 
         modelAndView.setViewName("redirect:/settings");
@@ -68,7 +68,7 @@ public class SettingsController {
             userModel.changePassword(currentPassword, newPassword, confirmNewPassword, passwordEncoder);
             redirectAttributes.addFlashAttribute("passwordChanged", true);
         } catch (Exception e) {
-            handleError(modelAndView, redirectAttributes, e.getMessage());
+            handleError(modelAndView, redirectAttributes, e);
         }
 
         modelAndView.setViewName("redirect:/settings");

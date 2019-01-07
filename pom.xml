@@ -21,7 +21,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+        <java.version>1.9</java.version>
     </properties>
 
     <dependencies>
@@ -59,19 +59,19 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.2.16.Final</version>
+            <version>5.4.0.Final</version>
         </dependency>
         <!-- Provides Spring integration with Hibernate -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
-            <version>5.0.2.RELEASE</version>
+            <version>5.1.3.RELEASE</version>
         </dependency>
         <!-- Provides DataSource needed for hibernate config -->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-dbcp</artifactId>
-            <version>9.0.1</version>
+            <version>9.0.14</version>
         </dependency>
 
         <!-- security -->
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
-            <version>5.0.5.RELEASE</version>
+            <version>5.1.3.RELEASE</version>
         </dependency>
 
         <dependency>
@@ -98,6 +98,27 @@
             <version>27.0.1-jre</version>
         </dependency>
 
+        <!-- java 11 support for spring -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>2.2.11</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.2.11</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+        </dependency>
     </dependencies>
 
     <build>

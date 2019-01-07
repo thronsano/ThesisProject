@@ -1,6 +1,6 @@
 package com.diamondLounge.MVC.model;
 
-import com.diamondLounge.exceptions.DiamondLoungeException;
+import com.diamondLounge.entity.exceptions.DiamondLoungeException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

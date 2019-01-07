@@ -1,15 +1,12 @@
-package com.diamondLounge.entity.model;
-
-import com.diamondLounge.entity.db.Employee;
-import com.diamondLounge.entity.db.Shop;
+package com.diamondLounge.entity.db;
 
 import javax.persistence.*;
+import java.time.Duration;
 import java.time.LocalDate;
-import java.util.Set;
 
 @Entity
-@Table(name = "shop_work_days")
-public class ShopWorkDay {
+@Table(name = "work_days")
+public class WorkDay {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -17,21 +14,26 @@ public class ShopWorkDay {
 
     @Column
     private LocalDate date;
-
+    @Column
+    private Duration hoursWorked;
     @OneToOne
     private Shop shop;
 
-    @Column
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Employee> employees;
-
-    public ShopWorkDay() {
+    public WorkDay() {
     }
 
-    public ShopWorkDay(LocalDate date, Shop shop, Set<Employee> employees) {
+    public WorkDay(LocalDate date, Shop shop, Duration hoursWorked) {
         this.date = date;
         this.shop = shop;
-        this.employees = employees;
+        this.hoursWorked = hoursWorked;
+    }
+
+    public Duration getHoursWorked() {
+        return hoursWorked;
+    }
+
+    public void setHoursWorked(Duration hoursWorked) {
+        this.hoursWorked = hoursWorked;
     }
 
     public int getId() {
@@ -56,13 +58,5 @@ public class ShopWorkDay {
 
     public void setShop(Shop shop) {
         this.shop = shop;
-    }
-
-    public Set<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(Set<Employee> employees) {
-        this.employees = employees;
     }
 }

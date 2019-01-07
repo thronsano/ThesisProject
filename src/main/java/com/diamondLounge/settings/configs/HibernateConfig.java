@@ -1,4 +1,4 @@
-package com.diamondLounge.security.configs;
+package com.diamondLounge.settings.configs;
 
 import com.diamondLounge.entity.db.*;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
@@ -22,7 +22,7 @@ import static org.hibernate.cfg.Environment.*;
 @EnableTransactionManagement
 public class HibernateConfig {
 
-    private static final Class[] ANNOTATED_CLASSES = new Class[]{User.class, Authority.class, ResetToken.class, Employee.class, Wage.class};
+    private static final Class[] ANNOTATED_CLASSES = new Class[]{User.class, Authority.class, ResetToken.class, Employee.class, Wage.class, Shop.class, Schedule.class, WorkDay.class};
 
     @Autowired
     Environment env;
@@ -42,6 +42,7 @@ public class HibernateConfig {
         Properties props = new Properties();
 
         props.put(SHOW_SQL, Objects.requireNonNull(env.getProperty("hibernate.show_sql")));
+        props.put(FORMAT_SQL, Objects.requireNonNull(env.getProperty("hibernate.format_sql")));
         props.put(HBM2DDL_AUTO, Objects.requireNonNull(env.getProperty("hibernate.hbm2ddl.auto")));
         props.put(DIALECT, Objects.requireNonNull(env.getProperty("hibernate.dialect")));
         props.put(POOL_SIZE, Objects.requireNonNull(env.getProperty("hibernate.pool_size")));

@@ -2,7 +2,7 @@ package com.diamondLounge.MVC.model;
 
 
 import com.diamondLounge.entity.db.ResetToken;
-import com.diamondLounge.exceptions.UsernamePasswordException;
+import com.diamondLounge.entity.exceptions.UsernamePasswordException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;

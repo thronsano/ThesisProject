@@ -1,7 +1,7 @@
 package com.diamondLounge.MVC.controller;
 
 import com.diamondLounge.MVC.model.UserModel;
-import com.diamondLounge.exceptions.DiamondLoungeException;
+import com.diamondLounge.entity.exceptions.DiamondLoungeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;

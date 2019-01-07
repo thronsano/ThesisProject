@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link href="/styles.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <script src="/updateURLParams.js" type="text/javascript"></script>
     <script src="/scheduleScript.js" type="text/javascript"></script>
@@ -19,7 +19,7 @@
 </nav>
 
 <section class="content">
-    <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+    <h1 th:inline="text">Logged as [[${#httpServletRequest.remoteUser}]]</h1>
     <form method="get">
         <button class="btn-basic week-btn" th:onclick="'java:buttonClicked(-1);'" type="button">
             PREVIOUS WEEK
@@ -28,10 +28,34 @@
             NEXT WEEK
         </button>
     </form>
+    <div th:if="${scheduleTable}!=null">
+        <h2>Schedule</h2>
+        <form>
+            <table>
+                <tbody>
+                <tr th:each="j: ${#numbers.sequence(0, scheduleTable.height)}">
+                    <td th:each="i: ${#numbers.sequence(0, scheduleTable.width)}"
+                        th:text="${scheduleTable.table[i][j]}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
     <br>
-    <form method="POST" th:action="@{/generateSchedule}">
+    <div>
+        <form method="POST" th:action="@{/generateSchedule}">
+            <input id="offset" name="offset" type="hidden">
+            <script>
+                document.getElementById('offset').value = getParametersValue('offset')
+            </script>
+            <button class="btn-basic week-btn" type="submit">
+                GENERATE SCHEDULE
+            </button>
+        </form>
+    </div>
+    <form method="POST" th:action="@{/eraseSchedule}">
         <button class="btn-basic week-btn" type="submit">
-            GENERATE SCHEDULE
+            ERASE
         </button>
     </form>
 </section>

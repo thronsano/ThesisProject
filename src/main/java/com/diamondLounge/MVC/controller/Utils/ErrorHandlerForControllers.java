@@ -7,9 +7,10 @@ import static com.diamondLounge.utility.Logger.logWarning;
 
 public class ErrorHandlerForControllers {
 
-    public static void handleError(ModelAndView modelAndView, RedirectAttributes redirectAttributes, String message) {
-        logWarning(message);
-        redirectAttributes.addFlashAttribute("error", message);
-        modelAndView.addObject("error", message);
+    public static void handleError(ModelAndView modelAndView, RedirectAttributes redirectAttributes, Exception exception) {
+        exception.printStackTrace();
+        logWarning(exception.getMessage());
+        redirectAttributes.addFlashAttribute("error", exception);
+        modelAndView.addObject("error", exception);
     }
 }

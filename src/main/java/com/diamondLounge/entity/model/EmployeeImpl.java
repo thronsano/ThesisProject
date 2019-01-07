@@ -2,19 +2,25 @@ package com.diamondLounge.entity.model;
 
 import com.diamondLounge.entity.db.Employee;
 import com.diamondLounge.entity.db.Wage;
+import com.diamondLounge.entity.db.WorkDay;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Ordering;
 
+import java.time.Duration;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import static com.diamondLounge.utility.Logger.logError;
 
 public class EmployeeImpl {
 
     private int id;
     private String name;
     private float timeFactor;
-    private String localization;
+    private String location;
     private Set<Wage> wages;
+    private Set<WorkDay> workDays;
     private Wage currentWage;
     private double currentWageVal;
 
@@ -22,10 +28,30 @@ public class EmployeeImpl {
         this.id = employee.getId();
         this.name = employee.getName();
         this.timeFactor = employee.getTimeFactor();
-        this.localization = employee.getLocalization();
+        this.location = employee.getLocation();
         this.wages = employee.getWages();
-        this.currentWage = wages.stream().filter(x -> x.getEndDate() == null).findAny().orElse(new Wage());
-        this.currentWageVal = currentWage.getHourlyWage().doubleValue();
+        this.workDays = employee.getWorkDays();
+
+        currentWage = wages.stream().filter(x -> x.getEndDate() == null).findAny().orElse(new Wage());
+        currentWageVal = currentWage.getHourlyWage().doubleValue();
+    }
+
+    public double getTimeInSecondsWorkedThisWeek() {
+        return workDays.stream().map(WorkDay::getHoursWorked).mapToLong(Duration::getSeconds).sum();
+    }
+
+    public double getTimeWorkedThisWeek(TimeUnit timeUnit) {
+        switch (timeUnit) {
+            case HOURS:
+                return getTimeInSecondsWorkedThisWeek() / 60f / 60f;
+            case MINUTES:
+                return getTimeInSecondsWorkedThisWeek() / 60f;
+            case SECONDS:
+                return getTimeInSecondsWorkedThisWeek();
+            default:
+                logError("Unsupported time unit! Conversion failed");
+                throw new RuntimeException("Unsupported time unit! Conversion failed");
+        }
     }
 
     public double getCurrentWageVal() {
@@ -36,32 +62,16 @@ public class EmployeeImpl {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public float getTimeFactor() {
         return timeFactor;
     }
 
-    public void setTimeFactor(float timeFactor) {
-        this.timeFactor = timeFactor;
-    }
-
-    public String getLocalization() {
-        return localization;
-    }
-
-    public void setLocalization(String localization) {
-        this.localization = localization;
+    public String getLocation() {
+        return location;
     }
 
     public Set<Wage> getWages() {
@@ -73,15 +83,11 @@ public class EmployeeImpl {
         return ImmutableSortedSet.orderedBy(wageOrdering).addAll(getWages()).build().asList();
     }
 
-    public void setWages(Set<Wage> wages) {
-        this.wages = wages;
-    }
-
     public Wage getCurrentWage() {
         return currentWage;
     }
 
-    public void setCurrentWage(Wage currentWage) {
-        this.currentWage = currentWage;
+    public Set<WorkDay> getWorkDays() {
+        return workDays;
     }
 }

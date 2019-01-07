@@ -24,10 +24,10 @@ public class ShopController {
     ShopModel shopModel;
 
     @RequestMapping(value = "/editShopInformation", method = GET)
-    public ModelAndView getEditBusinessPage(@RequestParam(value = "selectedShop", required = false, defaultValue = "-1") int selectedShop,
-                                            Model model,
-                                            ModelAndView modelAndView,
-                                            RedirectAttributes redirectAttributes) {
+    public ModelAndView getEditShopPage(@RequestParam(value = "selectedShop", required = false, defaultValue = "-1") int selectedShop,
+                                        Model model,
+                                        ModelAndView modelAndView,
+                                        RedirectAttributes redirectAttributes) {
         try {
             model.addAttribute("shopList", shopModel.getAllShops());
             if (selectedShop != -1) {
@@ -35,7 +35,7 @@ public class ShopController {
                 model.addAttribute("selectedShop", shop);
             }
         } catch (Exception e) {
-            handleError(modelAndView, redirectAttributes, e.getMessage());
+            handleError(modelAndView, redirectAttributes, e);
         }
 
         modelAndView.setViewName("settings/shopInformation");
@@ -45,16 +45,16 @@ public class ShopController {
     @RequestMapping(value = "/addShop", method = POST)
     public String addShop(
             @RequestParam("name") String name,
-            @RequestParam("localization") String localization,
+            @RequestParam("location") String location,
             @RequestParam("openingTime") LocalTime openingTime,
             @RequestParam("closingTime") LocalTime closingTime,
             @RequestParam("requiredStaff") int requiredStaff,
             ModelAndView modelAndView,
             RedirectAttributes redirectAttributes) {
         try {
-            shopModel.addShop(name, localization, openingTime, closingTime, requiredStaff);
+            shopModel.addShop(name, location, openingTime, closingTime, requiredStaff);
         } catch (Exception e) {
-            handleError(modelAndView, redirectAttributes, e.getMessage());
+            handleError(modelAndView, redirectAttributes, e);
         }
 
         return "redirect:/shops/editShopInformation";
@@ -64,16 +64,16 @@ public class ShopController {
     public String editShop(
             @RequestParam("id") int id,
             @RequestParam("name") String name,
-            @RequestParam("localization") String localization,
+            @RequestParam("location") String location,
             @RequestParam("openingTime") LocalTime openingTime,
             @RequestParam("closingTime") LocalTime closingTime,
             @RequestParam("requiredStaff") int requiredStaff,
             ModelAndView modelAndView,
             RedirectAttributes redirectAttributes) {
         try {
-            shopModel.editShop(id, name, localization, openingTime, closingTime, requiredStaff);
+            shopModel.editShop(id, name, location, openingTime, closingTime, requiredStaff);
         } catch (Exception e) {
-            handleError(modelAndView, redirectAttributes, e.getMessage());
+            handleError(modelAndView, redirectAttributes, e);
         }
 
         return "redirect:/shops/editShopInformation";

@@ -15,7 +15,7 @@ public class Shop {
     private String name;
 
     @Column
-    private String localization;
+    private String location;
 
     @Column
     private LocalTime openingTime;
@@ -29,9 +29,9 @@ public class Shop {
     public Shop() {
     }
 
-    public Shop(String name, String localization, LocalTime openingTime, LocalTime closingTime, int requiredStaff) {
+    public Shop(String name, String location, LocalTime openingTime, LocalTime closingTime, int requiredStaff) {
         this.name = name;
-        this.localization = localization;
+        this.location = location;
         this.openingTime = openingTime;
         this.closingTime = closingTime;
         this.requiredStaff = requiredStaff;
@@ -61,12 +61,12 @@ public class Shop {
         this.name = name;
     }
 
-    public String getLocalization() {
-        return localization;
+    public String getLocation() {
+        return location;
     }
 
-    public void setLocalization(String localization) {
-        this.localization = localization;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public LocalTime getOpeningTime() {

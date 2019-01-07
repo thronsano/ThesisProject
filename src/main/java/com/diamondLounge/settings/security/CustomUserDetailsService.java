@@ -1,4 +1,4 @@
-package com.diamondLounge.security;
+package com.diamondLounge.settings.security;
 
 import com.diamondLounge.MVC.model.UserModel;
 import com.diamondLounge.entity.db.Authority;

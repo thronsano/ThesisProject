@@ -22,19 +22,23 @@ public class Employee {
     private float timeFactor;
 
     @Column
-    private String localization;
+    private String location;
 
     @Column
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
     private Set<Wage> wages = new HashSet<>();
 
+    @Column
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    private Set<WorkDay> workDays = new HashSet<>();
+
     public Employee() {
     }
 
-    public Employee(String name, float timeFactor, String localization, Set<Wage> wages) {
+    public Employee(String name, float timeFactor, String location, Set<Wage> wages) {
         this.name = name;
         this.timeFactor = timeFactor;
-        this.localization = localization;
+        this.location = location;
         this.wages = wages;
     }
 
@@ -70,11 +74,19 @@ public class Employee {
         this.wages = wages;
     }
 
-    public String getLocalization() {
-        return localization;
+    public String getLocation() {
+        return location;
     }
 
-    public void setLocalization(String localization) {
-        this.localization = localization;
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Set<WorkDay> getWorkDays() {
+        return workDays;
+    }
+
+    public void setWorkDays(Set<WorkDay> workDays) {
+        this.workDays = workDays;
     }
 }

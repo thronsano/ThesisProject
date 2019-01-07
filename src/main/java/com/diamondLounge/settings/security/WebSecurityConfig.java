@@ -1,4 +1,4 @@
-package com.diamondLounge.security;
+package com.diamondLounge.settings.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

@@ -25,7 +25,7 @@ public class EmployeeController {
     EmployeeModel employeeModel;
 
     @RequestMapping(value = "/editEmployeeInformation", method = GET)
-    public ModelAndView getEditBusinessPage(@RequestParam(value = "selectedEmployee", required = false, defaultValue = "-1") int selectedEmployee,
+    public ModelAndView getEditEmployeePage(@RequestParam(value = "selectedEmployee", required = false, defaultValue = "-1") int selectedEmployee,
                                             Model model,
                                             ModelAndView modelAndView,
                                             RedirectAttributes redirectAttributes) {
@@ -36,7 +36,7 @@ public class EmployeeController {
                 model.addAttribute("selectedEmployee", employee);
             }
         } catch (Exception e) {
-            handleError(modelAndView, redirectAttributes, e.getMessage());
+            handleError(modelAndView, redirectAttributes, e);
         }
 
         modelAndView.setViewName("settings/employeeInformation");
@@ -47,14 +47,14 @@ public class EmployeeController {
     public String addEmployee(
             @RequestParam("name") String name,
             @RequestParam("timeFactor") float timeFactor,
-            @RequestParam("localization") String localization,
+            @RequestParam("location") String location,
             @RequestParam("wage") double wage,
             ModelAndView modelAndView,
             RedirectAttributes redirectAttributes) {
         try {
-            employeeModel.addEmployee(name, timeFactor, localization, BigDecimal.valueOf(wage));
+            employeeModel.addEmployee(name, timeFactor, location, BigDecimal.valueOf(wage));
         } catch (Exception e) {
-            handleError(modelAndView, redirectAttributes, e.getMessage());
+            handleError(modelAndView, redirectAttributes, e);
         }
 
         return "redirect:/employees/editEmployeeInformation";
@@ -65,14 +65,14 @@ public class EmployeeController {
             @RequestParam("id") int id,
             @RequestParam("name") String name,
             @RequestParam("timeFactor") float timeFactor,
-            @RequestParam("localization") String localization,
+            @RequestParam("location") String location,
             @RequestParam("wage") double wage,
             ModelAndView modelAndView,
             RedirectAttributes redirectAttributes) {
         try {
-            employeeModel.editEmployee(id, name, timeFactor, localization, BigDecimal.valueOf(wage));
+            employeeModel.editEmployee(id, name, timeFactor, location, BigDecimal.valueOf(wage));
         } catch (Exception e) {
-            handleError(modelAndView, redirectAttributes, e.getMessage());
+            handleError(modelAndView, redirectAttributes, e);
         }
 
         return "redirect:/employees/editEmployeeInformation";
