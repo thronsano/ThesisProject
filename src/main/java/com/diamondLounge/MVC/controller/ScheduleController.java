@@ -34,15 +34,16 @@ public class ScheduleController {
     }
 
     @RequestMapping(value = "/eraseSchedule", method = POST)
-    public ModelAndView erase(ModelAndView modelAndView,
+    public ModelAndView erase(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
+                              ModelAndView modelAndView,
                               RedirectAttributes redirectAttributes) {
         try {
-            scheduleModel.eraseAllSchedules();
+            scheduleModel.eraseThisWeekSchedule(offset);
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);
         }
 
-        modelAndView.setViewName("redirect:/home");
+        modelAndView.setViewName("redirect:/home?offset=" + offset);
         return modelAndView;
     }
 

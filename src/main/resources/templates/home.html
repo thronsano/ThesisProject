@@ -12,7 +12,8 @@
 <nav th:fragment="menuBar">
     <a th:href="@{/home}"><img alt="Diamond Lounge" class="logo" height="50" src="/logo.svg" width="125"></a>
     <a class="nav-element" th:href="@{/home}">Schedule</a>
-    <a class="nav-element" th:href="@{/settings}">Settings</a>
+    <a class="nav-element" th:href="@{/settings/editAccountInformation}">Settings</a>
+    <a class="nav-element" th:href="@{/settings}">Storage</a>
     <form method="post" th:action="@{/logout}">
         <input class="nav-element" type="submit" value="Log out"/>
     </form>
@@ -31,7 +32,7 @@
     <div th:if="${scheduleTable}!=null">
         <h2>Schedule</h2>
         <form>
-            <table>
+            <table class="schedule">
                 <tbody>
                 <tr th:each="j: ${#numbers.sequence(0, scheduleTable.height)}">
                     <td th:each="i: ${#numbers.sequence(0, scheduleTable.width)}"
@@ -40,22 +41,25 @@
                 </tbody>
             </table>
         </form>
-    </div>
-    <br>
-    <div>
-        <form method="POST" th:action="@{/generateSchedule}">
-            <input id="offset" name="offset" type="hidden">
+        <br>
+        <form method="POST" th:action="@{/eraseSchedule}">
+            <input id="offsetErase" name="offset" type="hidden">
             <script>
-                document.getElementById('offset').value = getParametersValue('offset')
+                document.getElementById('offsetErase').value = getParametersValue('offset')
             </script>
             <button class="btn-basic week-btn" type="submit">
-                GENERATE SCHEDULE
+                ERASE
             </button>
         </form>
     </div>
-    <form method="POST" th:action="@{/eraseSchedule}">
+    <br>
+    <form method="POST" th:action="@{/generateSchedule}" th:if="${scheduleTable}==null">
+        <input id="offset" name="offset" type="hidden">
+        <script>
+            document.getElementById('offset').value = getParametersValue('offset')
+        </script>
         <button class="btn-basic week-btn" type="submit">
-            ERASE
+            GENERATE SCHEDULE
         </button>
     </form>
 </section>

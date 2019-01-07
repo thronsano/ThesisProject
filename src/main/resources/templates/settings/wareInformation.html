@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ware Information</title>
+    <link href="/styles.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script src="/updateURLParams.js" type="text/javascript"></script>
+</head>
+<body>
+<nav th:include="home :: menuBar"></nav>
+<section class="content grid-container">
+    <div class="row" style="grid-row: 1">
+        <section class="login-info">
+            <div class="error-message" th:text="${error}"></div>
+        </section>
+    </div>
+    <div class="row" style="grid-row: 2">
+        <div class="columnHalfSpace">
+            <h2>Add ware</h2>
+            <form method="post" th:action="@{/wares/addWare}">
+                Name:
+                <div><input class="input-field" name="name" placeholder="Name" required type="text"/></div>
+
+                Amount:
+                <div><input class="input-field" max="9999999.00" min="0.01" name="amount" placeholder="Amount" required
+                            type="number"/></div>
+
+                Price:
+                <div><input class="input-field" max="9999999.00" min="0.01" name="price" placeholder="Price" required
+                            type="number"/></div>
+
+                Description:
+                <div><input class="input-field" name="description" placeholder="Description" required type="text"/>
+                </div>
+
+                <button class="btn-login btn-basic" type="submit">ADD</button>
+            </form>
+        </div>
+        <div class="columnHalfSpace" th:if="${selectedWare}!=null">
+            <h2>Edit Ware</h2>
+            <form method="post" th:action="@{/wares/editWare}">
+                <input hidden name="id" th:value="${selectedWare.id}"/>
+
+                Name:
+                <div><input class="input-field" name="name" placeholder="Name" required th:value="${selectedWare.name}"
+                            type="text"/></div>
+
+                Amount:
+                <div><input class="input-field" max="9999999.00" min="0.01" name="amount" placeholder="Amount" required
+                            th:value="${selectedWare.amount}" type="number"/></div>
+
+                Price:
+                <div><input class="input-field" max="9999999.00" min="0.01" name="price" placeholder="Price" required
+                            th:value="${selectedWare.price}" type="number"/></div>
+
+                Description:
+                <div><input class="input-field" name="description" placeholder="Description" required
+                            th:value="${selectedWare.description}" type="text"/></div>
+
+                <button class="btn-login btn-basic" type="submit">SAVE</button>
+            </form>
+        </div>
+    </div>
+    <div class="row" style="grid-row: 3">
+        <div class="columnHalfSpace">
+            <h2>Ware List</h2>
+            Wares:
+            <form>
+                <table>
+                    <thead>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="ware : ${wareList}"
+                        th:onclick="'javascript:updateParams(\'wares/editWareInformation\', \'selectedWare\', \'' + ${ware.id} + '\');'">
+                        <td th:text="${ware.name}"></td>
+                        <td th:text="${ware.amount}"></td>
+                        <td th:text="${ware.price}"></td>
+                        <td th:text="${ware.description}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>

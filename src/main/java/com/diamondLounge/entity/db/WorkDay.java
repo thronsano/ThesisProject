@@ -14,8 +14,10 @@ public class WorkDay {
 
     @Column
     private LocalDate date;
+
     @Column
     private Duration hoursWorked;
+
     @OneToOne
     private Shop shop;
 

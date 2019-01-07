@@ -46,12 +46,12 @@ CREATE TABLE employees_wages
 (
   employee_id INT,
   wages_id    int unique,
-  constraint pk_employees_wages primary key (employee_id, wages_id),
-  constraint fk_employees_wages_employees foreign key (employee_id) references employees (id) ON DELETE CASCADE,
-  constraint fk_employees_wages_wages foreign key (wages_id) references wages (id) ON DELETE CASCADE
+  CONSTRAINT pk_employees_wages PRIMARY KEY (employee_id, wages_id),
+  CONSTRAINT fk_employees_wages_employees FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE,
+  CONSTRAINT fk_employees_wages_wages FOREIGN KEY (wages_id) REFERENCES wages (id) ON DELETE CASCADE
 );
 
-create table shops
+CREATE TABLE shops
 (
   id            INT PRIMARY KEY AUTO_INCREMENT,
   name          VARCHAR(255) NOT NULL,
@@ -61,39 +61,48 @@ create table shops
   requiredStaff int          not null
 );
 
-create table schedules
+CREATE TABLE schedules
 (
   id      INT PRIMARY KEY AUTO_INCREMENT,
   date    DATE NOT NULL,
-  shop_id int,
-  constraint fk_schedules_shop foreign key (shop_id) references shops (id) ON DELETE CASCADE
+  shop_id INT,
+  CONSTRAINT fk_schedules_shop FOREIGN KEY (shop_id) REFERENCES shops (id) ON DELETE CASCADE
 );
 
-create table schedules_employees
+CREATE TABLE schedules_employees
 (
-  schedule_id  int,
-  employees_id int not null,
-  constraint pk_schedules_employees primary key (schedule_id, employees_id),
-  constraint fk_schedules_employees_schedules foreign key (schedule_id) references schedules (id) ON DELETE CASCADE,
-  constraint fk_schedules_employees_employees foreign key (employees_id) references employees (id) ON DELETE CASCADE
+  schedule_id  INT,
+  employees_id INT NOT NULL,
+  CONSTRAINT pk_schedules_employees PRIMARY KEY (schedule_id, employees_id),
+  CONSTRAINT fk_schedules_employees_schedules FOREIGN KEY (schedule_id) REFERENCES schedules (id) ON DELETE CASCADE,
+  CONSTRAINT fk_schedules_employees_employees FOREIGN KEY (employees_id) REFERENCES employees (id) ON DELETE CASCADE
 );
 
-create table work_days
+CREATE TABLE work_days
 (
   id          INT PRIMARY KEY AUTO_INCREMENT,
-  hoursWorked bigint not null,
-  shop_id     int,
+  hoursWorked BIGINT NOT NULL,
+  shop_id     INT,
   date        DATE   NOT NULL,
-  constraint work_days_shops foreign key (shop_id) references shops (id)
+  CONSTRAINT work_days_shops FOREIGN KEY (shop_id) REFERENCES shops (id) ON DELETE CASCADE
 );
 
-create table employees_work_days
+CREATE TABLE employees_work_days
 (
-  employee_id int,
-  workDays_id int unique,
-  constraint pk_employees_work_days primary key (employee_id, workDays_id),
-  constraint fk_employees_work_days_employees foreign key (employee_id) references employees (id),
-  constraint fk_employees_work_days_workDays foreign key (workDays_id) references work_days (id)
+  employee_id INT,
+  workDays_id INT UNIQUE,
+  CONSTRAINT pk_employees_work_days PRIMARY KEY (employee_id, workDays_id),
+  CONSTRAINT fk_employees_work_days_employees FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE,
+  CONSTRAINT fk_employees_work_days_workDays FOREIGN KEY (workDays_id) REFERENCES work_days (id) ON DELETE CASCADE
+);
+
+CREATE TABLE wares
+(
+  id          INT PRIMARY KEY AUTO_INCREMENT,
+  name        VARCHAR(255) NOT NULL,
+  amount      DOUBLE       NOT NULL,
+  price       DOUBLE       NOT NULL,
+  description VARCHAR(255) NOT NULL
 );
 
 -- Sample user's password '$2a$10$9d5AC2CrUGaWSgwRHbtZV.TbKiuixWQh3EzJhZ7tHt0AeifE2AxCq' is a hashed version of password 'password'
@@ -116,16 +125,36 @@ VALUES ('Pracownik Cztery', 1, 'KRK');
 INSERT INTO employees (name, timeFactor, location)
 VALUES ('Pracownik Piec', 1, 'KRK');
 
-# INSERT INTO wages (employee_id, hourlyWage, startDate) values (1, 11.50, '2018-06-10 11:00:00');
-# INSERT INTO wages (employee_id, hourlyWage, startDate) values (2, 11.50, '2018-06-10 11:00:00');
-# INSERT INTO wages (employee_id, hourlyWage, startDate, endDate) values (3, 11.50, '2018-06-10 11:00:00', '2018-06-11 11:00:00');
-# INSERT INTO wages (employee_id, hourlyWage, startDate) values (3, 20.50, '2018-06-12 11:00:00');
-# INSERT INTO wages (employee_id, hourlyWage, startDate) values (4, 11.50, '2018-06-12 11:00:00');
-# INSERT INTO wages (employee_id, hourlyWage, startDate) values (5, 11.50, '2018-06-12 11:00:00');
+INSERT INTO wages (hourlyWage, startDate)
+VALUES (15, '2018-12-12');
+INSERT INTO wages (hourlyWage, startDate)
+VALUES (15, '2018-12-12');
+INSERT INTO wages (hourlyWage, startDate)
+VALUES (15, '2018-12-12');
+INSERT INTO wages (hourlyWage, startDate)
+VALUES (15, '2018-12-12');
+INSERT INTO wages (hourlyWage, startDate)
+VALUES (15, '2018-12-12');
 
-insert into shops (name, location, openingTime, closingTime, requiredStaff)
-values ('Shop one', 'KRK', '09:00', '17:00', 2);
-insert into shops (name, location, openingTime, closingTime, requiredStaff)
-values ('Shop two', 'KRK', '10:00', '12:00', 1);
-insert into shops (name, location, openingTime, closingTime, requiredStaff)
-values ('Shop three', 'DFW', '10:00', '12:00', 1);
+INSERT INTO employees_wages (employee_id, wages_id)
+VALUES (1, 1);
+INSERT INTO employees_wages (employee_id, wages_id)
+VALUES (2, 2);
+INSERT INTO employees_wages (employee_id, wages_id)
+VALUES (3, 3);
+INSERT INTO employees_wages (employee_id, wages_id)
+VALUES (4, 4);
+INSERT INTO employees_wages (employee_id, wages_id)
+VALUES (5, 5);
+
+INSERT INTO shops (name, location, openingTime, closingTime, requiredStaff)
+VALUES ('Shop one', 'KRK', '09:00', '17:00', 2);
+INSERT INTO shops (name, location, openingTime, closingTime, requiredStaff)
+VALUES ('Shop two', 'KRK', '10:00', '12:00', 1);
+INSERT INTO shops (name, location, openingTime, closingTime, requiredStaff)
+VALUES ('Shop three', 'DFW', '10:00', '12:00', 1);
+
+INSERT INTO wares (name, amount, price, description)
+VALUES ('ring', '1', 150, 'An old ring');
+INSERT INTO wares (name, amount, price, description)
+VALUES ('bracelet', '2', 200, 'Original bracelet');

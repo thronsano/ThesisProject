@@ -22,7 +22,10 @@ import static org.hibernate.cfg.Environment.*;
 @EnableTransactionManagement
 public class HibernateConfig {
 
-    private static final Class[] ANNOTATED_CLASSES = new Class[]{User.class, Authority.class, ResetToken.class, Employee.class, Wage.class, Shop.class, Schedule.class, WorkDay.class};
+    private static final Class[] ANNOTATED_CLASSES = new Class[]{
+            User.class, Authority.class, ResetToken.class, Employee.class, Wage.class, Shop.class, Schedule.class,
+            WorkDay.class, Ware.class
+    };
 
     @Autowired
     Environment env;
@@ -57,7 +60,7 @@ public class HibernateConfig {
         LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
 
         factoryBean.setDataSource(getDataSource());
-        factoryBean.setPackagesToScan("com.diamondLounge.entity");
+        factoryBean.setPackagesToScan("com.diamondLounge.entity.db");
         factoryBean.setHibernateProperties(getHibernateProperties());
         factoryBean.setAnnotatedClasses(ANNOTATED_CLASSES);
 

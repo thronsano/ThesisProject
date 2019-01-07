@@ -9,9 +9,6 @@ import com.google.common.collect.Ordering;
 
 import java.time.Duration;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import static com.diamondLounge.utility.Logger.logError;
 
 public class EmployeeImpl {
 
@@ -36,22 +33,8 @@ public class EmployeeImpl {
         currentWageVal = currentWage.getHourlyWage().doubleValue();
     }
 
-    public double getTimeInSecondsWorkedThisWeek() {
+    public double getTimeInSecondsWorked() {
         return workDays.stream().map(WorkDay::getHoursWorked).mapToLong(Duration::getSeconds).sum();
-    }
-
-    public double getTimeWorkedThisWeek(TimeUnit timeUnit) {
-        switch (timeUnit) {
-            case HOURS:
-                return getTimeInSecondsWorkedThisWeek() / 60f / 60f;
-            case MINUTES:
-                return getTimeInSecondsWorkedThisWeek() / 60f;
-            case SECONDS:
-                return getTimeInSecondsWorkedThisWeek();
-            default:
-                logError("Unsupported time unit! Conversion failed");
-                throw new RuntimeException("Unsupported time unit! Conversion failed");
-        }
     }
 
     public double getCurrentWageVal() {

@@ -9,13 +9,7 @@
 <body>
 <nav th:include="home :: menuBar"></nav>
 <section class="content">
-    <h1>Settings</h1>
-    <form method="GET" th:action="@{/settings/editAccountInformation}">
-        <button class="btn-basic" th:type="submit">
-            EDIT ACCOUNT INFORMATION
-        </button>
-    </form>
-    <br>
+    <h1>Storage</h1>
     <form method="GET" th:action="@{/employees/editEmployeeInformation}">
         <button class="btn-basic" th:type="submit">
             EDIT EMPLOYEE INFORMATION
@@ -25,6 +19,12 @@
     <form method="GET" th:action="@{/shops/editShopInformation}">
         <button class="btn-basic" th:type="submit">
             EDIT SHOP INFORMATION
+        </button>
+    </form>
+    <br>
+    <form method="GET" th:action="@{/wares/editWareInformation}">
+        <button class="btn-basic" th:type="submit">
+            EDIT WARE INFORMATION
         </button>
     </form>
     <br>

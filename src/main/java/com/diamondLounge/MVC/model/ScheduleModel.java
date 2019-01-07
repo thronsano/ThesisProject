@@ -74,15 +74,16 @@ public class ScheduleModel extends PersistenceModel {
 
     private Set<Employee> generateEmployeeList(LocalDate date, ShopImpl shop, List<EmployeeImpl> availableEmployees) {
         if (shop.getRequiredStaff() > availableEmployees.size()) {
-            logWarning("Not enough staff! " + shop.getRequiredStaff() + "/" + availableEmployees.size());
+            logWarning("Not enough staff for " + shop.getName() + "! " + availableEmployees.size() + "/" + shop.getRequiredStaff());
         }
 
         return availableEmployees.stream()
-                .sorted(comparing(EmployeeImpl::getTimeInSecondsWorkedThisWeek).reversed())
+                .sorted(comparing(EmployeeImpl::getTimeInSecondsWorked))
                 .limit(shop.getRequiredStaff())
                 .map(x -> {
                     WorkDay workDay = new WorkDay(date, shopModel.getShopById(shop.getId()), Duration.between(shop.getOpeningTime(), shop.getClosingTime()));
                     Employee employee = employeeModel.getEmployeeById(x.getId());
+                    availableEmployees.get(availableEmployees.indexOf(x)).getWorkDays().add(workDay);
                     x.getWorkDays().add(workDay);
                     employee.getWorkDays().add(workDay);
                     return employee;
@@ -98,13 +99,23 @@ public class ScheduleModel extends PersistenceModel {
         return shops.stream().collect(groupingBy(ShopImpl::getLocation));
     }
 
-    public void eraseAllSchedules() {
+    public void eraseThisWeekSchedule(int offset) {
+        WeekRange weekRange = new WeekRange(offset);
         Session session = sessionFactory.openSession();
 
         try {
             session.beginTransaction();
-            Query query = session.createQuery("delete from Schedule");
-            query.executeUpdate();
+
+            Query scheduleQuery = session.createQuery("delete from Schedule as sched where sched.date>=:fromDate AND sched.date<:toDate");
+            Query workDayQuery = session.createQuery("delete from WorkDay as workday where workday.date>=:fromDate AND workday.date<:toDate");
+
+            scheduleQuery.setParameter("fromDate", weekRange.getLastMonday());
+            scheduleQuery.setParameter("toDate", weekRange.getNextMonday());
+            workDayQuery.setParameter("fromDate", weekRange.getLastMonday());
+            workDayQuery.setParameter("toDate", weekRange.getNextMonday());
+
+            scheduleQuery.executeUpdate();
+            workDayQuery.executeUpdate();
         } finally {
             session.getTransaction().commit();
             session.close();
@@ -113,6 +124,12 @@ public class ScheduleModel extends PersistenceModel {
 
     public ScheduleTableImpl getScheduleTable(int offset) {
         WeekRange weekRange = new WeekRange(offset);
-        return new ScheduleTableImpl(getSchedules(weekRange.getLastMonday(), weekRange.getNextMonday()), weekRange.getDateRange());
+        List<Schedule> schedules = getSchedules(weekRange.getLastMonday(), weekRange.getNextMonday());
+
+        if (schedules.size() == 0) {
+            return null;
+        }
+
+        return new ScheduleTableImpl(schedules, weekRange.getDateRange());
     }
 }

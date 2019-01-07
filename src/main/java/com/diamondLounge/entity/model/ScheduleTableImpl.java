@@ -30,10 +30,10 @@ public class ScheduleTableImpl {
             table[0][currentHeight.get()] = shop.getName();
 
             scheduleList.forEach(schedule -> {
-                AtomicInteger offset = new AtomicInteger();
+                AtomicInteger verticalOffset = new AtomicInteger();
                 schedule.getEmployees().forEach(employee -> {
-                    table[scheduleList.indexOf(schedule) + 1][currentHeight.get() + offset.get()] = employee.getName();
-                    offset.getAndIncrement();
+                    table[scheduleList.indexOf(schedule) + 1][currentHeight.get() + verticalOffset.get()] = employee.getName();
+                    verticalOffset.getAndIncrement();
                 });
             });
 

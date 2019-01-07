@@ -229,6 +229,16 @@ td {
     text-align: center;
 }
 
+.schedule td:first-child {
+    font-weight: 900;
+    background-color: #1c1c1c;
+}
+
+.schedule tr:first-child {
+    font-weight: 900;
+    background-color: #1c1c1c !important;
+}
+
 tr:nth-child(even) {
     background-color: #282828;
 }
