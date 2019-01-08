@@ -36,7 +36,6 @@ public class EmployeeModel extends PersistenceModel<Employee> {
         return new EmployeeImpl(getEmployeeById(selectedEmployee));
     }
 
-
     Employee getEmployeeById(int selectedEmployee) throws DiamondLoungeException {
         return getObjectById("Employee", selectedEmployee);
     }
