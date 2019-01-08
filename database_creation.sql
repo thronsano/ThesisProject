@@ -21,7 +21,7 @@ create table authorities
 CREATE TABLE resetToken
 (
   email      VARCHAR(100) PRIMARY KEY,
-  resetToken CHAR(36),
+  resetToken VARCHAR(255),
   date       DATETIME,
   CONSTRAINT fk_resetToken_users FOREIGN KEY (email) REFERENCES users (email) ON DELETE CASCADE
 );
@@ -29,9 +29,9 @@ CREATE TABLE resetToken
 CREATE TABLE employees
 (
   id         INT PRIMARY KEY AUTO_INCREMENT,
-  name       VARCHAR(255)  NOT NULL,
-  timeFactor DECIMAL(3, 2) NOT NULL,
-  location   varchar(255)  NOT NULL
+  name       VARCHAR(255) NOT NULL,
+  timeFactor float        NOT NULL,
+  location   varchar(255) NOT NULL
 );
 
 CREATE TABLE wages
@@ -107,9 +107,9 @@ CREATE TABLE wares
 
 -- Sample user's password '$2a$10$9d5AC2CrUGaWSgwRHbtZV.TbKiuixWQh3EzJhZ7tHt0AeifE2AxCq' is a hashed version of password 'password'
 INSERT INTO users (email, password, username)
-VALUES ('sdoe@gmail.com', '$2a$10$9d5AC2CrUGaWSgwRHbtZV.TbKiuixWQh3EzJhZ7tHt0AeifE2AxCq', 'Steve');
+VALUES ('sdoe@gmail.com', '$2a$10$9d5AC2CrUGaWSgwRHbtZV.TbKiuixWQh3EzJhZ7tHt0AeifE2AxCq', 'Piotr');
 INSERT INTO users (email, password, username)
-VALUES ('test@gmail.com', '$2a$10$9d5AC2CrUGa', 'Steve');
+VALUES ('test@gmail.com', '$2a$10$9d5AC2CrUGa', 'Piotr 2');
 
 INSERT INTO authorities (email, authority)
 VALUES ('sdoe@gmail.com', 'ROLE_USER');

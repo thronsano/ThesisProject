@@ -70,6 +70,11 @@
 
                 <button class="btn-login btn-basic" type="submit">SAVE</button>
             </form>
+
+            <form method="post" th:action="@{/shops/deleteShop}">
+                <input hidden name="id" th:value="${selectedShop.id}"/>
+                <button class="btn-login btn-basic" type="submit">DELETE</button>
+            </form>
         </div>
     </div>
     <div class="row" style="grid-row: 3">

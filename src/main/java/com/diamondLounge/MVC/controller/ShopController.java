@@ -78,4 +78,18 @@ public class ShopController {
 
         return "redirect:/shops/editShopInformation";
     }
+
+    @RequestMapping(value = "/deleteShop", method = POST)
+    public String deleteShop(
+            @RequestParam("id") int id,
+            ModelAndView modelAndView,
+            RedirectAttributes redirectAttributes) {
+        try {
+            shopModel.deleteShop(id);
+        } catch (Exception e) {
+            handleError(modelAndView, redirectAttributes, e);
+        }
+
+        return "redirect:/shops/editShopInformation";
+    }
 }

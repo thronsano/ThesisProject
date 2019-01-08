@@ -13,6 +13,7 @@ import static com.diamondLounge.utility.Logger.logWarning;
 
 @Repository
 public class PersistenceModel<T> {
+
     @Autowired
     SessionFactory sessionFactory;
 
@@ -31,7 +32,7 @@ public class PersistenceModel<T> {
         }
     }
 
-    T getObjectById(String table, int id) {
+    T getObjectById(String table, int id) throws DiamondLoungeException {
         Session session = sessionFactory.openSession();
 
         try {
@@ -55,6 +56,23 @@ public class PersistenceModel<T> {
             session.beginTransaction();
             Query query = session.createQuery("from " + table);
             return query.list();
+        } catch (Exception ex) {
+            logWarning(ex.getMessage());
+            throw new DiamondLoungeException(ex.getMessage());
+        } finally {
+            session.getTransaction().commit();
+            session.close();
+        }
+    }
+
+    void deleteObjectById(String table, int selectedId) throws DiamondLoungeException {
+        Session session = sessionFactory.openSession();
+
+        try {
+            session.beginTransaction();
+            Query query = session.createQuery("delete from " + table + " as obj where obj.id=:selectedId");
+            query.setParameter("selectedId", selectedId);
+            query.executeUpdate();
         } catch (Exception ex) {
             logWarning(ex.getMessage());
             throw new DiamondLoungeException(ex.getMessage());

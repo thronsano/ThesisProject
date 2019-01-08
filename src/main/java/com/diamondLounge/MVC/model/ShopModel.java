@@ -40,4 +40,8 @@ public class ShopModel extends PersistenceModel<Shop> {
 
         persistObject(shop);
     }
+
+    public void deleteShop(int id) {
+        deleteObjectById("Shop", id);
+    }
 }

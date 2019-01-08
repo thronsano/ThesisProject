@@ -62,6 +62,7 @@ public class ScheduleModel extends PersistenceModel {
         shopMap.forEach(
                 (location, shops) -> {
                     List<EmployeeImpl> availableEmployees = employeeMap.get(location);
+
                     shops.forEach(
                             shop -> weekRange.getLastMonday().datesUntil(weekRange.getNextMonday()).forEach(
                                     date -> schedules.add(new Schedule(date, shopModel.getShopById(shop.getId()), generateEmployeeList(date, shop, availableEmployees))))
@@ -73,11 +74,16 @@ public class ScheduleModel extends PersistenceModel {
     }
 
     private Set<Employee> generateEmployeeList(LocalDate date, ShopImpl shop, List<EmployeeImpl> availableEmployees) {
+        if (availableEmployees == null) {
+            return null;
+        }
+
         if (shop.getRequiredStaff() > availableEmployees.size()) {
             logWarning("Not enough staff for " + shop.getName() + "! " + availableEmployees.size() + "/" + shop.getRequiredStaff());
         }
 
         return availableEmployees.stream()
+                .filter(x -> x.getWorkDays().stream().noneMatch(y -> y.getDate().isEqual(date)))
                 .sorted(comparing(EmployeeImpl::getTimeInSecondsWorked))
                 .limit(shop.getRequiredStaff())
                 .map(x -> {

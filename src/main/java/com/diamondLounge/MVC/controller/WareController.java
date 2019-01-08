@@ -74,4 +74,18 @@ public class WareController {
 
         return "redirect:/wares/editWareInformation";
     }
+
+    @RequestMapping(value = "/deleteWare", method = POST)
+    public String deleteWare(
+            @RequestParam("id") int id,
+            ModelAndView modelAndView,
+            RedirectAttributes redirectAttributes) {
+        try {
+            wareModel.deleteWare(id);
+        } catch (Exception e) {
+            handleError(modelAndView, redirectAttributes, e);
+        }
+
+        return "redirect:/wares/editWareInformation";
+    }
 }

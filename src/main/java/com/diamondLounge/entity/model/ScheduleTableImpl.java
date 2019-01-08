@@ -23,7 +23,10 @@ public class ScheduleTableImpl {
         ImmutableSortedMap<Shop, List<Schedule>> sortedMap = ImmutableSortedMap.copyOf(schedules.stream().collect(groupingBy(Schedule::getShop)), shopOrdering);
         createEmptyTable(dateRange, sortedMap);
         addHeaders(dateRange);
+        addBody(sortedMap);
+    }
 
+    private void addBody(ImmutableSortedMap<Shop, List<Schedule>> sortedMap) {
         AtomicInteger currentHeight = new AtomicInteger(1);
 
         sortedMap.forEach((shop, scheduleList) -> {
@@ -37,7 +40,7 @@ public class ScheduleTableImpl {
                 });
             });
 
-            int maxAmountOfEmployees = scheduleList.stream().mapToInt(x -> x.getEmployees().size()).max().orElse(0);
+            int maxAmountOfEmployees = scheduleList.stream().mapToInt(x -> x.getEmployees().size()).filter(x -> x != 0).max().orElse(1); //accommodate schedules without employees
             currentHeight.getAndAdd(maxAmountOfEmployees);
         });
     }
@@ -48,7 +51,12 @@ public class ScheduleTableImpl {
 
         shopMap.forEach(
                 (Shop, ScheduleList) -> {
-                    int maxAmountOfEmployees = ScheduleList.stream().mapToInt(x -> x.getEmployees().size()).max().orElse(0);
+                    int maxAmountOfEmployees = ScheduleList.stream().mapToInt(x -> x.getEmployees().size()).max().orElse(1);
+
+                    if (maxAmountOfEmployees == 0) {
+                        maxAmountOfEmployees = 1; //accommodate shop name row
+                    }
+
                     height.addAndGet(maxAmountOfEmployees);
                 }
         );

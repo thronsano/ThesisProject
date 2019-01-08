@@ -77,4 +77,18 @@ public class EmployeeController {
 
         return "redirect:/employees/editEmployeeInformation";
     }
+
+    @RequestMapping(value = "/deleteEmployee", method = POST)
+    public String deleteEmployee(
+            @RequestParam("id") int id,
+            ModelAndView modelAndView,
+            RedirectAttributes redirectAttributes) {
+        try {
+            employeeModel.deleteEmployee(id);
+        } catch (Exception e) {
+            handleError(modelAndView, redirectAttributes, e);
+        }
+
+        return "redirect:/employees/editEmployeeInformation";
+    }
 }

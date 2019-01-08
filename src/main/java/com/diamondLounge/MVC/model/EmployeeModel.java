@@ -57,4 +57,8 @@ public class EmployeeModel extends PersistenceModel<Employee> {
 
         persistObject(employee);
     }
+
+    public void deleteEmployee(int id) {
+        deleteObjectById("Employee", id);
+    }
 }

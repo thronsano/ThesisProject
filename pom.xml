@@ -80,18 +80,19 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- context support for email -->
+        <!--  emails -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
             <version>5.1.3.RELEASE</version>
         </dependency>
-
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4</version>
         </dependency>
+
+        <!-- utility -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>

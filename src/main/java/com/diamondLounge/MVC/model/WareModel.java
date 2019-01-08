@@ -30,4 +30,8 @@ public class WareModel extends PersistenceModel<Ware> {
 
         persistObject(ware);
     }
+
+    public void deleteWare(int id) {
+        deleteObjectById("Ware", id);
+    }
 }
