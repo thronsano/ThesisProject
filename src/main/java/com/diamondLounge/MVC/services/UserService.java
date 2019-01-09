@@ -44,7 +44,7 @@ public class UserService {
         }
     }
 
-    private void saveUsersPassword(User user) throws UsernamePasswordException {
+    private void savePassword(User user) throws UsernamePasswordException {
         Session session = sessionFactory.openSession();
 
         try {
@@ -60,7 +60,7 @@ public class UserService {
         }
     }
 
-    private void saveNewUser(User user, Authority authority) throws UsernamePasswordException {
+    private void saveUser(User user, Authority authority) throws UsernamePasswordException {
         Session session = sessionFactory.openSession();
 
         try {
@@ -90,7 +90,7 @@ public class UserService {
                 User user = new User(email, hashedPassword, username);
                 Authority authority = new Authority(user);
 
-                saveNewUser(user, authority);
+                saveUser(user, authority);
             } else {
                 throw new UsernamePasswordException("Passwords do not match!");
             }
@@ -99,7 +99,7 @@ public class UserService {
         }
     }
 
-    public void resetPasswordFromToken(String token, String password, String confirmPassword, PasswordEncoder passwordEncoder) throws UsernamePasswordException {
+    public void resetPasswordWithToken(String token, String password, String confirmPassword, PasswordEncoder passwordEncoder) throws UsernamePasswordException {
         User user;
         ResetToken resetToken;
 
@@ -111,7 +111,7 @@ public class UserService {
                 if (password.equals(confirmPassword)) {
                     user.setPassword(passwordEncoder.encode(password));
                     resetTokenService.deleteResetToken(user.getEmail());
-                    saveUsersPassword(user);
+                    savePassword(user);
                 }
             } else {
                 throw new UsernamePasswordException("User doesn't exist!");
@@ -131,7 +131,6 @@ public class UserService {
             resetTokenService.addResetToken(resetToken);
             String appUrl = request.getScheme() + "://" + request.getServerName();
 
-            // Email message
             SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
             passwordResetEmail.setFrom(emailService.getServerEmail());
             passwordResetEmail.setTo(user.getEmail());
@@ -147,13 +146,13 @@ public class UserService {
         return text != null && !text.isEmpty();
     }
 
-    public void editUser(String username) throws DiamondLoungeException {
+    public void editUserByUsername(String username) throws DiamondLoungeException {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = new User(email, "", username);
-        editUserInDatabase(user);
+        editUserByObject(user);
     }
 
-    private void editUserInDatabase(User user) throws DiamondLoungeException {
+    private void editUserByObject(User user) throws DiamondLoungeException {
         Session session = sessionFactory.openSession();
 
         try {
@@ -175,11 +174,11 @@ public class UserService {
         User user;
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        if (checkPassword(email, currentPassword, passwordEncoder)) {
+        if (validatePassword(email, currentPassword, passwordEncoder)) {
             if (newPassword.equals(confirmNewPassword)) {
                 newPassword = passwordEncoder.encode(newPassword);
                 user = new User(email, newPassword, "");
-                saveUsersPassword(user);
+                savePassword(user);
             } else {
                 throw new InputMismatchException("Passwords do not match!");
             }
@@ -188,7 +187,7 @@ public class UserService {
         }
     }
 
-    private boolean checkPassword(String email, String password, PasswordEncoder passwordEncoder) {
+    private boolean validatePassword(String email, String password, PasswordEncoder passwordEncoder) {
         User user = getUserByEmail(email);
         return passwordEncoder.matches(password, user.getPassword());
     }

@@ -1,4 +1,4 @@
-package com.diamondLounge.MVC.controller;
+package com.diamondLounge.MVC.controllers;
 
 import com.diamondLounge.MVC.services.ShopService;
 import com.diamondLounge.entity.db.Shop;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalTime;
 
-import static com.diamondLounge.MVC.controller.Utils.ErrorHandlerForControllers.handleError;
+import static com.diamondLounge.MVC.controllers.Utils.ErrorHandlerForControllers.handleError;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 

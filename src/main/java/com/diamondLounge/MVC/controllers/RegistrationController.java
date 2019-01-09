@@ -1,4 +1,4 @@
-package com.diamondLounge.MVC.controller;
+package com.diamondLounge.MVC.controllers;
 
 import com.diamondLounge.MVC.services.UserService;
 import com.diamondLounge.entity.exceptions.UsernamePasswordException;
@@ -30,13 +30,13 @@ public class RegistrationController {
     public ModelAndView createAccount(
             @RequestParam("email") String email,
             @RequestParam("password") String password,
-            @RequestParam("password2") String password2,
+            @RequestParam("password2") String confirmPassword,
             @RequestParam("username") String username,
             ModelAndView modelAndView,
             RedirectAttributes redirectAttributes) {
 
         try {
-            userService.createUser(email, password, password2, username, passwordEncoder);
+            userService.createUser(email, password, confirmPassword, username, passwordEncoder);
             redirectAttributes.addFlashAttribute("userCreated", true);
             modelAndView.setViewName("redirect:/");
         } catch (UsernamePasswordException ex) {

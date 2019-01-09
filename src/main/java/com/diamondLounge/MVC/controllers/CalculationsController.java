@@ -1,6 +1,6 @@
-package com.diamondLounge.MVC.controller;
+package com.diamondLounge.MVC.controllers;
 
-import com.diamondLounge.MVC.controller.Utils.ErrorHandlerForControllers;
+import com.diamondLounge.MVC.controllers.Utils.ErrorHandlerForControllers;
 import com.diamondLounge.MVC.services.CalculationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

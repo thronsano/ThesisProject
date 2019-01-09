@@ -1,4 +1,4 @@
-package com.diamondLounge.MVC.controller;
+package com.diamondLounge.MVC.controllers;
 
 import com.diamondLounge.MVC.services.UserService;
 import com.diamondLounge.entity.exceptions.DiamondLoungeException;
@@ -59,7 +59,7 @@ public class PasswordController {
                                        RedirectAttributes redir) {
 
         try {
-            userService.resetPasswordFromToken(token, password, confirmPassword, passwordEncoder);
+            userService.resetPasswordWithToken(token, password, confirmPassword, passwordEncoder);
             redir.addFlashAttribute("passwordChanged", true);
             modelAndView.setViewName("redirect:/");
         } catch (DiamondLoungeException e) {

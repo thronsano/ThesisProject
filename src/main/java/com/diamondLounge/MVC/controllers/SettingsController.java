@@ -1,4 +1,4 @@
-package com.diamondLounge.MVC.controller;
+package com.diamondLounge.MVC.controllers;
 
 import com.diamondLounge.MVC.services.EmployeeService;
 import com.diamondLounge.MVC.services.UserService;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import static com.diamondLounge.MVC.controller.Utils.ErrorHandlerForControllers.handleError;
+import static com.diamondLounge.MVC.controllers.Utils.ErrorHandlerForControllers.handleError;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -47,7 +47,7 @@ public class SettingsController {
                                  RedirectAttributes redirectAttributes) {
 
         try {
-            userService.editUser(username);
+            userService.editUserByUsername(username);
             redirectAttributes.addFlashAttribute("userEdited", true);
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);

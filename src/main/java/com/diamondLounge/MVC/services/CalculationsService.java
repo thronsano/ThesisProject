@@ -63,8 +63,8 @@ public class CalculationsService extends PersistenceService<Object> {
                 .getHourlyWage();
     }
 
-    private Wage calculateAvg(EmployeeModel empoloyee, LocalDateTime dateStart, LocalDateTime dateEnd) {
-        List<BigDecimal> hourlyWageInDateRange = empoloyee.getWages().stream()
+    private Wage calculateAvg(EmployeeModel employee, LocalDateTime dateStart, LocalDateTime dateEnd) {
+        List<BigDecimal> hourlyWageInDateRange = employee.getWages().stream()
                 .filter(fallsWithinRange(dateStart, dateEnd))
                 .map(Wage::getHourlyWage)
                 .collect(toList());
