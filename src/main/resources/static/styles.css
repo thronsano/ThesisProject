@@ -153,10 +153,10 @@ body {
 
 nav {
     box-sizing: border-box;
-    padding: 20px;
+    padding: 10px;
     position: fixed;
     height: 100%;
-    width: 200px;
+    width: 220px;
     top: 0;
     left: 0;
     z-index: 1;
@@ -191,7 +191,7 @@ nav input {
 }
 
 .content {
-    margin-left: 215px;
+    margin-left: 240px;
 }
 
 .grid-container {

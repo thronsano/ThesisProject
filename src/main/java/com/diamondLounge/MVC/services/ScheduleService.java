@@ -7,7 +7,7 @@ import com.diamondLounge.entity.exceptions.DiamondLoungeException;
 import com.diamondLounge.entity.model.EmployeeModel;
 import com.diamondLounge.entity.model.ScheduleTableModel;
 import com.diamondLounge.entity.model.ShopModel;
-import com.diamondLounge.entity.model.WeekRange;
+import com.diamondLounge.entity.model.WeekDateRange;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -55,7 +55,7 @@ public class ScheduleService extends PersistenceService {
 
     public void generateSchedule(int offset) throws DiamondLoungeException {
         List<Schedule> schedules = new ArrayList<>();
-        WeekRange weekRange = new WeekRange(offset);
+        WeekDateRange weekDateRange = new WeekDateRange(offset);
         Map<String, List<ShopModel>> shopMap = groupShopsByLocation(shopModel.getAllShops());
         Map<String, List<EmployeeModel>> employeeMap = groupEmployeesByLocation(employeeService.getAllEmployees());
 
@@ -64,7 +64,7 @@ public class ScheduleService extends PersistenceService {
                     List<EmployeeModel> availableEmployees = employeeMap.get(location);
 
                     shops.forEach(
-                            shop -> weekRange.getLastMonday().datesUntil(weekRange.getNextMonday()).forEach(
+                            shop -> weekDateRange.getWeekStart().datesUntil(weekDateRange.getWeekEnd()).forEach(
                                     date -> schedules.add(new Schedule(date, shopModel.getShopById(shop.getId()), generateEmployeeList(date, shop, availableEmployees))))
                     );
                 }
@@ -105,8 +105,7 @@ public class ScheduleService extends PersistenceService {
         return shops.stream().collect(groupingBy(ShopModel::getLocation));
     }
 
-    public void eraseThisWeekSchedule(int offset) {
-        WeekRange weekRange = new WeekRange(offset);
+    public void eraseSchedulesForRange(WeekDateRange weekDateRange) {
         Session session = sessionFactory.openSession();
 
         try {
@@ -115,10 +114,10 @@ public class ScheduleService extends PersistenceService {
             Query scheduleQuery = session.createQuery("delete from Schedule as sched where sched.date>=:fromDate AND sched.date<:toDate");
             Query workDayQuery = session.createQuery("delete from WorkDay as workday where workday.date>=:fromDate AND workday.date<:toDate");
 
-            scheduleQuery.setParameter("fromDate", weekRange.getLastMonday());
-            scheduleQuery.setParameter("toDate", weekRange.getNextMonday());
-            workDayQuery.setParameter("fromDate", weekRange.getLastMonday());
-            workDayQuery.setParameter("toDate", weekRange.getNextMonday());
+            scheduleQuery.setParameter("fromDate", weekDateRange.getWeekStart());
+            scheduleQuery.setParameter("toDate", weekDateRange.getWeekEnd());
+            workDayQuery.setParameter("fromDate", weekDateRange.getWeekStart());
+            workDayQuery.setParameter("toDate", weekDateRange.getWeekEnd());
 
             scheduleQuery.executeUpdate();
             workDayQuery.executeUpdate();
@@ -128,14 +127,13 @@ public class ScheduleService extends PersistenceService {
         }
     }
 
-    public ScheduleTableModel getScheduleTable(int offset) {
-        WeekRange weekRange = new WeekRange(offset);
-        List<Schedule> schedules = getSchedules(weekRange.getLastMonday(), weekRange.getNextMonday());
+    public ScheduleTableModel getScheduleTableForRange(WeekDateRange weekDateRange) {
+        List<Schedule> schedules = getSchedules(weekDateRange.getWeekStart(), weekDateRange.getWeekEnd());
 
         if (schedules.size() == 0) {
             return null;
         }
 
-        return new ScheduleTableModel(schedules, weekRange.getDateRange());
+        return new ScheduleTableModel(schedules, weekDateRange.getDateRange());
     }
 }

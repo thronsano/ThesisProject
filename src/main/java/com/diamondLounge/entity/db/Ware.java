@@ -1,6 +1,10 @@
 package com.diamondLounge.entity.db;
 
 import javax.persistence.*;
+import java.util.Set;
+
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 
 @Entity
 @Table(name = "wares")
@@ -22,11 +26,15 @@ public class Ware {
     @Column
     private String description;
 
-    public Ware(String name, double amount, double price, String description) {
+    @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
+    private Set<WarePart> soldParts;
+
+    public Ware(String name, double amount, double price, String description, Set<WarePart> soldParts) {
         this.name = name;
         this.amount = amount;
         this.price = price;
         this.description = description;
+        this.soldParts = soldParts;
     }
 
     public Ware() {
@@ -70,5 +78,13 @@ public class Ware {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<WarePart> getSoldParts() {
+        return soldParts;
+    }
+
+    public void setSoldParts(Set<WarePart> soldParts) {
+        this.soldParts = soldParts;
     }
 }

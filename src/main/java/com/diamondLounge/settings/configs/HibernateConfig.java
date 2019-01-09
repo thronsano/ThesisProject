@@ -24,7 +24,7 @@ public class HibernateConfig {
 
     private static final Class[] ANNOTATED_CLASSES = new Class[]{
             User.class, Authority.class, ResetToken.class, Employee.class, Wage.class, Shop.class, Schedule.class,
-            WorkDay.class, Ware.class
+            WorkDay.class, Ware.class, WarePart.class
     };
 
     @Autowired

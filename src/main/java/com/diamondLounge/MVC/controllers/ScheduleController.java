@@ -1,6 +1,7 @@
 package com.diamondLounge.MVC.controllers;
 
 import com.diamondLounge.MVC.services.ScheduleService;
+import com.diamondLounge.entity.model.WeekDateRange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +26,8 @@ public class ScheduleController {
                                     ModelAndView modelAndView,
                                     RedirectAttributes redirectAttributes) {
         try {
-            model.addAttribute("scheduleTable", scheduleModel.getScheduleTable(offset));
+            WeekDateRange weekDateRange = new WeekDateRange(offset);
+            model.addAttribute("scheduleTable", scheduleModel.getScheduleTableForRange(weekDateRange));
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);
         }
@@ -38,7 +40,8 @@ public class ScheduleController {
                               ModelAndView modelAndView,
                               RedirectAttributes redirectAttributes) {
         try {
-            scheduleModel.eraseThisWeekSchedule(offset);
+            WeekDateRange weekDateRange = new WeekDateRange(offset);
+            scheduleModel.eraseSchedulesForRange(weekDateRange);
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);
         }

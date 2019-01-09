@@ -19,7 +19,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class WareController {
 
     @Autowired
-    WareService wareModel;
+    WareService wareService;
 
     @RequestMapping(value = "/editWareInformation", method = GET)
     public ModelAndView getEditWarePage(@RequestParam(value = "selectedWare", required = false, defaultValue = "-1") int selectedWare,
@@ -27,9 +27,11 @@ public class WareController {
                                         ModelAndView modelAndView,
                                         RedirectAttributes redirectAttributes) {
         try {
-            model.addAttribute("wareList", wareModel.getAllWares());
+            model.addAttribute("waresList", wareService.getAllWares());
+            model.addAttribute("soldWaresList", wareService.getAllWareParts());
+
             if (selectedWare != -1) {
-                Ware ware = wareModel.getWareById(selectedWare);
+                Ware ware = wareService.getWareById(selectedWare);
                 model.addAttribute("selectedWare", ware);
             }
         } catch (Exception e) {
@@ -49,7 +51,22 @@ public class WareController {
             ModelAndView modelAndView,
             RedirectAttributes redirectAttributes) {
         try {
-            wareModel.addWare(name, amount, price, description);
+            wareService.addWare(name, amount, price, description);
+        } catch (Exception e) {
+            handleError(modelAndView, redirectAttributes, e);
+        }
+
+        return "redirect:/wares/editWareInformation";
+    }
+
+    @RequestMapping(value = "/sellWare", method = POST)
+    public String sellWare(
+            @RequestParam("id") int id,
+            @RequestParam("amount") double amount,
+            ModelAndView modelAndView,
+            RedirectAttributes redirectAttributes) {
+        try {
+            wareService.sellWare(id, amount);
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);
         }
@@ -67,7 +84,7 @@ public class WareController {
             ModelAndView modelAndView,
             RedirectAttributes redirectAttributes) {
         try {
-            wareModel.editWare(id, name, amount, price, description);
+            wareService.editWare(id, name, amount, price, description);
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);
         }
@@ -81,7 +98,7 @@ public class WareController {
             ModelAndView modelAndView,
             RedirectAttributes redirectAttributes) {
         try {
-            wareModel.deleteWare(id);
+            wareService.deleteWare(id);
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);
         }

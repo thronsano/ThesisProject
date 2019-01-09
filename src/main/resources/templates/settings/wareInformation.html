@@ -15,19 +15,19 @@
         </section>
     </div>
     <div class="row" style="grid-row: 2">
-        <div class="columnHalfSpace">
-            <h2>Add ware</h2>
+        <div class="columnThirdOfSpace">
+            <h2>Add wares</h2>
             <form method="post" th:action="@{/wares/addWare}">
                 Name:
                 <div><input class="input-field" name="name" placeholder="Name" required type="text"/></div>
 
                 Amount:
                 <div><input class="input-field" max="9999999.00" min="0.01" name="amount" placeholder="Amount" required
-                            type="number"/></div>
+                            step="0.01" type="number"/></div>
 
                 Price:
                 <div><input class="input-field" max="9999999.00" min="0.01" name="price" placeholder="Price" required
-                            type="number"/></div>
+                            step="0.01" type="number"/></div>
 
                 Description:
                 <div><input class="input-field" name="description" placeholder="Description" required type="text"/>
@@ -36,8 +36,8 @@
                 <button class="btn-login btn-basic" type="submit">ADD</button>
             </form>
         </div>
-        <div class="columnHalfSpace" th:if="${selectedWare}!=null">
-            <h2>Edit Ware</h2>
+        <div class="columnThirdOfSpace" th:if="${selectedWare}!=null">
+            <h2>Edit Wares</h2>
             <form method="post" th:action="@{/wares/editWare}">
                 <input hidden name="id" th:value="${selectedWare.id}"/>
 
@@ -47,11 +47,11 @@
 
                 Amount:
                 <div><input class="input-field" max="9999999.00" min="0.01" name="amount" placeholder="Amount" required
-                            th:value="${selectedWare.amount}" type="number"/></div>
+                            step="0.01" th:value="${selectedWare.amount}" type="number"/></div>
 
                 Price:
                 <div><input class="input-field" max="9999999.00" min="0.01" name="price" placeholder="Price" required
-                            th:value="${selectedWare.price}" type="number"/></div>
+                            step="0.01" th:value="${selectedWare.price}" type="number"/></div>
 
                 Description:
                 <div><input class="input-field" name="description" placeholder="Description" required
@@ -63,6 +63,16 @@
             <form method="post" th:action="@{/wares/deleteWare}">
                 <input hidden name="id" th:value="${selectedWare.id}"/>
                 <button class="btn-login btn-basic" type="submit">DELETE</button>
+            </form>
+        </div>
+        <div class="columnThirdOfSpace" th:if="${selectedWare}!=null">
+            <h2>Sell Wares</h2>
+            <form method="post" th:action="@{/wares/sellWare}">
+                Amount:
+                <div><input class="input-field" min="0.01" name="amount" placeholder="Amount" required step="0.01"
+                            th:max="${selectedWare.amount}" th:value="${selectedWare.amount}" type="number"/></div>
+                <input hidden name="id" th:value="${selectedWare.id}"/>
+                <button class="btn-login btn-basic" type="submit">SELL WARE</button>
             </form>
         </div>
     </div>
@@ -80,12 +90,37 @@
                     </thead>
 
                     <tbody>
-                    <tr th:each="ware : ${wareList}"
+                    <tr th:each="ware : ${waresList}"
                         th:onclick="'javascript:updateParams(\'wares/editWareInformation\', \'selectedWare\', \'' + ${ware.id} + '\');'">
                         <td th:text="${ware.name}"></td>
                         <td th:text="${ware.amount}"></td>
                         <td th:text="${ware.price}"></td>
                         <td th:text="${ware.description}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <div class="columnHalfSpace">
+            <h2>Sold wares</h2>
+            Wares:
+            <form>
+                <table>
+                    <thead>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th>Date sold</th>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="ware : ${soldWaresList}">
+                        <td th:text="${ware.name}"></td>
+                        <td th:text="${ware.amount}"></td>
+                        <td th:text="${ware.price}"></td>
+                        <td th:text="${ware.description}"></td>
+                        <td th:text="${#temporals.format(ware.dateSold, 'dd-MM-yyyy HH:mm')}"></td>
                     </tr>
                     </tbody>
                 </table>

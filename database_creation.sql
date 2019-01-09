@@ -105,6 +105,23 @@ CREATE TABLE wares
   description VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE sold_wares
+(
+  id       INT PRIMARY KEY AUTO_INCREMENT,
+  amount   DOUBLE   NOT NULL,
+  price    DOUBLE   NOT NULL,
+  dateSold DATETIME NOT NULL
+);
+
+CREATE TABLE wares_sold_wares
+(
+  ware_id      int        not null AUTO_INCREMENT,
+  soldParts_id int unique not null,
+  constraint pk_wares_sold_wares primary key (ware_id, soldParts_id),
+  constraint fk_wares_sold_wares_sold_wares foreign key (soldParts_id) references sold_wares (id) ON DELETE CASCADE,
+  constraint fk_wares_sold_wares_wares foreign key (ware_id) references wares (id) ON DELETE CASCADE
+);
+
 -- Sample user's password '$2a$10$9d5AC2CrUGaWSgwRHbtZV.TbKiuixWQh3EzJhZ7tHt0AeifE2AxCq' is a hashed version of password 'password'
 INSERT INTO users (email, password, username)
 VALUES ('sdoe@gmail.com', '$2a$10$9d5AC2CrUGaWSgwRHbtZV.TbKiuixWQh3EzJhZ7tHt0AeifE2AxCq', 'Piotr');

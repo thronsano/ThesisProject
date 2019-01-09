@@ -5,16 +5,16 @@
     <link href="/styles.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <script src="/updateURLParams.js" type="text/javascript"></script>
-    <script src="/scheduleScript.js" type="text/javascript"></script>
+    <script src="/dateRangeScript.js" type="text/javascript"></script>
     <title>Schedule</title>
 </head>
 <body>
 <nav th:fragment="menuBar">
     <a th:href="@{/home}"><img alt="Diamond Lounge" class="logo" height="50" src="/logo.svg" width="125"></a>
     <a class="nav-element" th:href="@{/home}">Schedule</a>
-    <a class="nav-element" th:href="@{/settings/editAccountInformation}">Settings</a>
-    <a class="nav-element" th:href="@{/settings}">Storage</a>
     <a class="nav-element" th:href="@{/getCalculations}">Calculations</a>
+    <a class="nav-element" th:href="@{/settings}">Storage</a>
+    <a class="nav-element" th:href="@{/settings/editAccountInformation}">Settings</a>
     <form method="post" th:action="@{/logout}">
         <input class="nav-element" type="submit" value="Log out"/>
     </form>
@@ -23,10 +23,10 @@
 <section class="content">
     <h1 th:inline="text">Logged as [[${#httpServletRequest.remoteUser}]]</h1>
     <form method="get">
-        <button class="btn-basic week-btn" th:onclick="'java:buttonClicked(-1);'" type="button">
+        <button class="btn-basic week-btn" th:onclick="'java:buttonClicked(-1, \'home\');'" type="button">
             PREVIOUS WEEK
         </button>
-        <button class="btn-basic week-btn" th:onclick="'java:buttonClicked(1);'" type="button">
+        <button class="btn-basic week-btn" th:onclick="'java:buttonClicked(1, \'home\');'" type="button">
             NEXT WEEK
         </button>
     </form>
