@@ -1,8 +1,8 @@
 package com.diamondLounge.MVC.controller;
 
 
-import com.diamondLounge.MVC.model.EmployeeModel;
-import com.diamondLounge.entity.model.EmployeeImpl;
+import com.diamondLounge.MVC.services.EmployeeService;
+import com.diamondLounge.entity.model.EmployeeModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +22,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class EmployeeController {
 
     @Autowired
-    EmployeeModel employeeModel;
+    EmployeeService employeeService;
 
     @RequestMapping(value = "/editEmployeeInformation", method = GET)
     public ModelAndView getEditEmployeePage(@RequestParam(value = "selectedEmployee", required = false, defaultValue = "-1") int selectedEmployee,
@@ -30,9 +30,9 @@ public class EmployeeController {
                                             ModelAndView modelAndView,
                                             RedirectAttributes redirectAttributes) {
         try {
-            model.addAttribute("employeeList", employeeModel.getAllEmployees());
+            model.addAttribute("employeeList", employeeService.getAllEmployees());
             if (selectedEmployee != -1) {
-                EmployeeImpl employee = employeeModel.getEmployeeImplById(selectedEmployee);
+                EmployeeModel employee = employeeService.getEmployeeImplById(selectedEmployee);
                 model.addAttribute("selectedEmployee", employee);
             }
         } catch (Exception e) {
@@ -52,7 +52,7 @@ public class EmployeeController {
             ModelAndView modelAndView,
             RedirectAttributes redirectAttributes) {
         try {
-            employeeModel.addEmployee(name, timeFactor, location, BigDecimal.valueOf(wage));
+            employeeService.addEmployee(name, timeFactor, location, BigDecimal.valueOf(wage));
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);
         }
@@ -70,7 +70,7 @@ public class EmployeeController {
             ModelAndView modelAndView,
             RedirectAttributes redirectAttributes) {
         try {
-            employeeModel.editEmployee(id, name, timeFactor, location, BigDecimal.valueOf(wage));
+            employeeService.editEmployee(id, name, timeFactor, location, BigDecimal.valueOf(wage));
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);
         }
@@ -84,7 +84,7 @@ public class EmployeeController {
             ModelAndView modelAndView,
             RedirectAttributes redirectAttributes) {
         try {
-            employeeModel.deleteEmployee(id);
+            employeeService.deleteEmployee(id);
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);
         }

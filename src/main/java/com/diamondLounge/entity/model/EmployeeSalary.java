@@ -3,19 +3,19 @@ package com.diamondLounge.entity.model;
 import java.math.BigDecimal;
 
 public class EmployeeSalary {
-    private EmployeeImpl employee;
+    private EmployeeModel employee;
     private BigDecimal salary;
 
-    public EmployeeSalary(EmployeeImpl employee, BigDecimal salary) {
+    public EmployeeSalary(EmployeeModel employee, BigDecimal salary) {
         this.employee = employee;
         this.salary = salary;
     }
 
-    public EmployeeImpl getEmployee() {
+    public EmployeeModel getEmployee() {
         return employee;
     }
 
-    public void setEmployee(EmployeeImpl employee) {
+    public void setEmployee(EmployeeModel employee) {
         this.employee = employee;
     }
 

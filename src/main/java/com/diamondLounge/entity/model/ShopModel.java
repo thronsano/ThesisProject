@@ -4,7 +4,7 @@ import com.diamondLounge.entity.db.Shop;
 
 import java.time.LocalTime;
 
-public class ShopImpl {
+public class ShopModel {
 
     private int id;
     private String name;
@@ -13,7 +13,7 @@ public class ShopImpl {
     private LocalTime closingTime;
     private int requiredStaff;
 
-    public ShopImpl(Shop shop) {
+    public ShopModel(Shop shop) {
         this.id = shop.getId();
         this.name = shop.getName();
         this.location = shop.getLocation();

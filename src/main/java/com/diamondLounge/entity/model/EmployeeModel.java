@@ -10,7 +10,7 @@ import com.google.common.collect.Ordering;
 import java.time.Duration;
 import java.util.Set;
 
-public class EmployeeImpl {
+public class EmployeeModel {
 
     private int id;
     private String name;
@@ -21,7 +21,7 @@ public class EmployeeImpl {
     private Wage currentWage;
     private double currentWageVal;
 
-    public EmployeeImpl(Employee employee) {
+    public EmployeeModel(Employee employee) {
         this.id = employee.getId();
         this.name = employee.getName();
         this.timeFactor = employee.getTimeFactor();

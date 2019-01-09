@@ -1,6 +1,6 @@
 package com.diamondLounge.MVC.controller;
 
-import com.diamondLounge.MVC.model.WareModel;
+import com.diamondLounge.MVC.services.WareService;
 import com.diamondLounge.entity.db.Ware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +19,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class WareController {
 
     @Autowired
-    WareModel wareModel;
+    WareService wareModel;
 
     @RequestMapping(value = "/editWareInformation", method = GET)
     public ModelAndView getEditWarePage(@RequestParam(value = "selectedWare", required = false, defaultValue = "-1") int selectedWare,

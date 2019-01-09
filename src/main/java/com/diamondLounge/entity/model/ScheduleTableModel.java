@@ -12,13 +12,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.stream.Collectors.groupingBy;
 
-public class ScheduleTableImpl {
+public class ScheduleTableModel {
     private String[][] table;
     private int width;
     private int height;
 
 
-    public ScheduleTableImpl(List<Schedule> schedules, List<LocalDate> dateRange) {
+    public ScheduleTableModel(List<Schedule> schedules, List<LocalDate> dateRange) {
         Ordering<Shop> shopOrdering = Ordering.natural().onResultOf(Shop::getName);
         ImmutableSortedMap<Shop, List<Schedule>> sortedMap = ImmutableSortedMap.copyOf(schedules.stream().collect(groupingBy(Schedule::getShop)), shopOrdering);
         createEmptyTable(dateRange, sortedMap);

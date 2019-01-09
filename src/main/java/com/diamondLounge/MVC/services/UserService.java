@@ -1,4 +1,4 @@
-package com.diamondLounge.MVC.model;
+package com.diamondLounge.MVC.services;
 
 import com.diamondLounge.entity.db.Authority;
 import com.diamondLounge.entity.db.ResetToken;
@@ -21,13 +21,13 @@ import java.util.UUID;
 import static com.diamondLounge.utility.Logger.logError;
 
 @Repository
-public class UserModel {
+public class UserService {
 
     @Autowired
     private SessionFactory sessionFactory;
 
     @Autowired
-    private ResetTokenModel resetTokenModel;
+    private ResetTokenService resetTokenService;
 
     @Autowired
     private EmailService emailService;
@@ -104,13 +104,13 @@ public class UserModel {
         ResetToken resetToken;
 
         if (validateString(token)) {
-            resetToken = resetTokenModel.getByResetToken(token);
+            resetToken = resetTokenService.getByResetToken(token);
             user = getUserByEmail(resetToken.getEmail());
 
             if (user != null) {
                 if (password.equals(confirmPassword)) {
                     user.setPassword(passwordEncoder.encode(password));
-                    resetTokenModel.deleteResetToken(user.getEmail());
+                    resetTokenService.deleteResetToken(user.getEmail());
                     saveUsersPassword(user);
                 }
             } else {
@@ -128,7 +128,7 @@ public class UserModel {
             throw new UsernamePasswordException("User doesn't exist!");
         } else {
             ResetToken resetToken = new ResetToken(userEmail, UUID.randomUUID().toString());
-            resetTokenModel.addResetToken(resetToken);
+            resetTokenService.addResetToken(resetToken);
             String appUrl = request.getScheme() + "://" + request.getServerName();
 
             // Email message

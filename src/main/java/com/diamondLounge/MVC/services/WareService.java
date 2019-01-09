@@ -1,4 +1,4 @@
-package com.diamondLounge.MVC.model;
+package com.diamondLounge.MVC.services;
 
 import com.diamondLounge.entity.db.Ware;
 import org.springframework.stereotype.Repository;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class WareModel extends PersistenceModel<Ware> {
+public class WareService extends PersistenceService<Ware> {
     public List<Ware> getAllWares() {
         return getAllObjects("Ware");
     }

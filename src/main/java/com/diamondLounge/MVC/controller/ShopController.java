@@ -1,6 +1,6 @@
 package com.diamondLounge.MVC.controller;
 
-import com.diamondLounge.MVC.model.ShopModel;
+import com.diamondLounge.MVC.services.ShopService;
 import com.diamondLounge.entity.db.Shop;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class ShopController {
 
     @Autowired
-    ShopModel shopModel;
+    ShopService shopModel;
 
     @RequestMapping(value = "/editShopInformation", method = GET)
     public ModelAndView getEditShopPage(@RequestParam(value = "selectedShop", required = false, defaultValue = "-1") int selectedShop,

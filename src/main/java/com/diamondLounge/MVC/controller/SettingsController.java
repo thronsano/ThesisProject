@@ -1,7 +1,7 @@
 package com.diamondLounge.MVC.controller;
 
-import com.diamondLounge.MVC.model.EmployeeModel;
-import com.diamondLounge.MVC.model.UserModel;
+import com.diamondLounge.MVC.services.EmployeeService;
+import com.diamondLounge.MVC.services.UserService;
 import com.diamondLounge.entity.db.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,10 +21,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class SettingsController {
 
     @Autowired
-    UserModel userModel;
+    UserService userService;
 
     @Autowired
-    EmployeeModel employeeModel;
+    EmployeeService employeeService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -32,7 +32,7 @@ public class SettingsController {
     @RequestMapping(value = "/editAccountInformation", method = GET)
     public ModelAndView getEditUserPage(ModelAndView modelAndView) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userModel.getUserByEmail(email);
+        User user = userService.getUserByEmail(email);
 
         modelAndView.addObject("user", user);
         modelAndView.setViewName("settings/editUser");
@@ -47,7 +47,7 @@ public class SettingsController {
                                  RedirectAttributes redirectAttributes) {
 
         try {
-            userModel.editUser(username);
+            userService.editUser(username);
             redirectAttributes.addFlashAttribute("userEdited", true);
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);
@@ -65,7 +65,7 @@ public class SettingsController {
                                        RedirectAttributes redirectAttributes) {
 
         try {
-            userModel.changePassword(currentPassword, newPassword, confirmNewPassword, passwordEncoder);
+            userService.changePassword(currentPassword, newPassword, confirmNewPassword, passwordEncoder);
             redirectAttributes.addFlashAttribute("passwordChanged", true);
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);

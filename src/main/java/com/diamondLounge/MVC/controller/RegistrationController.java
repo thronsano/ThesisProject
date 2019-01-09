@@ -1,6 +1,6 @@
 package com.diamondLounge.MVC.controller;
 
-import com.diamondLounge.MVC.model.UserModel;
+import com.diamondLounge.MVC.services.UserService;
 import com.diamondLounge.entity.exceptions.UsernamePasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class RegistrationController {
 
     @Autowired
-    UserModel userModel = new UserModel();
+    UserService userService = new UserService();
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -36,7 +36,7 @@ public class RegistrationController {
             RedirectAttributes redirectAttributes) {
 
         try {
-            userModel.createUser(email, password, password2, username, passwordEncoder);
+            userService.createUser(email, password, password2, username, passwordEncoder);
             redirectAttributes.addFlashAttribute("userCreated", true);
             modelAndView.setViewName("redirect:/");
         } catch (UsernamePasswordException ex) {

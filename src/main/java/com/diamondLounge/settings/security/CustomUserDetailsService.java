@@ -1,6 +1,6 @@
 package com.diamondLounge.settings.security;
 
-import com.diamondLounge.MVC.model.UserModel;
+import com.diamondLounge.MVC.services.UserService;
 import com.diamondLounge.entity.db.Authority;
 import com.diamondLounge.entity.db.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +17,12 @@ import static org.springframework.security.core.userdetails.User.withUsername;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserModel userModel;
+    private UserService userService;
 
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userModel.getUserByEmail(email);
+        User user = userService.getUserByEmail(email);
         UserBuilder userBuilder;
 
         if (user != null) {

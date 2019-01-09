@@ -1,8 +1,8 @@
-package com.diamondLounge.MVC.model;
+package com.diamondLounge.MVC.services;
 
 import com.diamondLounge.entity.db.Shop;
 import com.diamondLounge.entity.exceptions.DiamondLoungeException;
-import com.diamondLounge.entity.model.ShopImpl;
+import com.diamondLounge.entity.model.ShopModel;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalTime;
@@ -10,14 +10,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class ShopModel extends PersistenceModel<Shop> {
+public class ShopService extends PersistenceService<Shop> {
 
-    public List<ShopImpl> getAllShops() throws DiamondLoungeException {
+    public List<ShopModel> getAllShops() throws DiamondLoungeException {
         return convertFromDbObjects(getAllObjects("Shop"));
     }
 
-    private List<ShopImpl> convertFromDbObjects(List<Shop> employeeList) {
-        return employeeList.stream().map(ShopImpl::new).collect(Collectors.toList());
+    private List<ShopModel> convertFromDbObjects(List<Shop> employeeList) {
+        return employeeList.stream().map(ShopModel::new).collect(Collectors.toList());
     }
 
     public Shop getShopById(int selectedShop) throws DiamondLoungeException {

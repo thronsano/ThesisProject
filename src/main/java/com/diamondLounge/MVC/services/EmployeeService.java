@@ -1,9 +1,9 @@
-package com.diamondLounge.MVC.model;
+package com.diamondLounge.MVC.services;
 
 import com.diamondLounge.entity.db.Employee;
 import com.diamondLounge.entity.db.Wage;
 import com.diamondLounge.entity.exceptions.DiamondLoungeException;
-import com.diamondLounge.entity.model.EmployeeImpl;
+import com.diamondLounge.entity.model.EmployeeModel;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -16,7 +16,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static java.time.LocalDateTime.now;
 
 @Repository
-public class EmployeeModel extends PersistenceModel<Employee> {
+public class EmployeeService extends PersistenceService<Employee> {
 
     public void addEmployee(String name, float timeFactor, String location, BigDecimal wage) throws DiamondLoungeException {
         Set<Wage> wages = newHashSet(new Wage(wage, now(), null));
@@ -24,16 +24,16 @@ public class EmployeeModel extends PersistenceModel<Employee> {
         persistObject(employee);
     }
 
-    public List<EmployeeImpl> getAllEmployees() throws DiamondLoungeException {
+    public List<EmployeeModel> getAllEmployees() throws DiamondLoungeException {
         return convertFromDbObjects(getAllObjects("Employee"));
     }
 
-    private List<EmployeeImpl> convertFromDbObjects(List<Employee> employeeList) {
-        return employeeList.stream().map(EmployeeImpl::new).collect(Collectors.toList());
+    private List<EmployeeModel> convertFromDbObjects(List<Employee> employeeList) {
+        return employeeList.stream().map(EmployeeModel::new).collect(Collectors.toList());
     }
 
-    public EmployeeImpl getEmployeeImplById(int selectedEmployee) throws DiamondLoungeException {
-        return new EmployeeImpl(getEmployeeById(selectedEmployee));
+    public EmployeeModel getEmployeeImplById(int selectedEmployee) throws DiamondLoungeException {
+        return new EmployeeModel(getEmployeeById(selectedEmployee));
     }
 
     Employee getEmployeeById(int selectedEmployee) throws DiamondLoungeException {

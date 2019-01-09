@@ -1,14 +1,13 @@
-package com.diamondLounge.MVC.model;
+package com.diamondLounge.MVC.services;
 
 import com.diamondLounge.entity.db.Wage;
 import com.diamondLounge.entity.db.WorkDay;
-import com.diamondLounge.entity.model.EmployeeImpl;
+import com.diamondLounge.entity.model.EmployeeModel;
 import com.diamondLounge.entity.model.EmployeeSalary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,19 +16,20 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
 import static java.time.LocalTime.MAX;
 import static java.util.stream.Collectors.toList;
 
 @Repository
-public class CalculationsModel extends PersistenceModel<Object> {
+public class CalculationsService extends PersistenceService<Object> {
 
     @Autowired
-    EmployeeModel employeeModel;
+    EmployeeService employeeService;
 
     public List<EmployeeSalary> getSalaryList() {
         List<EmployeeSalary> employeeSalaries = new ArrayList<>();
-        List<EmployeeImpl> allEmployees = employeeModel.getAllEmployees();
+        List<EmployeeModel> allEmployees = employeeService.getAllEmployees();
 
         allEmployees.forEach(employee -> {
             BigDecimal salary = computedSalary(employee);
@@ -40,8 +40,8 @@ public class CalculationsModel extends PersistenceModel<Object> {
         return employeeSalaries;
     }
 
-    private BigDecimal computedSalary(EmployeeImpl employee) {
-        BigDecimal salary = new BigDecimal(BigInteger.ZERO);
+    private BigDecimal computedSalary(EmployeeModel employee) {
+        BigDecimal salary = ZERO;
 
         for (WorkDay workDay : employee.getWorkDays()) {
             LocalDate date = workDay.getDate();
@@ -52,7 +52,7 @@ public class CalculationsModel extends PersistenceModel<Object> {
         return salary;
     }
 
-    private BigDecimal getWageForDate(EmployeeImpl employee, LocalDate date) {
+    private BigDecimal getWageForDate(EmployeeModel employee, LocalDate date) {
         LocalDateTime dayStart = date.atStartOfDay();
         LocalDateTime dayEnd = date.atTime(MAX);
 
@@ -63,21 +63,21 @@ public class CalculationsModel extends PersistenceModel<Object> {
                 .getHourlyWage();
     }
 
-    private Wage calculateAvg(EmployeeImpl empoloyee, LocalDateTime dateStart, LocalDateTime dateEnd) {
-        List<BigDecimal> fallsIntoRange = empoloyee.getWages().stream()
+    private Wage calculateAvg(EmployeeModel empoloyee, LocalDateTime dateStart, LocalDateTime dateEnd) {
+        List<BigDecimal> hourlyWageInDateRange = empoloyee.getWages().stream()
                 .filter(fallsWithinRange(dateStart, dateEnd))
                 .map(Wage::getHourlyWage)
                 .collect(toList());
 
-        if (fallsIntoRange.size() == 0) {
-            return new Wage(BigDecimal.ZERO, dateStart, dateEnd);
+        if (hourlyWageInDateRange.size() == 0) {
+            return new Wage(ZERO, dateStart, dateEnd);
         }
 
-        BigDecimal sum = fallsIntoRange.stream()
+        BigDecimal sum = hourlyWageInDateRange.stream()
                 .map(Objects::requireNonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(ZERO, BigDecimal::add);
 
-        return new Wage(sum.divide(new BigDecimal(fallsIntoRange.size()), RoundingMode.HALF_UP), dateStart, dateEnd);
+        return new Wage(sum.divide(new BigDecimal(hourlyWageInDateRange.size()), RoundingMode.HALF_UP), dateStart, dateEnd);
     }
 
     private Predicate<Wage> fallsWithinRange(LocalDateTime dateStart, LocalDateTime dateEnd) {

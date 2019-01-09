@@ -1,4 +1,4 @@
-package com.diamondLounge.MVC.model;
+package com.diamondLounge.MVC.services;
 
 import com.diamondLounge.entity.exceptions.DiamondLoungeException;
 import org.hibernate.Session;
@@ -12,7 +12,7 @@ import java.util.List;
 import static com.diamondLounge.utility.Logger.logWarning;
 
 @Repository
-public class PersistenceModel<T> {
+public class PersistenceService<T> {
 
     @Autowired
     SessionFactory sessionFactory;

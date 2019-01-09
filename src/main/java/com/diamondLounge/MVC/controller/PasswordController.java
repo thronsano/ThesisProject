@@ -1,6 +1,6 @@
 package com.diamondLounge.MVC.controller;
 
-import com.diamondLounge.MVC.model.UserModel;
+import com.diamondLounge.MVC.services.UserService;
 import com.diamondLounge.entity.exceptions.DiamondLoungeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public class PasswordController {
 
     @Autowired
-    private UserModel userModel;
+    private UserService userService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -34,7 +34,7 @@ public class PasswordController {
                                                   @RequestParam("email") String userEmail,
                                                   HttpServletRequest request) {
         try {
-            userModel.sendResetToken(userEmail, request);
+            userService.sendResetToken(userEmail, request);
             modelAndView.addObject("successEmail", true);
         } catch (DiamondLoungeException e) {
             modelAndView.addObject("error", e.getMessage());
@@ -59,7 +59,7 @@ public class PasswordController {
                                        RedirectAttributes redir) {
 
         try {
-            userModel.resetPasswordFromToken(token, password, confirmPassword, passwordEncoder);
+            userService.resetPasswordFromToken(token, password, confirmPassword, passwordEncoder);
             redir.addFlashAttribute("passwordChanged", true);
             modelAndView.setViewName("redirect:/");
         } catch (DiamondLoungeException e) {

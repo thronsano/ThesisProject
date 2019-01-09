@@ -1,6 +1,6 @@
 package com.diamondLounge.MVC.controller;
 
-import com.diamondLounge.MVC.model.ScheduleModel;
+import com.diamondLounge.MVC.services.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +17,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class ScheduleController {
 
     @Autowired
-    private ScheduleModel scheduleModel;
+    private ScheduleService scheduleModel;
 
     @RequestMapping(value = "/home", method = GET)
     public ModelAndView getSchedule(@RequestParam(value = "offset", required = false, defaultValue = "0") int offset,

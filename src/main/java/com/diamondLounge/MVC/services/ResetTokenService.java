@@ -1,4 +1,4 @@
-package com.diamondLounge.MVC.model;
+package com.diamondLounge.MVC.services;
 
 
 import com.diamondLounge.entity.db.ResetToken;
@@ -13,7 +13,7 @@ import static com.diamondLounge.utility.Logger.log;
 import static com.diamondLounge.utility.Logger.logError;
 
 @Repository
-public class ResetTokenModel {
+public class ResetTokenService {
 
     @Autowired
     private SessionFactory sessionFactory;

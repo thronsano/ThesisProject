@@ -1,12 +1,12 @@
-package com.diamondLounge.MVC.model;
+package com.diamondLounge.MVC.services;
 
 import com.diamondLounge.entity.db.Employee;
 import com.diamondLounge.entity.db.Schedule;
 import com.diamondLounge.entity.db.WorkDay;
 import com.diamondLounge.entity.exceptions.DiamondLoungeException;
-import com.diamondLounge.entity.model.EmployeeImpl;
-import com.diamondLounge.entity.model.ScheduleTableImpl;
-import com.diamondLounge.entity.model.ShopImpl;
+import com.diamondLounge.entity.model.EmployeeModel;
+import com.diamondLounge.entity.model.ScheduleTableModel;
+import com.diamondLounge.entity.model.ShopModel;
 import com.diamondLounge.entity.model.WeekRange;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -27,13 +27,13 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toSet;
 
 @Repository
-public class ScheduleModel extends PersistenceModel {
+public class ScheduleService extends PersistenceService {
 
     @Autowired
-    EmployeeModel employeeModel;
+    EmployeeService employeeService;
 
     @Autowired
-    ShopModel shopModel;
+    ShopService shopModel;
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -56,12 +56,12 @@ public class ScheduleModel extends PersistenceModel {
     public void generateSchedule(int offset) throws DiamondLoungeException {
         List<Schedule> schedules = new ArrayList<>();
         WeekRange weekRange = new WeekRange(offset);
-        Map<String, List<ShopImpl>> shopMap = groupShopsByLocation(shopModel.getAllShops());
-        Map<String, List<EmployeeImpl>> employeeMap = groupEmployeesByLocation(employeeModel.getAllEmployees());
+        Map<String, List<ShopModel>> shopMap = groupShopsByLocation(shopModel.getAllShops());
+        Map<String, List<EmployeeModel>> employeeMap = groupEmployeesByLocation(employeeService.getAllEmployees());
 
         shopMap.forEach(
                 (location, shops) -> {
-                    List<EmployeeImpl> availableEmployees = employeeMap.get(location);
+                    List<EmployeeModel> availableEmployees = employeeMap.get(location);
 
                     shops.forEach(
                             shop -> weekRange.getLastMonday().datesUntil(weekRange.getNextMonday()).forEach(
@@ -73,7 +73,7 @@ public class ScheduleModel extends PersistenceModel {
         schedules.forEach(this::persistObject);
     }
 
-    private Set<Employee> generateEmployeeList(LocalDate date, ShopImpl shop, List<EmployeeImpl> availableEmployees) {
+    private Set<Employee> generateEmployeeList(LocalDate date, ShopModel shop, List<EmployeeModel> availableEmployees) {
         if (availableEmployees == null) {
             return null;
         }
@@ -84,11 +84,11 @@ public class ScheduleModel extends PersistenceModel {
 
         return availableEmployees.stream()
                 .filter(x -> x.getWorkDays().stream().noneMatch(y -> y.getDate().isEqual(date)))
-                .sorted(comparing(EmployeeImpl::getTimeInSecondsWorked))
+                .sorted(comparing(EmployeeModel::getTimeInSecondsWorked))
                 .limit(shop.getRequiredStaff())
                 .map(x -> {
                     WorkDay workDay = new WorkDay(date, shopModel.getShopById(shop.getId()), Duration.between(shop.getOpeningTime(), shop.getClosingTime()));
-                    Employee employee = employeeModel.getEmployeeById(x.getId());
+                    Employee employee = employeeService.getEmployeeById(x.getId());
                     availableEmployees.get(availableEmployees.indexOf(x)).getWorkDays().add(workDay);
                     x.getWorkDays().add(workDay);
                     employee.getWorkDays().add(workDay);
@@ -97,12 +97,12 @@ public class ScheduleModel extends PersistenceModel {
                 .collect(toSet());
     }
 
-    private Map<String, List<EmployeeImpl>> groupEmployeesByLocation(List<EmployeeImpl> employees) {
-        return employees.stream().collect(groupingBy(EmployeeImpl::getLocation));
+    private Map<String, List<EmployeeModel>> groupEmployeesByLocation(List<EmployeeModel> employees) {
+        return employees.stream().collect(groupingBy(EmployeeModel::getLocation));
     }
 
-    private Map<String, List<ShopImpl>> groupShopsByLocation(List<ShopImpl> shops) {
-        return shops.stream().collect(groupingBy(ShopImpl::getLocation));
+    private Map<String, List<ShopModel>> groupShopsByLocation(List<ShopModel> shops) {
+        return shops.stream().collect(groupingBy(ShopModel::getLocation));
     }
 
     public void eraseThisWeekSchedule(int offset) {
@@ -128,7 +128,7 @@ public class ScheduleModel extends PersistenceModel {
         }
     }
 
-    public ScheduleTableImpl getScheduleTable(int offset) {
+    public ScheduleTableModel getScheduleTable(int offset) {
         WeekRange weekRange = new WeekRange(offset);
         List<Schedule> schedules = getSchedules(weekRange.getLastMonday(), weekRange.getNextMonday());
 
@@ -136,6 +136,6 @@ public class ScheduleModel extends PersistenceModel {
             return null;
         }
 
-        return new ScheduleTableImpl(schedules, weekRange.getDateRange());
+        return new ScheduleTableModel(schedules, weekRange.getDateRange());
     }
 }

@@ -1,7 +1,7 @@
 package com.diamondLounge.MVC.controller;
 
 import com.diamondLounge.MVC.controller.Utils.ErrorHandlerForControllers;
-import com.diamondLounge.MVC.model.CalculationsModel;
+import com.diamondLounge.MVC.services.CalculationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CalculationsController {
 
     @Autowired
-    CalculationsModel calculationsController;
+    CalculationsService calculationsController;
 
     @RequestMapping("/getCalculations")
     public ModelAndView handleError(ModelAndView modelAndView,
