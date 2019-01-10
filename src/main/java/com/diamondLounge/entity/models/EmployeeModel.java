@@ -1,4 +1,4 @@
-package com.diamondLounge.entity.model;
+package com.diamondLounge.entity.models;
 
 import com.diamondLounge.entity.db.Employee;
 import com.diamondLounge.entity.db.Wage;
@@ -19,7 +19,6 @@ public class EmployeeModel {
     private Set<Wage> wages;
     private Set<WorkDay> workDays;
     private Wage currentWage;
-    private double currentWageVal;
 
     public EmployeeModel(Employee employee) {
         this.id = employee.getId();
@@ -30,15 +29,10 @@ public class EmployeeModel {
         this.workDays = employee.getWorkDays();
 
         currentWage = wages.stream().filter(x -> x.getEndDate() == null).findAny().orElse(new Wage());
-        currentWageVal = currentWage.getHourlyWage().doubleValue();
     }
 
-    public double getTimeInSecondsWorked() {
+    public long getTimeInSecondsWorked() {
         return workDays.stream().map(WorkDay::getHoursWorked).mapToLong(Duration::getSeconds).sum();
-    }
-
-    public double getCurrentWageVal() {
-        return currentWageVal;
     }
 
     public int getId() {

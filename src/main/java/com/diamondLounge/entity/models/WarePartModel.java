@@ -1,16 +1,17 @@
-package com.diamondLounge.entity.model;
+package com.diamondLounge.entity.models;
 
 import com.diamondLounge.entity.db.Ware;
 import com.diamondLounge.entity.db.WarePart;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class WarePartModel {
     private int wareId;
     private int warePartId;
     private String name;
-    private double amount;
-    private double price;
+    private BigDecimal amount;
+    private BigDecimal price;
     private String description;
     private String employeeName;
     private LocalDateTime dateSold;
@@ -21,8 +22,8 @@ public class WarePartModel {
         this.description = ware.getDescription();
 
         this.warePartId = warePart.getId();
-        this.amount = warePart.getAmount().doubleValue();
-        this.price = warePart.getPrice().doubleValue();
+        this.amount = warePart.getAmount();
+        this.price = warePart.getPrice();
         this.dateSold = warePart.getDateSold();
         this.employeeName = warePart.getEmployee().getName();
     }
@@ -39,11 +40,11 @@ public class WarePartModel {
         return name;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 

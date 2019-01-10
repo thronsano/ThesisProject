@@ -108,20 +108,20 @@ CREATE TABLE wares
 CREATE TABLE sold_wares
 (
   id          INT PRIMARY KEY AUTO_INCREMENT,
-  employee_id int           not null,
+  employee_id INT           NOT NULL,
   amount      DECIMAL(7, 2) NOT NULL,
   price       DECIMAL(7, 2) NOT NULL,
   dateSold    DATETIME      NOT NULL,
-  constraint fk_sold_wares_employee foreign key (employee_id) references employees (id) on delete cascade
+  CONSTRAINT fk_sold_wares_employee FOREIGN KEY (employee_id) REFERENCES employees (id) ON DELETE CASCADE
 );
 
 CREATE TABLE wares_sold_wares
 (
-  ware_id      int        not null AUTO_INCREMENT,
-  soldParts_id int unique not null,
-  constraint pk_wares_sold_wares primary key (ware_id, soldParts_id),
-  constraint fk_wares_sold_wares_sold_wares foreign key (soldParts_id) references sold_wares (id) ON DELETE CASCADE,
-  constraint fk_wares_sold_wares_wares foreign key (ware_id) references wares (id) ON DELETE CASCADE
+  ware_id      INT        NOT NULL AUTO_INCREMENT,
+  soldParts_id INT UNIQUE NOT NULL,
+  CONSTRAINT pk_wares_sold_wares PRIMARY KEY (ware_id, soldParts_id),
+  CONSTRAINT fk_wares_sold_wares_sold_wares FOREIGN KEY (soldParts_id) REFERENCES sold_wares (id) ON DELETE CASCADE,
+  CONSTRAINT fk_wares_sold_wares_wares FOREIGN KEY (ware_id) REFERENCES wares (id) ON DELETE CASCADE
 );
 
 -- Sample user's password '$2a$10$9d5AC2CrUGaWSgwRHbtZV.TbKiuixWQh3EzJhZ7tHt0AeifE2AxCq' is a hashed version of password 'password'

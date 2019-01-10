@@ -35,22 +35,27 @@
             </form>
             <br>
             Salaries:
-            <form th:if="${salaryList}!=null">
+            <form th:if="${reportList}!=null">
                 <table>
                     <thead>
                     <th>Name</th>
+                    <th>Earned</th>
                     <th>Salary</th>
+                    <th>Result</th>
                     </thead>
 
                     <tbody>
-                    <tr th:each="salary : ${salaryList}">
-                        <td th:text="${salary.employee.name}"></td>
-                        <td th:text="${salary.salary}"></td>
+                    <tr th:each="report : ${reportList}">
+                        <td th:text="${report.employee.name}"></td>
+                        <td th:text="${report.earnings}"></td>
+                        <td th:text="${report.salary}"></td>
+                        <td th:text="${report.result}"></td>
                     </tr>
                     </tbody>
                 </table>
             </form>
         </div>
+    </div>
 </section>
 </body>
 </html>

@@ -2,7 +2,7 @@ package com.diamondLounge.MVC.services;
 
 import com.diamondLounge.entity.db.Shop;
 import com.diamondLounge.entity.exceptions.DiamondLoungeException;
-import com.diamondLounge.entity.model.ShopModel;
+import com.diamondLounge.entity.models.ShopModel;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalTime;

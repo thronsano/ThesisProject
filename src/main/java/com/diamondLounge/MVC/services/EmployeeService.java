@@ -3,7 +3,7 @@ package com.diamondLounge.MVC.services;
 import com.diamondLounge.entity.db.Employee;
 import com.diamondLounge.entity.db.Wage;
 import com.diamondLounge.entity.exceptions.DiamondLoungeException;
-import com.diamondLounge.entity.model.EmployeeModel;
+import com.diamondLounge.entity.models.EmployeeModel;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;

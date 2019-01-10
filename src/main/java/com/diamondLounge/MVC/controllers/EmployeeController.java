@@ -2,7 +2,7 @@ package com.diamondLounge.MVC.controllers;
 
 
 import com.diamondLounge.MVC.services.EmployeeService;
-import com.diamondLounge.entity.model.EmployeeModel;
+import com.diamondLounge.entity.models.EmployeeModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,11 +48,11 @@ public class EmployeeController {
             @RequestParam("name") String name,
             @RequestParam("timeFactor") float timeFactor,
             @RequestParam("location") String location,
-            @RequestParam("wage") double wage,
+            @RequestParam("wage") BigDecimal wage,
             ModelAndView modelAndView,
             RedirectAttributes redirectAttributes) {
         try {
-            employeeService.addEmployee(name, timeFactor, location, BigDecimal.valueOf(wage));
+            employeeService.addEmployee(name, timeFactor, location, wage);
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);
         }
@@ -66,11 +66,11 @@ public class EmployeeController {
             @RequestParam("name") String name,
             @RequestParam("timeFactor") float timeFactor,
             @RequestParam("location") String location,
-            @RequestParam("wage") double wage,
+            @RequestParam("wage") BigDecimal wage,
             ModelAndView modelAndView,
             RedirectAttributes redirectAttributes) {
         try {
-            employeeService.editEmployee(id, name, timeFactor, location, BigDecimal.valueOf(wage));
+            employeeService.editEmployee(id, name, timeFactor, location, wage);
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);
         }

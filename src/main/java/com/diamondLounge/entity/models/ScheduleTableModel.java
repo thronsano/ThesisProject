@@ -1,4 +1,4 @@
-package com.diamondLounge.entity.model;
+package com.diamondLounge.entity.models;
 
 import com.diamondLounge.entity.db.Schedule;
 import com.diamondLounge.entity.db.Shop;

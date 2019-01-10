@@ -230,6 +230,7 @@ td {
     padding: 15px;
     cursor: pointer;
     text-align: center;
+    min-width: 70px;
 }
 
 .schedule td:first-child {

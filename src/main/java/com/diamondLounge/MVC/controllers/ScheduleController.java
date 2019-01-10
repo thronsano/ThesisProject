@@ -1,7 +1,7 @@
 package com.diamondLounge.MVC.controllers;
 
 import com.diamondLounge.MVC.services.ScheduleService;
-import com.diamondLounge.entity.model.WeekDateRange;
+import com.diamondLounge.entity.models.WeekDateRange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

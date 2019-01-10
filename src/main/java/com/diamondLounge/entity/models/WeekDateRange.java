@@ -1,4 +1,4 @@
-package com.diamondLounge.entity.model;
+package com.diamondLounge.entity.models;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,7 +42,7 @@ public class WeekDateRange {
         return weekStart.atStartOfDay();
     }
 
-    public LocalDateTime getWeekEndWithTime() {
-        return weekEnd.atTime(MAX);
+    public LocalDateTime getWeekEndWithTimeExclusive() {
+        return weekEnd.minusDays(1).atTime(MAX);
     }
 }
