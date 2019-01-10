@@ -5,7 +5,7 @@
     <link href="/styles.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
-<body class="front">
+<body class="login-body">
 <section class="inside-content-box" style="top:45%">
     <a th:href="@{/home}"><img alt="Diamond Lounge" class="logo" height="250" src="/logo.svg" width="450"></a>
 
@@ -24,7 +24,7 @@
         <button class="btn-login btn-basic center-horizontal" type="submit">REGISTER</button>
     </form>
 
-    <section class="login-info">
+    <section class="italic-grey-text">
         <div class="error-message" th:text="${error}"></div>
     </section>
 </section>

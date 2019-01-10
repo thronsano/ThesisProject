@@ -12,6 +12,7 @@ public class WarePartModel {
     private double amount;
     private double price;
     private String description;
+    private String employeeName;
     private LocalDateTime dateSold;
 
     public WarePartModel(WarePart warePart, Ware ware) {
@@ -20,9 +21,10 @@ public class WarePartModel {
         this.description = ware.getDescription();
 
         this.warePartId = warePart.getId();
-        this.amount = warePart.getAmount();
-        this.price = warePart.getPrice();
+        this.amount = warePart.getAmount().doubleValue();
+        this.price = warePart.getPrice().doubleValue();
         this.dateSold = warePart.getDateSold();
+        this.employeeName = warePart.getEmployee().getName();
     }
 
     public int getWareId() {
@@ -51,5 +53,9 @@ public class WarePartModel {
 
     public LocalDateTime getDateSold() {
         return dateSold;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
     }
 }

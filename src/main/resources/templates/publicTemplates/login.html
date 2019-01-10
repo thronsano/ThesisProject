@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="/styles.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
-<body class="front">
+<body class="login-body">
     <section class="inside-content-box">
         <a th:href="@{/home}"><img src="/logo.svg" class="logo center-horizontal" alt="Diamond Lounge" height="250" width="450"></a>
 
@@ -20,7 +20,7 @@
             <button type="submit" th:href="@{/home}" class="btn-login btn-basic center-horizontal">LOGIN</button>
         </form>
 
-        <section class="login-info">
+        <section class="italic-grey-text">
             <div th:if="${param.error}">
                 Invalid email or password
             </div>
@@ -35,9 +35,9 @@
             </div>
         </section>
 
-        <section class="register-forgot-box register-forgot-strings">
-            <a th:href="@{/register}" class="register-forgot-strings" style="float: left;">Register</a>
-            <a th:href="@{/forgot}" class="register-forgot-strings" style="float: right">Forgot password?</a>
+        <section class="register-forgot-box italic-info-text">
+            <a class="italic-info-text" style="float: left;" th:href="@{/register}">Register</a>
+            <a class="italic-info-text" style="float: right" th:href="@{/forgot}">Forgot password?</a>
         </section>
     </section>
 </body>

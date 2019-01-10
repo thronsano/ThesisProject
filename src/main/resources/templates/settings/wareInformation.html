@@ -10,7 +10,7 @@
 <nav th:include="home :: menuBar"></nav>
 <section class="content grid-container">
     <div class="row" style="grid-row: 1">
-        <section class="login-info">
+        <section class="italic-grey-text">
             <div class="error-message" th:text="${error}"></div>
         </section>
     </div>
@@ -21,6 +21,10 @@
                 Name:
                 <div><input class="input-field" name="name" placeholder="Name" required type="text"/></div>
 
+                Description:
+                <div><input class="input-field" name="description" placeholder="Description" required type="text"/>
+                </div>
+
                 Amount:
                 <div><input class="input-field" max="9999999.00" min="0.01" name="amount" placeholder="Amount" required
                             step="0.01" type="number"/></div>
@@ -29,9 +33,6 @@
                 <div><input class="input-field" max="9999999.00" min="0.01" name="price" placeholder="Price" required
                             step="0.01" type="number"/></div>
 
-                Description:
-                <div><input class="input-field" name="description" placeholder="Description" required type="text"/>
-                </div>
 
                 <button class="btn-login btn-basic" type="submit">ADD</button>
             </form>
@@ -45,6 +46,10 @@
                 <div><input class="input-field" name="name" placeholder="Name" required th:value="${selectedWare.name}"
                             type="text"/></div>
 
+                Description:
+                <div><input class="input-field" name="description" placeholder="Description" required
+                            th:value="${selectedWare.description}" type="text"/></div>
+
                 Amount:
                 <div><input class="input-field" max="9999999.00" min="0.01" name="amount" placeholder="Amount" required
                             step="0.01" th:value="${selectedWare.amount}" type="number"/></div>
@@ -52,10 +57,6 @@
                 Price:
                 <div><input class="input-field" max="9999999.00" min="0.01" name="price" placeholder="Price" required
                             step="0.01" th:value="${selectedWare.price}" type="number"/></div>
-
-                Description:
-                <div><input class="input-field" name="description" placeholder="Description" required
-                            th:value="${selectedWare.description}" type="text"/></div>
 
                 <button class="btn-login btn-basic" type="submit">SAVE</button>
             </form>
@@ -71,9 +72,17 @@
                 Amount:
                 <div><input class="input-field" min="0.01" name="amount" placeholder="Amount" required step="0.01"
                             th:max="${selectedWare.amount}" th:value="${selectedWare.amount}" type="number"/></div>
+                <div>Date of sale<input class="input-field" name="date" type="date"/></div>
+                <div>Time of sale<input class="input-field" name="time" type="time" value="9:00"/></div>
+                <div>Sold by <select class="input-field dropdown" name="employeeId">
+                    <option th:each="employee : ${employeeList}" th:text="${employee.name}"
+                            th:value="${employee.id}"></option>
+                </select></div>
                 <input hidden name="id" th:value="${selectedWare.id}"/>
                 <button class="btn-login btn-basic" type="submit">SELL WARE</button>
             </form>
+            <br>
+            <p class="italic-grey-text"> Leaving date and time fields empty will result in saving current time.</p>
         </div>
     </div>
     <div class="row" style="grid-row: 3">
@@ -84,18 +93,18 @@
                 <table>
                     <thead>
                     <th>Name</th>
+                    <th>Description</th>
                     <th>Amount</th>
                     <th>Price</th>
-                    <th>Description</th>
                     </thead>
 
                     <tbody>
                     <tr th:each="ware : ${waresList}"
                         th:onclick="'javascript:updateParams(\'wares/editWareInformation\', \'selectedWare\', \'' + ${ware.id} + '\');'">
                         <td th:text="${ware.name}"></td>
+                        <td th:text="${ware.description}"></td>
                         <td th:text="${ware.amount}"></td>
                         <td th:text="${ware.price}"></td>
-                        <td th:text="${ware.description}"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -108,19 +117,21 @@
                 <table>
                     <thead>
                     <th>Name</th>
+                    <th>Description</th>
                     <th>Amount</th>
                     <th>Price</th>
-                    <th>Description</th>
                     <th>Date sold</th>
+                    <th>Sold by</th>
                     </thead>
 
                     <tbody>
                     <tr th:each="ware : ${soldWaresList}">
                         <td th:text="${ware.name}"></td>
+                        <td th:text="${ware.description}"></td>
                         <td th:text="${ware.amount}"></td>
                         <td th:text="${ware.price}"></td>
-                        <td th:text="${ware.description}"></td>
                         <td th:text="${#temporals.format(ware.dateSold, 'dd-MM-yyyy HH:mm')}"></td>
+                        <td th:text="${ware.employeeName}"></td>
                     </tr>
                     </tbody>
                 </table>

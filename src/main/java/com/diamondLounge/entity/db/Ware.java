@@ -1,6 +1,7 @@
 package com.diamondLounge.entity.db;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
@@ -18,10 +19,10 @@ public class Ware {
     private String name;
 
     @Column
-    private double amount;
+    private BigDecimal amount;
 
     @Column
-    private double price;
+    private BigDecimal price;
 
     @Column
     private String description;
@@ -29,7 +30,7 @@ public class Ware {
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true)
     private Set<WarePart> soldParts;
 
-    public Ware(String name, double amount, double price, String description, Set<WarePart> soldParts) {
+    public Ware(String name, BigDecimal amount, BigDecimal price, String description, Set<WarePart> soldParts) {
         this.name = name;
         this.amount = amount;
         this.price = price;
@@ -56,19 +57,19 @@ public class Ware {
         this.name = name;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

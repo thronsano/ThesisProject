@@ -60,6 +60,10 @@ body {
     transition: 0.2s;
 }
 
+.dropdown {
+    width: 275px;
+}
+
 .input-field-small {
     margin-bottom: 15px;
     padding: 10px;
@@ -85,7 +89,6 @@ body {
 }
 
 .input-field-xs input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
-    /* display: none; <- Crashes Chrome on hover */
     -webkit-appearance: none;
     margin: 0;
 }
@@ -94,7 +97,7 @@ body {
     border: 2px #36adcf solid;
 }
 
-.front {
+.login-body {
     height: 100%;
     animation: fadein 1s;
     position: relative;
@@ -139,13 +142,13 @@ body {
     margin-top: 15px;
 }
 
-.register-forgot-strings {
+.italic-info-text {
     color: white;
     font-style: italic;
     text-decoration: underline;
 }
 
-.login-info {
+.italic-grey-text {
     margin-top: 5px;
     font-style: italic;
     color: lightgrey;

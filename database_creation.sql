@@ -99,18 +99,20 @@ CREATE TABLE employees_work_days
 CREATE TABLE wares
 (
   id          INT PRIMARY KEY AUTO_INCREMENT,
-  name        VARCHAR(255) NOT NULL,
-  amount      DOUBLE       NOT NULL,
-  price       DOUBLE       NOT NULL,
-  description VARCHAR(255) NOT NULL
+  name        VARCHAR(255)  NOT NULL,
+  amount      DECIMAL(7, 2) NOT NULL,
+  price       DECIMAL(7, 2) NOT NULL,
+  description VARCHAR(255)  NOT NULL
 );
 
 CREATE TABLE sold_wares
 (
-  id       INT PRIMARY KEY AUTO_INCREMENT,
-  amount   DOUBLE   NOT NULL,
-  price    DOUBLE   NOT NULL,
-  dateSold DATETIME NOT NULL
+  id          INT PRIMARY KEY AUTO_INCREMENT,
+  employee_id int           not null,
+  amount      DECIMAL(7, 2) NOT NULL,
+  price       DECIMAL(7, 2) NOT NULL,
+  dateSold    DATETIME      NOT NULL,
+  constraint fk_sold_wares_employee foreign key (employee_id) references employees (id) on delete cascade
 );
 
 CREATE TABLE wares_sold_wares

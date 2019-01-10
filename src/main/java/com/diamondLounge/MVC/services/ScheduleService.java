@@ -27,13 +27,13 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toSet;
 
 @Repository
-public class ScheduleService extends PersistenceService {
+public class ScheduleService extends PersistenceService<Schedule> {
 
     @Autowired
     EmployeeService employeeService;
 
     @Autowired
-    ShopService shopModel;
+    ShopService shopService;
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -56,19 +56,21 @@ public class ScheduleService extends PersistenceService {
     public void generateSchedule(int offset) throws DiamondLoungeException {
         List<Schedule> schedules = new ArrayList<>();
         WeekDateRange weekDateRange = new WeekDateRange(offset);
-        Map<String, List<ShopModel>> shopMap = groupShopsByLocation(shopModel.getAllShops());
+        Map<String, List<ShopModel>> shopMap = groupShopsByLocation(shopService.getAllShops());
         Map<String, List<EmployeeModel>> employeeMap = groupEmployeesByLocation(employeeService.getAllEmployees());
 
         shopMap.forEach(
                 (location, shops) -> {
                     List<EmployeeModel> availableEmployees = employeeMap.get(location);
-
-                    shops.forEach(
-                            shop -> weekDateRange.getWeekStart().datesUntil(weekDateRange.getWeekEnd()).forEach(
-                                    date -> schedules.add(new Schedule(date, shopModel.getShopById(shop.getId()), generateEmployeeList(date, shop, availableEmployees))))
-                    );
-                }
-        );
+                    shops.forEach(shop -> weekDateRange.getWeekStart()
+                                                       .datesUntil(weekDateRange.getWeekEnd())
+                                                       .forEach(
+                                                               date -> schedules.add(
+                                                                       new Schedule(date, shopService.getShopById(shop.getId()),
+                                                                                    generateEmployeeList(date, shop, availableEmployees)))
+                                                               )
+                                 );
+                });
 
         schedules.forEach(this::persistObject);
     }
@@ -83,18 +85,19 @@ public class ScheduleService extends PersistenceService {
         }
 
         return availableEmployees.stream()
-                .filter(x -> x.getWorkDays().stream().noneMatch(y -> y.getDate().isEqual(date)))
-                .sorted(comparing(EmployeeModel::getTimeInSecondsWorked))
-                .limit(shop.getRequiredStaff())
-                .map(x -> {
-                    WorkDay workDay = new WorkDay(date, shopModel.getShopById(shop.getId()), Duration.between(shop.getOpeningTime(), shop.getClosingTime()));
-                    Employee employee = employeeService.getEmployeeById(x.getId());
-                    availableEmployees.get(availableEmployees.indexOf(x)).getWorkDays().add(workDay);
-                    x.getWorkDays().add(workDay);
-                    employee.getWorkDays().add(workDay);
-                    return employee;
-                })
-                .collect(toSet());
+                                 .filter(x -> x.getWorkDays().stream().noneMatch(y -> y.getDate().isEqual(date)))
+                                 .sorted(comparing(EmployeeModel::getTimeInSecondsWorked))
+                                 .limit(shop.getRequiredStaff())
+                                 .map(x -> {
+                                     WorkDay workDay = new WorkDay(date,
+                                                                   shopService.getShopById(shop.getId()),
+                                                                   Duration.between(shop.getOpeningTime(), shop.getClosingTime()));
+                                     Employee employee = employeeService.getEmployeeById(x.getId());
+                                     x.getWorkDays().add(workDay);
+                                     employee.getWorkDays().add(workDay);
+                                     return employee;
+                                 })
+                                 .collect(toSet());
     }
 
     private Map<String, List<EmployeeModel>> groupEmployeesByLocation(List<EmployeeModel> employees) {
@@ -129,11 +132,6 @@ public class ScheduleService extends PersistenceService {
 
     public ScheduleTableModel getScheduleTableForRange(WeekDateRange weekDateRange) {
         List<Schedule> schedules = getSchedules(weekDateRange.getWeekStart(), weekDateRange.getWeekEnd());
-
-        if (schedules.size() == 0) {
-            return null;
-        }
-
-        return new ScheduleTableModel(schedules, weekDateRange.getDateRange());
+        return schedules.size() == 0 ? null : new ScheduleTableModel(schedules, weekDateRange.getDateRange());
     }
 }

@@ -4,16 +4,21 @@ import com.diamondLounge.entity.db.Ware;
 import com.diamondLounge.entity.db.WarePart;
 import com.diamondLounge.entity.exceptions.DiamondLoungeException;
 import com.diamondLounge.entity.model.WarePartModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static java.time.LocalDateTime.now;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toList;
 
 @Repository
 public class WareService extends PersistenceService<Ware> {
+
+    @Autowired
+    EmployeeService employeeService;
 
     public List<Ware> getAllWares() {
         return getAllObjects("Ware");
@@ -23,12 +28,12 @@ public class WareService extends PersistenceService<Ware> {
         return getObjectById("Ware", selectedWare);
     }
 
-    public void addWare(String name, double amount, double price, String description) {
+    public void addWare(String name, BigDecimal amount, BigDecimal price, String description) {
         Ware ware = new Ware(name, amount, price, description, emptySet());
         persistObject(ware);
     }
 
-    public void editWare(int id, String name, double amount, double price, String description) {
+    public void editWare(int id, String name, BigDecimal amount, BigDecimal price, String description) {
         Ware ware = getWareById(id);
 
         ware.setName(name);
@@ -43,16 +48,16 @@ public class WareService extends PersistenceService<Ware> {
         deleteObjectById("Ware", id);
     }
 
-    public void sellWare(int id, double amount) throws DiamondLoungeException {
+    public void sellWare(int id, BigDecimal amount, int employeeId, LocalDateTime saleTime) throws DiamondLoungeException {
         Ware ware = getObjectById("Ware", id);
 
-        if (ware.getAmount() < amount) {
+        if (ware.getAmount().compareTo(amount) < 0) {
             throw new DiamondLoungeException("Amount to sell is too large!");
         }
 
-        WarePart warePart = new WarePart(amount, ware.getPrice() * amount, now());
+        WarePart warePart = new WarePart(amount, ware.getPrice().multiply(amount), employeeService.getEmployeeById(employeeId), saleTime);
 
-        ware.setAmount(ware.getAmount() - amount);
+        ware.setAmount(ware.getAmount().subtract(amount));
         ware.getSoldParts().add(warePart);
 
         persistObject(ware);
