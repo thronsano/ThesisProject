@@ -7,6 +7,7 @@ import com.diamondLounge.entity.exceptions.DiamondLoungeException;
 import com.diamondLounge.entity.exceptions.UsernamePasswordException;
 import com.diamondLounge.settings.security.mailing.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Repository
 public class UserService extends PersistenceService<User> {
 
+    @Lazy
     @Autowired
     PasswordEncoder passwordEncoder;
 
@@ -32,8 +34,8 @@ public class UserService extends PersistenceService<User> {
 
     public void createUser(String email, String password, String confirmPassword, String username) throws UsernamePasswordException {
         if (getAllObjects("User").size() != 0) {
-            throw new UsernamePasswordException("<p>Master account has already been created!</p>" +
-                                                "<p>Please use 'forgot password' option if recovery is required.</p>");
+            throw new UsernamePasswordException("Master account has already been created! " +
+                                                "Please use 'forgot password' option if recovery is required.");
         }
         if (validateString(email) && validateString(password) && validateString(username)) {
             if (password.equals(confirmPassword)) {
