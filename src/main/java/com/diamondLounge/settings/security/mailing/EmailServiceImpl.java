@@ -20,6 +20,9 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     Environment env;
 
+    @Autowired
+    private JavaMailSender mailSender;
+
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -38,12 +41,15 @@ public class EmailServiceImpl implements EmailService {
         return mailSender;
     }
 
-    @Autowired
-    private JavaMailSender mailSender;
-
     @Async
-    public void sendEmail(SimpleMailMessage email) {
-        mailSender.send(email);
+    public void sendEmail(String to, String body) {
+        SimpleMailMessage emailMessage = new SimpleMailMessage();
+        emailMessage.setFrom(getServerEmail());
+        emailMessage.setTo(to);
+        emailMessage.setSubject("Password Reset Request");
+        emailMessage.setText(body);
+
+        mailSender.send(emailMessage);
     }
 
     public String getServerEmail() {

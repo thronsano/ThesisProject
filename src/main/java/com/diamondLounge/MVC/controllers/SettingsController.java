@@ -47,7 +47,7 @@ public class SettingsController {
                                  RedirectAttributes redirectAttributes) {
 
         try {
-            userService.editUserByUsername(username);
+            userService.changeUsername(username);
             redirectAttributes.addFlashAttribute("redirectionMessage", "Information saved!");
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);

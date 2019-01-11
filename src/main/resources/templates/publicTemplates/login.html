@@ -2,40 +2,41 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Diamond Lounge</title>
-    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link href="/styles.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
 <body class="login-body">
-    <section class="inside-content-box">
-        <a th:href="@{/home}"><img src="/logo.svg" class="logo center-horizontal" alt="Diamond Lounge" height="250" width="450"></a>
+<section class="inside-content-box">
+    <a th:fragment="logo"><a th:href="@{/home}"><img alt="Diamond Lounge" class="logo center-horizontal" height="250"
+                                                     src="/logo.svg" width="450"></a></a>
 
-        <form id="loginForm" th:action="@{/login}" method="post">
-            <div>
-                <input type="email" class="input-field center-horizontal" placeholder="email" id="username" name="username">
-            </div>
-            <div>
-                <input type="password" class="input-field center-horizontal" placeholder="password" id="password"
-                       name="password">
-            </div>
-            <button type="submit" th:href="@{/home}" class="btn-login btn-basic center-horizontal">LOGIN</button>
-        </form>
+    <form id="loginForm" method="post" th:action="@{/login}">
+        <div>
+            <input class="input-field center-horizontal" id="username" name="username" placeholder="email" type="email">
+        </div>
+        <div>
+            <input class="input-field center-horizontal" id="password" name="password" placeholder="password"
+                   type="password">
+        </div>
+        <button class="btn-login btn-basic center-horizontal" th:href="@{/home}" type="submit">LOGIN</button>
+    </form>
 
-        <section class="italic-grey-text">
-            <div th:if="${param.error}">
-                Invalid email or password
-            </div>
-            <div th:if="${param.logout}">
-                You have been logged out
-            </div>
-            <div th:if="${redirectionMessage}!=null" class="alert alert-success">
-                <a th:text="${redirectionMessage}"></a>
-            </div>
-        </section>
-
-        <section class="register-forgot-box italic-info-text">
-            <a class="italic-info-text" style="float: left;" th:href="@{/register}">Register</a>
-            <a class="italic-info-text" style="float: right" th:href="@{/forgot}">Forgot password?</a>
-        </section>
+    <section class="italic-grey-text">
+        <div th:if="${param.error}">
+            Invalid email or password
+        </div>
+        <div th:if="${param.logout}">
+            You have been logged out
+        </div>
+        <div class="alert alert-success" th:if="${redirectionMessage}!=null">
+            <a th:text="${redirectionMessage}"></a>
+        </div>
     </section>
+
+    <section class="register-forgot-box italic-info-text">
+        <a class="italic-info-text" style="float: left;" th:href="@{/register}">Register</a>
+        <a class="italic-info-text" style="float: right" th:href="@{/forgot}">Forgot password?</a>
+    </section>
+</section>
 </body>
 </html>

@@ -3,7 +3,6 @@ package com.diamondLounge.MVC.controllers;
 import com.diamondLounge.MVC.services.UserService;
 import com.diamondLounge.entity.exceptions.DiamondLoungeException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,39 +14,40 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static com.diamondLounge.MVC.controllers.Utils.ErrorHandlerForControllers.handleError;
+
 @Controller
 public class PasswordController {
 
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @RequestMapping(value = "/forgot", method = RequestMethod.GET)
-    public ModelAndView displayForgotPasswordPage() {
+    public ModelAndView getForgotPasswordPage() {
         return new ModelAndView("publicTemplates/forgotPassword");
     }
 
     @RequestMapping(value = "/forgot", method = RequestMethod.POST)
     public ModelAndView processForgotPasswordForm(ModelAndView modelAndView,
-                                                  @RequestParam("email") String userEmail,
+                                                  RedirectAttributes redirectAttributes,
+                                                  @RequestParam("email") String email,
                                                   HttpServletRequest request) {
         try {
-            userService.sendResetToken(userEmail, request);
-            modelAndView.addObject("successEmail", true);
-        } catch (DiamondLoungeException e) {
-            modelAndView.addObject("error", e.getMessage());
+            userService.sendResetToken(email, request);
+            modelAndView.addObject("statusParam", "Email sent!");
+        } catch (Exception ex) {
+            handleError(modelAndView, redirectAttributes, ex);
         }
 
         modelAndView.setViewName("publicTemplates/forgotPassword");
+
         return modelAndView;
     }
 
     @RequestMapping(value = "/reset", method = RequestMethod.GET)
-    public ModelAndView displayResetPasswordPage(ModelAndView modelAndView) {
-
+    public ModelAndView getResetPasswordPage(ModelAndView modelAndView) {
         modelAndView.setViewName("publicTemplates/resetPassword");
+
         return modelAndView;
     }
 
@@ -56,20 +56,19 @@ public class PasswordController {
                                        @RequestParam("token") String token,
                                        @RequestParam("password") String password,
                                        @RequestParam("confirm") String confirmPassword,
-                                       RedirectAttributes redir) {
-
+                                       RedirectAttributes redirectAttributes) {
         try {
-            userService.resetPasswordWithToken(token, password, confirmPassword, passwordEncoder);
-            redir.addFlashAttribute("redirectionMessage", "You have successfully reset your password");
+            userService.resetPasswordWithToken(token, password, confirmPassword);
+            redirectAttributes.addFlashAttribute("redirectionMessage", "You have successfully reset your password");
             modelAndView.setViewName("redirect:/");
-        } catch (DiamondLoungeException e) {
-            redir.addFlashAttribute("error", e.getMessage());
+        } catch (DiamondLoungeException ex) {
+            handleError(modelAndView, redirectAttributes, ex);
             modelAndView.setViewName("publicTemplates/resetPassword");
         }
+
         return modelAndView;
     }
 
-    // Going to reset page without a token redirects to login page
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ModelAndView handleMissingParams(MissingServletRequestParameterException ex) {
         return new ModelAndView("redirect:publicTemplates/login");

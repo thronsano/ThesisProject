@@ -7,7 +7,7 @@
 </head>
 <body class="login-body">
 <section class="inside-content-box" style="top:45%">
-    <a th:href="@{/home}"><img alt="Diamond Lounge" class="logo" height="250" src="/logo.svg" width="450"></a>
+    <a th:include="publicTemplates/login :: logo"></a>
 
     <form method="post" th:action="@{/register}">
         <div>

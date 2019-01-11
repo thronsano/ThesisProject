@@ -3,7 +3,6 @@ package com.diamondLounge.MVC.controllers;
 import com.diamondLounge.MVC.services.UserService;
 import com.diamondLounge.entity.exceptions.UsernamePasswordException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,9 +18,6 @@ public class RegistrationController {
 
     @Autowired
     UserService userService;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
     @RequestMapping(value = "/register", method = GET)
     public ModelAndView getRegisterPage(ModelAndView modelAndView) {
@@ -39,7 +35,7 @@ public class RegistrationController {
             RedirectAttributes redirectAttributes) {
 
         try {
-            userService.createUser(email, password, confirmPassword, username, passwordEncoder);
+            userService.createUser(email, password, confirmPassword, username);
             redirectAttributes.addFlashAttribute("redirectionMessage", "New account created!");
             modelAndView.setViewName("redirect:/");
         } catch (UsernamePasswordException ex) {

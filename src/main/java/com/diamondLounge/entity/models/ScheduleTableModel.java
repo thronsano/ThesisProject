@@ -22,6 +22,7 @@ public class ScheduleTableModel {
     public ScheduleTableModel(List<Schedule> schedules, List<LocalDate> dateRange) {
         Ordering<Shop> shopOrdering = Ordering.natural().onResultOf(Shop::getName);
         ImmutableSortedMap<Shop, List<Schedule>> sortedMap = ImmutableSortedMap.copyOf(schedules.stream().collect(groupingBy(Schedule::getShop)), shopOrdering);
+
         createEmptyTable(dateRange, sortedMap);
         addHeaders(dateRange);
         addBody(sortedMap);
@@ -46,6 +47,7 @@ public class ScheduleTableModel {
                                                    .filter(x -> x != 0)
                                                    .max()
                                                    .orElse(1); //accommodate schedules without employees
+
             currentHeight.getAndAdd(maxAmountOfEmployees);
         });
     }
@@ -58,20 +60,24 @@ public class ScheduleTableModel {
                 (shop, scheduleList) -> {
                     int maxAmountOfEmployees = scheduleList.stream()
                                                            .mapToInt(calculateAmountOfRows(shop))
-                            .max()
-                            .orElse(1);
+                                                           .max()
+                                                           .orElse(1);
 
-                    if (maxAmountOfEmployees == 0) {
-                        maxAmountOfEmployees = 1; //accommodate shop name row
-                    }
+                    maxAmountOfEmployees = considerShopNameRow(maxAmountOfEmployees);
 
                     height.addAndGet(maxAmountOfEmployees);
-                }
-        );
+                });
 
         table = new String[width][height.get()];
         this.height = height.get() - 1;
         this.width = width - 1;
+    }
+
+    private int considerShopNameRow(int maxAmountOfEmployees) {
+        if (maxAmountOfEmployees == 0) {
+            maxAmountOfEmployees = 1;
+        }
+        return maxAmountOfEmployees;
     }
 
     private ToIntFunction<Schedule> calculateAmountOfRows(Shop Shop) {
