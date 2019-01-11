@@ -7,6 +7,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.diamondLounge.utility.Logger.logWarning;
@@ -24,15 +25,13 @@ public class PersistenceService<T> {
             session.beginTransaction();
             session.saveOrUpdate(obj);
         } catch (Exception ex) {
-            logWarning(ex.getMessage());
-            throw new DiamondLoungeException(ex.getMessage());
+            handleError(ex);
         } finally {
-            session.getTransaction().commit();
-            session.close();
+            finishSession(session);
         }
     }
 
-    T getObjectById(String table, int id) throws DiamondLoungeException {
+    T getObjectById(String table, Object id) throws DiamondLoungeException {
         Session session = sessionFactory.openSession();
 
         try {
@@ -41,12 +40,12 @@ public class PersistenceService<T> {
             query.setParameter("selectedId", id);
             return (T) query.uniqueResult();
         } catch (Exception ex) {
-            logWarning(ex.getMessage());
-            throw new DiamondLoungeException(ex.getMessage());
+            handleError(ex);
         } finally {
-            session.getTransaction().commit();
-            session.close();
+            finishSession(session);
         }
+
+        return null;
     }
 
     List<T> getAllObjects(String table) throws DiamondLoungeException {
@@ -57,15 +56,15 @@ public class PersistenceService<T> {
             Query query = session.createQuery("from " + table);
             return query.list();
         } catch (Exception ex) {
-            logWarning(ex.getMessage());
-            throw new DiamondLoungeException(ex.getMessage());
+            handleError(ex);
         } finally {
-            session.getTransaction().commit();
-            session.close();
+            finishSession(session);
         }
+
+        return new ArrayList<>();
     }
 
-    void deleteObjectById(String table, int selectedId) throws DiamondLoungeException {
+    void deleteObjectById(String table, Object selectedId) throws DiamondLoungeException {
         Session session = sessionFactory.openSession();
 
         try {
@@ -74,11 +73,19 @@ public class PersistenceService<T> {
             query.setParameter("selectedId", selectedId);
             query.executeUpdate();
         } catch (Exception ex) {
-            logWarning(ex.getMessage());
-            throw new DiamondLoungeException(ex.getMessage());
+            handleError(ex);
         } finally {
-            session.getTransaction().commit();
-            session.close();
+            finishSession(session);
         }
+    }
+
+    private void handleError(Exception ex) throws DiamondLoungeException {
+        logWarning(ex.getMessage());
+        throw new DiamondLoungeException(ex.getMessage());
+    }
+
+    private void finishSession(Session session) {
+        session.getTransaction().commit();
+        session.close();
     }
 }

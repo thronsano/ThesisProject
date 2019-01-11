@@ -48,7 +48,7 @@ public class SettingsController {
 
         try {
             userService.editUserByUsername(username);
-            redirectAttributes.addFlashAttribute("userEdited", true);
+            redirectAttributes.addFlashAttribute("redirectionMessage", "Information saved!");
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);
         }
@@ -66,7 +66,7 @@ public class SettingsController {
 
         try {
             userService.changePassword(currentPassword, newPassword, confirmNewPassword, passwordEncoder);
-            redirectAttributes.addFlashAttribute("passwordChanged", true);
+            redirectAttributes.addFlashAttribute("redirectionMessage", "Information saved!");
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);
         }

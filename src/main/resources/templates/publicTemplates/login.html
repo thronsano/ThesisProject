@@ -11,10 +11,10 @@
 
         <form id="loginForm" th:action="@{/login}" method="post">
             <div>
-                <input type="email" class="input-field center-horizontal" value="" placeholder="username" id="username" name="username">
+                <input type="email" class="input-field center-horizontal" placeholder="email" id="username" name="username">
             </div>
             <div>
-                <input type="password" class="input-field center-horizontal" value="" placeholder="password" id="password"
+                <input type="password" class="input-field center-horizontal" placeholder="password" id="password"
                        name="password">
             </div>
             <button type="submit" th:href="@{/home}" class="btn-login btn-basic center-horizontal">LOGIN</button>
@@ -27,11 +27,8 @@
             <div th:if="${param.logout}">
                 You have been logged out
             </div>
-            <div th:if="${userCreated}" class="alert alert-success">
-                New account created!
-            </div>
-            <div th:if="${passwordChanged}" class="alert alert-success">
-                You have successfully reset your password
+            <div th:if="${redirectionMessage}!=null" class="alert alert-success">
+                <a th:text="${redirectionMessage}"></a>
             </div>
         </section>
 

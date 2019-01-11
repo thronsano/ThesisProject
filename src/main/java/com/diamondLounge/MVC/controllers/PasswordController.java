@@ -60,7 +60,7 @@ public class PasswordController {
 
         try {
             userService.resetPasswordWithToken(token, password, confirmPassword, passwordEncoder);
-            redir.addFlashAttribute("passwordChanged", true);
+            redir.addFlashAttribute("redirectionMessage", "You have successfully reset your password");
             modelAndView.setViewName("redirect:/");
         } catch (DiamondLoungeException e) {
             redir.addFlashAttribute("error", e.getMessage());

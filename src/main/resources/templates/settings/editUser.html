@@ -11,11 +11,8 @@
     <div class="row" style="grid-row: 1">
         <section class="italic-grey-text">
             <div class="error-message" th:text="${error}"></div>
-            <div class="error-message" th:if="${userEdited}">
-                Information saved!
-            </div>
-            <div class="error-message" th:if="${passwordChanged}">
-                Password is changed!
+            <div class="error-message" th:if="${redirectionMessage}!=null">
+                <a th:text="${redirectionMessage}"></a>
             </div>
         </section>
     </div>

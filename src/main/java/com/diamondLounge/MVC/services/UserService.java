@@ -110,7 +110,7 @@ public class UserService {
             if (user != null) {
                 if (password.equals(confirmPassword)) {
                     user.setPassword(passwordEncoder.encode(password));
-                    resetTokenService.deleteResetToken(user.getEmail());
+                    resetTokenService.deletePreviousResetToken(user.getEmail());
                     savePassword(user);
                 }
             } else {
