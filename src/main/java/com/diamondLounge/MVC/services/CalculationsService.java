@@ -17,18 +17,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
-import static com.diamondLounge.utility.DateUtils.isSameOrAfter;
-import static com.diamondLounge.utility.DateUtils.isSameOrBefore;
-import static com.diamondLounge.utility.Logger.logWarning;
+import static com.diamondLounge.utility.DateUtils.*;
 import static java.math.BigDecimal.ZERO;
 import static java.math.BigDecimal.valueOf;
 import static java.math.RoundingMode.HALF_UP;
 import static java.time.LocalTime.MAX;
-import static java.util.stream.Collectors.toList;
+import static java.time.ZoneOffset.UTC;
 import static java.util.stream.Collectors.toSet;
 
 @Repository
@@ -48,42 +46,21 @@ public class CalculationsService extends PersistenceService<Object> {
             BigDecimal salary = getComputedSalary(employee, forDateRange);
             BigDecimal earnings = getEarnings(employee, forDateRange);
             FinancialReport financialReport = new FinancialReport(employee, salary, earnings);
+
             employeeSalaries.add(financialReport);
         });
 
         return employeeSalaries;
     }
 
-    private BigDecimal getEarnings(EmployeeModel employee, WeekDateRange forDateRange) throws DiamondLoungeException {
-        Session session = sessionFactory.openSession();
-
-        try {
-            session.beginTransaction();
-            Query query = session.createQuery("from WarePart as part where part.dateSold<:rangeEnd and part.dateSold>:rangeStart and part.employee.id=:employeeId");
-            query.setParameter("employeeId", employee.getId());
-            query.setParameter("rangeStart", forDateRange.getWeekStartWithTime());
-            query.setParameter("rangeEnd", forDateRange.getWeekEndWithTimeExclusive());
-
-            List<WarePart> waresSold = query.list();
-
-            return waresSold.stream()
-                            .map(WarePart::getPrice)
-                            .reduce(ZERO, BigDecimal::add);
-        } catch (Exception ex) {
-            logWarning(ex.getMessage());
-            throw new DiamondLoungeException(ex.getMessage());
-        } finally {
-            session.getTransaction().commit();
-            session.close();
-        }
-    }
-
     private BigDecimal getComputedSalary(EmployeeModel employee, WeekDateRange forDateRange) {
         BigDecimal salary = ZERO;
+
         Set<WorkDay> workDaysToConsider = employee.getWorkDays().stream()
                                                   .filter(x -> isSameOrAfter(x.getDate(), forDateRange.getWeekStart()) &&
-                                                          isSameOrBefore(x.getDate(), forDateRange.getWeekEndExclusive()))
+                                                               isSameOrBefore(x.getDate(), forDateRange.getWeekEndExclusive()))
                                                   .collect(toSet());
+
         for (WorkDay workDay : workDaysToConsider) {
             LocalDate date = workDay.getDate();
             BigDecimal dailySalary = getWageForDate(employee, date).multiply(valueOf(workDay.getHoursWorked().toHours()));
@@ -98,37 +75,75 @@ public class CalculationsService extends PersistenceService<Object> {
         LocalDateTime dayEnd = date.atTime(MAX);
 
         return employee.getWages().stream()
-                       .filter(x -> x.getStartDate().isBefore(dayStart) &&
-                               (x.getEndDate() == null || x.getEndDate().isAfter(dayEnd)))
+                       .filter(singleWageMatchingEntirePeriod(dayStart, dayEnd))
                        .findAny()
-                       .orElse(calculateAverageWage(employee, dayStart, dayEnd))
+                       .orElse(calculateFragmentedWage(employee, dayStart, dayEnd))
                        .getHourlyWage();
     }
 
-    private Wage calculateAverageWage(EmployeeModel employee, LocalDateTime dateStart, LocalDateTime dateEnd) {
-        List<BigDecimal> hourlyWageInDateRange = employee.getWages().stream()
-                                                         .filter(fallsWithinRange(dateStart, dateEnd))
-                                                         .map(Wage::getHourlyWage)
-                                                         .collect(toList());
-
-        if (hourlyWageInDateRange.size() == 0) {
-            return new Wage(ZERO, dateStart, dateEnd);
-        }
-
-        BigDecimal sum = hourlyWageInDateRange.stream()
-                                              .map(Objects::requireNonNull)
-                                              .reduce(ZERO, BigDecimal::add);
-
-        return new Wage(sum.divide(new BigDecimal(hourlyWageInDateRange.size()), HALF_UP), dateStart, dateEnd);
+    private Predicate<Wage> singleWageMatchingEntirePeriod(LocalDateTime dayStart, LocalDateTime dayEnd) {
+        return x -> x.getStartDate().isBefore(dayStart) &&
+                    (x.getEndDate() == null || x.getEndDate().isAfter(dayEnd));
     }
 
-    private Predicate<Wage> fallsWithinRange(LocalDateTime periodStart, LocalDateTime periodEnd) {
+    private Wage calculateFragmentedWage(EmployeeModel employee, LocalDateTime periodStart, LocalDateTime periodEnd) {
+        long totalPeriodLength = periodEnd.toEpochSecond(UTC) - periodStart.toEpochSecond(UTC);
+        AtomicInteger amountOfMatchingElements = new AtomicInteger();
+
+        BigDecimal fragmentedWage = employee.getWages().stream()
+                                            .filter(fallsWithinPeriodTimeRange(periodStart, periodEnd))
+                                            .map(wage -> calculateWeightOfWageFragment(periodStart, periodEnd, totalPeriodLength, amountOfMatchingElements, wage))
+                                            .reduce(ZERO, BigDecimal::add)
+                                            .divide(valueOf(amountOfMatchingElements.get()), HALF_UP);
+
+        return new Wage(fragmentedWage, periodStart, periodEnd);
+    }
+
+    private BigDecimal calculateWeightOfWageFragment(LocalDateTime periodStart, LocalDateTime periodEnd, long totalPeriodLength, AtomicInteger amountOfMatchingElements, Wage wage) {
+        amountOfMatchingElements.incrementAndGet();
+
+        LocalDateTime fragmentStart = getLaterDateTime(wage.getStartDate(), periodStart);
+        LocalDateTime fragmentEnd = getEarlierDateTime(wage.getEndDate(), periodEnd);
+        long periodFragmentLength = fragmentEnd.toEpochSecond(UTC) - fragmentStart.toEpochSecond(UTC);
+
+        return wage.getHourlyWage().multiply(valueOf(periodFragmentLength / totalPeriodLength));
+    }
+
+    private Predicate<Wage> fallsWithinPeriodTimeRange(LocalDateTime periodStart, LocalDateTime periodEnd) {
         return x -> x.getStartDate().isBefore(periodStart) && (x.getEndDate() == null || x.getEndDate().isAfter(periodEnd)) ||
-                x.getStartDate().isAfter(periodStart) && (x.getEndDate() == null || x.getEndDate().isBefore(periodEnd)) ||
-                x.getStartDate().isBefore(periodEnd) && (x.getEndDate() == null || x.getEndDate().isAfter(periodEnd));
+                    x.getStartDate().isAfter(periodStart) && (x.getEndDate() == null || x.getEndDate().isBefore(periodEnd)) ||
+                    x.getStartDate().isBefore(periodEnd) && (x.getEndDate() == null || x.getEndDate().isAfter(periodEnd));
+    }
+
+    private BigDecimal getEarnings(EmployeeModel employee, WeekDateRange forDateRange) throws DiamondLoungeException {
+        Session session = sessionFactory.openSession();
+
+        try {
+            session.beginTransaction();
+
+            Query query = session.createQuery("from WarePart as part where part.dateSold<:rangeEnd and part.dateSold>:rangeStart and part.employee.id=:employeeId");
+            query.setParameter("employeeId", employee.getId());
+            query.setParameter("rangeStart", forDateRange.getWeekStartWithTime());
+            query.setParameter("rangeEnd", forDateRange.getWeekEndWithTimeExclusive());
+
+            List<WarePart> waresSold = query.list();
+
+            return waresSold.stream()
+                            .map(WarePart::getPrice)
+                            .reduce(ZERO, BigDecimal::add);
+        } catch (Exception ex) {
+            handleError(ex);
+        } finally {
+            finishSession(session);
+        }
+
+        return ZERO;
     }
 
     public BigDecimal getRemainingWaresValue() {
-        return wareService.getAllWares().stream().map(x -> x.getAmount().multiply(x.getPrice())).reduce(ZERO, BigDecimal::add).setScale(2, HALF_UP);
+        return wareService.getAllWares().stream()
+                          .map(x -> x.getAmount().multiply(x.getPrice()))
+                          .reduce(ZERO, BigDecimal::add)
+                          .setScale(2, HALF_UP);
     }
 }

@@ -79,12 +79,12 @@ public class PersistenceService<T> {
         }
     }
 
-    private void handleError(Exception ex) throws DiamondLoungeException {
+    void handleError(Exception ex) throws DiamondLoungeException {
         logWarning(ex.getMessage());
         throw new DiamondLoungeException(ex.getMessage());
     }
 
-    private void finishSession(Session session) {
+    void finishSession(Session session) {
         session.getTransaction().commit();
         session.close();
     }
