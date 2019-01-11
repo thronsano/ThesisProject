@@ -28,6 +28,8 @@ public class ScheduleController {
         try {
             WeekDateRange weekDateRange = new WeekDateRange(offset);
             model.addAttribute("scheduleTable", scheduleModel.getScheduleTableForRange(weekDateRange));
+            model.addAttribute("startingDate", weekDateRange.getWeekStart());
+            model.addAttribute("endingDate", weekDateRange.getWeekEndExclusive());
         } catch (Exception e) {
             handleError(modelAndView, redirectAttributes, e);
         }

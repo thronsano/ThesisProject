@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.ToIntFunction;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -41,10 +42,10 @@ public class ScheduleTableModel {
             });
 
             int maxAmountOfEmployees = scheduleList.stream()
-                    .mapToInt(x -> x.getEmployees().size())
-                    .filter(x -> x != 0)
-                    .max()
-                    .orElse(1); //accommodate schedules without employees
+                                                   .mapToInt(calculateAmountOfRows(shop))
+                                                   .filter(x -> x != 0)
+                                                   .max()
+                                                   .orElse(1); //accommodate schedules without employees
             currentHeight.getAndAdd(maxAmountOfEmployees);
         });
     }
@@ -54,9 +55,9 @@ public class ScheduleTableModel {
         AtomicInteger height = new AtomicInteger(1); //accommodate date headers
 
         shopMap.forEach(
-                (Shop, ScheduleList) -> {
-                    int maxAmountOfEmployees = ScheduleList.stream()
-                            .mapToInt(x -> x.getEmployees().size())
+                (shop, scheduleList) -> {
+                    int maxAmountOfEmployees = scheduleList.stream()
+                                                           .mapToInt(calculateAmountOfRows(shop))
                             .max()
                             .orElse(1);
 
@@ -71,6 +72,10 @@ public class ScheduleTableModel {
         table = new String[width][height.get()];
         this.height = height.get() - 1;
         this.width = width - 1;
+    }
+
+    private ToIntFunction<Schedule> calculateAmountOfRows(Shop Shop) {
+        return x -> x.getEmployees().size() < Shop.getRequiredStaff() ? x.getEmployees().size() + 1 : x.getEmployees().size();
     }
 
     private void addHeaders(List<LocalDate> dateRange) {

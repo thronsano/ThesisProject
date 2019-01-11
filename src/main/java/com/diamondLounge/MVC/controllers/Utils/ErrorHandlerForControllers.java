@@ -10,7 +10,7 @@ public class ErrorHandlerForControllers {
     public static void handleError(ModelAndView modelAndView, RedirectAttributes redirectAttributes, Exception exception) {
         exception.printStackTrace();
         logWarning(exception.getMessage());
-        redirectAttributes.addFlashAttribute("error", exception);
-        modelAndView.addObject("error", exception);
+        redirectAttributes.addFlashAttribute("error", exception.getMessage());
+        modelAndView.addObject("error", exception.getMessage());
     }
 }

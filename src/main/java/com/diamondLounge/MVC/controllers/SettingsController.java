@@ -53,7 +53,7 @@ public class SettingsController {
             handleError(modelAndView, redirectAttributes, e);
         }
 
-        modelAndView.setViewName("redirect:/settings");
+        modelAndView.setViewName("redirect:/settings/editAccountInformation");
         return modelAndView;
     }
 
@@ -71,7 +71,7 @@ public class SettingsController {
             handleError(modelAndView, redirectAttributes, e);
         }
 
-        modelAndView.setViewName("redirect:/settings");
+        modelAndView.setViewName("redirect:/settings/editAccountInformation");
         return modelAndView;
     }
 }

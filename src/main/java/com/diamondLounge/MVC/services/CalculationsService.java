@@ -37,6 +37,9 @@ public class CalculationsService extends PersistenceService<Object> {
     @Autowired
     EmployeeService employeeService;
 
+    @Autowired
+    private WareService wareService;
+
     public List<FinancialReport> getFinancialReportList(WeekDateRange forDateRange) {
         List<FinancialReport> employeeSalaries = new ArrayList<>();
         List<EmployeeModel> allEmployees = employeeService.getAllEmployees();
@@ -97,7 +100,7 @@ public class CalculationsService extends PersistenceService<Object> {
         return employee.getWages().stream()
                        .filter(x -> x.getStartDate().isBefore(dayStart) &&
                                (x.getEndDate() == null || x.getEndDate().isAfter(dayEnd)))
-                       .findFirst()
+                       .findAny()
                        .orElse(calculateAverageWage(employee, dayStart, dayEnd))
                        .getHourlyWage();
     }
@@ -123,5 +126,9 @@ public class CalculationsService extends PersistenceService<Object> {
         return x -> x.getStartDate().isBefore(periodStart) && (x.getEndDate() == null || x.getEndDate().isAfter(periodEnd)) ||
                 x.getStartDate().isAfter(periodStart) && (x.getEndDate() == null || x.getEndDate().isBefore(periodEnd)) ||
                 x.getStartDate().isBefore(periodEnd) && (x.getEndDate() == null || x.getEndDate().isAfter(periodEnd));
+    }
+
+    public BigDecimal getRemainingWaresValue() {
+        return wareService.getAllWares().stream().map(x -> x.getAmount().multiply(x.getPrice())).reduce(ZERO, BigDecimal::add).setScale(2, HALF_UP);
     }
 }

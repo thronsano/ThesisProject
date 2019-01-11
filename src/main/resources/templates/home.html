@@ -21,47 +21,69 @@
 </nav>
 
 <section class="content">
-    <h1 th:inline="text">Logged as [[${#httpServletRequest.remoteUser}]]</h1>
-    <form method="get">
-        <button class="btn-basic week-btn" th:onclick="'java:buttonClicked(-1, \'home\');'" type="button">
-            PREVIOUS WEEK
-        </button>
-        <button class="btn-basic week-btn" th:onclick="'java:buttonClicked(1, \'home\');'" type="button">
-            NEXT WEEK
-        </button>
-    </form>
-    <div th:if="${scheduleTable}!=null">
-        <h2>Schedule</h2>
-        <form>
-            <table class="schedule">
-                <tbody>
-                <tr th:each="j: ${#numbers.sequence(0, scheduleTable.height)}">
-                    <td th:each="i: ${#numbers.sequence(0, scheduleTable.width)}"
-                        th:text="${scheduleTable.table[i][j]}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </form>
-        <br>
-        <form method="POST" th:action="@{/eraseSchedule}">
-            <input id="offsetErase" name="offset" type="hidden">
-            <script>
-                document.getElementById('offsetErase').value = getParametersValue('offset')
-            </script>
-            <button class="btn-basic week-btn" type="submit">
-                ERASE
-            </button>
-        </form>
+    <div class="row" style="grid-row: 1">
+        <section class="columnHalfSpace italic-grey-text">
+            <div class="error-message" th:text="${error}"></div>
+        </section>
+    </div>
+    <div class="row" style="grid-row: 2">
+        <div class="columnHalfSpace">
+            <h1 th:inline="text">Logged as [[${#httpServletRequest.remoteUser}]]</h1>
+            <form method="get">
+                <button class="btn-basic week-btn" th:onclick="'java:buttonClicked(-1, \'home\');'" type="button">
+                    PREVIOUS WEEK
+                </button>
+                <button class="btn-basic week-btn" th:onclick="'java:buttonClicked(1, \'home\');'" type="button">
+                    NEXT WEEK
+                </button>
+            </form>
+            <h3>
+                <h4>DATE RANGE:</h4>
+                <a th:text="${startingDate}"></a>
+                <a> - </a>
+                <a th:text="${endingDate}"></a>
+                <br>
+            </h3>
+        </div>
+    </div>
+    <div class="row" style="grid-row: 3" th:if="${scheduleTable}!=null">
+        <div class="columnHalfSpace">
+            <h2>Schedule</h2>
+            <form>
+                <table class="schedule">
+                    <tbody>
+                    <tr th:each="j: ${#numbers.sequence(0, scheduleTable.height)}">
+                        <td th:each="i: ${#numbers.sequence(0, scheduleTable.width)}"
+                            th:style="(${scheduleTable.table[i][j]} == null and ${i}!=0) ? 'background:#782b0c; font-weight:bolder' : ''"
+                            th:text="(${scheduleTable.table[i][j]} == null and ${i}!=0) ? 'NOT ENOUGH STAFF' : ${scheduleTable.table[i][j]}"
+                        ></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+            <br>
+            <form method="POST" th:action="@{/eraseSchedule}">
+                <input id="offsetErase" name="offset" type="hidden">
+                <script>
+                    document.getElementById('offsetErase').value = getParametersValue('offset')
+                </script>
+                <button class="btn-basic week-btn" type="submit">
+                    ERASE
+                </button>
+            </form>
+        </div>
     </div>
     <br>
-    <form method="POST" th:action="@{/generateSchedule}" th:if="${scheduleTable}==null">
-        <input id="offset" name="offset" type="hidden">
-        <script>
-            document.getElementById('offset').value = getParametersValue('offset')
-        </script>
-        <button class="btn-basic week-btn" type="submit">
-            GENERATE SCHEDULE
-        </button>
+    <form class="row" method="POST" style="grid-row: 4" th:action="@{/generateSchedule}" th:if="${scheduleTable}==null">
+        <div class="columnHalfSpace">
+            <input id="offset" name="offset" type="hidden">
+            <script>
+                document.getElementById('offset').value = getParametersValue('offset')
+            </script>
+            <button class="btn-basic week-btn" type="submit">
+                GENERATE SCHEDULE
+            </button>
+        </div>
     </form>
 </section>
 </body>

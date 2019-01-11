@@ -15,13 +15,15 @@
             <div class="error-message" th:text="${error}"></div>
         </section>
     </div>
-    <div class="row" style="grid-row: 3">
+    <div class="row" style="grid-row: 2">
         <div class="columnHalfSpace">
             <h1>Calculations</h1>
             <h3>
+                <h4>DATE RANGE:</h4>
                 <a th:text="${startingDate}"></a>
                 <a> - </a>
                 <a th:text="${endingDate}"></a>
+                <br><br>
             </h3>
             <form method="get">
                 <button class="btn-basic week-btn" th:onclick="'java:buttonClicked(-1, \'getCalculations\');'"
@@ -34,7 +36,8 @@
                 </button>
             </form>
             <br>
-            Salaries:
+            Financial reports:
+            <br><br>
             <form th:if="${reportList}!=null">
                 <table>
                     <thead>
@@ -49,11 +52,16 @@
                         <td th:text="${report.employee.name}"></td>
                         <td th:text="${report.earnings}"></td>
                         <td th:text="${report.salary}"></td>
-                        <td th:text="${report.result}"></td>
+                        <td th:style="${report.result} < 0 ? 'color:red' : (${report.result} > 0 ? 'color:greenyellow' : '')"
+                            th:text="${report.result}"></td>
                     </tr>
                     </tbody>
                 </table>
             </form>
+        </div>
+        <div class="columnHalfSpace center-text">
+            <h1>Remaining wares value:</h1>
+            <a class="emphasize-text" th:text="${waresValue}"></a>
         </div>
     </div>
 </section>

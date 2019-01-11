@@ -75,7 +75,7 @@ public class ScheduleService extends PersistenceService<Schedule> {
         schedules.forEach(this::persistObject);
     }
 
-    private Set<Employee> generateEmployeeList(LocalDate date, ShopModel shop, List<EmployeeModel> availableEmployees) {
+    private Set<Employee> generateEmployeeList(LocalDate targetDate, ShopModel shop, List<EmployeeModel> availableEmployees) {
         if (availableEmployees == null) {
             return null;
         }
@@ -85,15 +85,16 @@ public class ScheduleService extends PersistenceService<Schedule> {
         }
 
         return availableEmployees.stream()
-                                 .filter(x -> x.getWorkDays().stream().noneMatch(y -> y.getDate().isEqual(date)))
+                                 .filter(x -> x.getWorkDays().stream().noneMatch(workDay -> workDay.getDate().isEqual(targetDate)))
                                  .sorted(comparing(EmployeeModel::getTimeInSecondsWorked))
                                  .limit(shop.getRequiredStaff())
-                                 .map(x -> {
-                                     WorkDay workDay = new WorkDay(date,
+                                 .map(candidate -> {
+                                     WorkDay workDay = new WorkDay(targetDate,
                                                                    shopService.getShopById(shop.getId()),
-                                                                   Duration.between(shop.getOpeningTime(), shop.getClosingTime()));
-                                     Employee employee = employeeService.getEmployeeById(x.getId());
-                                     x.getWorkDays().add(workDay);
+                                                                   Duration.between(shop.getOpeningTime(),
+                                                                                    shop.getClosingTime()));
+                                     Employee employee = employeeService.getEmployeeById(candidate.getId());
+                                     candidate.getWorkDays().add(workDay);
                                      employee.getWorkDays().add(workDay);
                                      return employee;
                                  })

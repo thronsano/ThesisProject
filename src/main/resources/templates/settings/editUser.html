@@ -7,32 +7,46 @@
 </head>
 <body>
 <nav th:include="home :: menuBar"></nav>
-<section class="content row" th:if="${user}!=null">
-    <div class="columnHalfSpace">
-        <h2>Edit username</h2>
-        <form method="post" th:action="@{/settings/editAccountInformation}">
-            Name:
-            <div><input class="input-field" name="username" placeholder="Name" th:value="${user.username}" type="text"/>
+<section class="content grid-container" th:if="${user}!=null">
+    <div class="row" style="grid-row: 1">
+        <section class="italic-grey-text">
+            <div class="error-message" th:text="${error}"></div>
+            <div class="error-message" th:if="${userEdited}">
+                Information saved!
             </div>
-            <button class="btn-login btn-basic" type="submit">SAVE</button>
-        </form>
+            <div class="error-message" th:if="${passwordChanged}">
+                Password is changed!
+            </div>
+        </section>
     </div>
+    <div class="row" style="grid-row: 2">
+        <div class="columnHalfSpace">
+            <h2>Edit username</h2>
+            <form method="post" th:action="@{/settings/editAccountInformation}">
+                Name:
+                <div><input class="input-field" name="username" placeholder="Name" th:value="${user.username}"
+                            type="text"/>
+                </div>
+                <button class="btn-login btn-basic" type="submit">SAVE</button>
+            </form>
+        </div>
 
-    <div class="columnHalfSpace">
-        <h2>Change password</h2>
-        <form method="post" th:action="@{/settings/changePassword}">
-            Current password:
-            <div><input class="input-field" name="currentPassword" placeholder="Password" type="password"/></div>
+        <div class="columnHalfSpace">
+            <h2>Change password</h2>
+            <form method="post" th:action="@{/settings/changePassword}">
+                Current password:
+                <div><input class="input-field" name="currentPassword" placeholder="Password" type="password"/></div>
 
-            New password:
-            <div><input class="input-field" name="newPassword" placeholder="New password" type="password"/></div>
+                New password:
+                <div><input class="input-field" name="newPassword" placeholder="New password" type="password"/></div>
 
-            Confirm new password:
-            <div><input class="input-field" name="confirmNewPassword" placeholder="Confirm new password"
-                        type="password"/></div>
+                Confirm new password:
+                <div><input class="input-field" name="confirmNewPassword" placeholder="Confirm new password"
+                            type="password"/></div>
 
-            <button class="btn-login btn-basic" type="submit">CONFIRM</button>
-        </form>
+                <button class="btn-login btn-basic" type="submit">CONFIRM</button>
+            </form>
+        </div>
     </div>
 </section>
 </body>

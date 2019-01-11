@@ -25,6 +25,7 @@ public class CalculationsController {
         try {
             WeekDateRange forDateRange = new WeekDateRange(offset);
             model.addAttribute("reportList", calculationsController.getFinancialReportList(forDateRange));
+            model.addAttribute("waresValue", calculationsController.getRemainingWaresValue());
             model.addAttribute("startingDate", forDateRange.getWeekStart());
             model.addAttribute("endingDate", forDateRange.getWeekEndExclusive());
         } catch (Exception e) {

@@ -183,7 +183,7 @@ public class UserService {
                 throw new InputMismatchException("Passwords do not match!");
             }
         } else {
-            throw new UsernamePasswordException("Wrong password!");
+            throw new UsernamePasswordException("Incorrect password");
         }
     }
 
