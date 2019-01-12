@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 import static com.diamondLounge.utility.DateUtils.*;
@@ -46,7 +45,6 @@ public class CalculationsService extends PersistenceService<Object> {
             BigDecimal salary = getComputedSalary(employee, forDateRange);
             BigDecimal earnings = getEarnings(employee, forDateRange);
             FinancialReport financialReport = new FinancialReport(employee, salary, earnings);
-
             employeeSalaries.add(financialReport);
         });
 
@@ -63,11 +61,13 @@ public class CalculationsService extends PersistenceService<Object> {
 
         for (WorkDay workDay : workDaysToConsider) {
             LocalDate date = workDay.getDate();
-            BigDecimal dailySalary = getWageForDate(employee, date).multiply(valueOf(workDay.getHoursWorked().toHours()));
+            BigDecimal dailySalary = getWageForDate(employee, date).multiply(valueOf(workDay.getHoursWorked().getSeconds())
+                                                                                     .setScale(5, HALF_UP)
+                                                                                     .divide(valueOf(3600), HALF_UP));
             salary = salary.add(dailySalary);
         }
 
-        return salary;
+        return salary.setScale(2, HALF_UP);
     }
 
     private BigDecimal getWageForDate(EmployeeModel employee, LocalDate date) {
@@ -77,42 +77,37 @@ public class CalculationsService extends PersistenceService<Object> {
         return employee.getWages().stream()
                        .filter(singleWageMatchingEntirePeriod(dayStart, dayEnd))
                        .findAny()
-                       .orElse(calculateFragmentedWage(employee, dayStart, dayEnd))
+                       .orElseGet(() -> calculateFragmentedWage(employee, dayStart, dayEnd))
                        .getHourlyWage();
     }
 
     private Predicate<Wage> singleWageMatchingEntirePeriod(LocalDateTime dayStart, LocalDateTime dayEnd) {
-        return x -> x.getStartDate().isBefore(dayStart) &&
+        return x -> (x.getStartDate() == null || x.getStartDate().isBefore(dayStart)) &&
                     (x.getEndDate() == null || x.getEndDate().isAfter(dayEnd));
     }
 
     private Wage calculateFragmentedWage(EmployeeModel employee, LocalDateTime periodStart, LocalDateTime periodEnd) {
         long totalPeriodLength = periodEnd.toEpochSecond(UTC) - periodStart.toEpochSecond(UTC);
-        AtomicInteger amountOfMatchingElements = new AtomicInteger();
 
-        BigDecimal fragmentedWage = employee.getWages().stream()
+        BigDecimal calculatedWage = employee.getWages().stream()
                                             .filter(fallsWithinPeriodTimeRange(periodStart, periodEnd))
-                                            .map(wage -> calculateWeightOfWageFragment(periodStart, periodEnd, totalPeriodLength, amountOfMatchingElements, wage))
-                                            .reduce(ZERO, BigDecimal::add)
-                                            .divide(valueOf(amountOfMatchingElements.get()), HALF_UP);
+                                            .map(wage -> calculateWageFragment(periodStart, periodEnd, totalPeriodLength, wage))
+                                            .reduce(ZERO, BigDecimal::add);
 
-        return new Wage(fragmentedWage, periodStart, periodEnd);
+        return new Wage(calculatedWage, periodStart, periodEnd);
     }
 
-    private BigDecimal calculateWeightOfWageFragment(LocalDateTime periodStart, LocalDateTime periodEnd, long totalPeriodLength, AtomicInteger amountOfMatchingElements, Wage wage) {
-        amountOfMatchingElements.incrementAndGet();
-
+    private BigDecimal calculateWageFragment(LocalDateTime periodStart, LocalDateTime periodEnd, long totalPeriodLength, Wage wage) {
         LocalDateTime fragmentStart = getLaterDateTime(wage.getStartDate(), periodStart);
         LocalDateTime fragmentEnd = getEarlierDateTime(wage.getEndDate(), periodEnd);
-        long periodFragmentLength = fragmentEnd.toEpochSecond(UTC) - fragmentStart.toEpochSecond(UTC);
-
+        double periodFragmentLength = fragmentEnd.toEpochSecond(UTC) - fragmentStart.toEpochSecond(UTC);
         return wage.getHourlyWage().multiply(valueOf(periodFragmentLength / totalPeriodLength));
     }
 
     private Predicate<Wage> fallsWithinPeriodTimeRange(LocalDateTime periodStart, LocalDateTime periodEnd) {
-        return x -> x.getStartDate().isBefore(periodStart) && (x.getEndDate() == null || x.getEndDate().isAfter(periodEnd)) ||
-                    x.getStartDate().isAfter(periodStart) && (x.getEndDate() == null || x.getEndDate().isBefore(periodEnd)) ||
-                    x.getStartDate().isBefore(periodEnd) && (x.getEndDate() == null || x.getEndDate().isAfter(periodEnd));
+        return x -> (x.getStartDate() == null || x.getStartDate().isBefore(periodStart)) && (x.getEndDate() == null || x.getEndDate().isAfter(periodEnd)) ||
+                    x.getStartDate() != null && x.getStartDate().isAfter(periodStart) && (x.getEndDate() == null || x.getEndDate().isBefore(periodEnd)) ||
+                    (x.getStartDate() == null || x.getStartDate().isBefore(periodEnd)) && (x.getEndDate() == null || x.getEndDate().isAfter(periodEnd));
     }
 
     private BigDecimal getEarnings(EmployeeModel employee, WeekDateRange forDateRange) throws DiamondLoungeException {

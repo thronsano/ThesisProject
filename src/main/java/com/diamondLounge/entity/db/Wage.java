@@ -65,6 +65,6 @@ public class Wage {
     }
 
     public boolean hasTheSameValue(BigDecimal hourlyWage) {
-        return hourlyWage.setScale(2, FLOOR).equals(this.hourlyWage.setScale(2, FLOOR));
+        return hourlyWage.setScale(2, FLOOR).compareTo(this.hourlyWage.setScale(2, FLOOR)) == 0;
     }
 }

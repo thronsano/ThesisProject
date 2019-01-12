@@ -19,7 +19,7 @@ import static java.time.LocalDateTime.now;
 public class EmployeeService extends PersistenceService<Employee> {
 
     public void addEmployee(String name, float timeFactor, String location, BigDecimal wage) throws DiamondLoungeException {
-        Set<Wage> wages = newHashSet(new Wage(wage, now(), null));
+        Set<Wage> wages = newHashSet(new Wage(wage, null, null));
         Employee employee = new Employee(name, timeFactor, location, wages);
         persistObject(employee);
     }

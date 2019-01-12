@@ -38,7 +38,7 @@ CREATE TABLE wages
 (
   id         INT PRIMARY KEY AUTO_INCREMENT,
   hourlyWage DECIMAL(7, 2) NOT NULL,
-  startDate  DATETIME      NOT NULL,
+  startDate  DATETIME,
   endDate    DATETIME
 );
 
@@ -145,15 +145,15 @@ INSERT INTO employees (name, timeFactor, location)
 VALUES ('Pracownik Piec', 1, 'KRK');
 
 INSERT INTO wages (hourlyWage, startDate)
-VALUES (15, '2018-12-12');
+VALUES (15, '2016-12-12');
 INSERT INTO wages (hourlyWage, startDate)
-VALUES (15, '2018-12-12');
+VALUES (15, '2016-12-12');
 INSERT INTO wages (hourlyWage, startDate)
-VALUES (15, '2018-12-12');
+VALUES (15, '2016-12-12');
 INSERT INTO wages (hourlyWage, startDate)
-VALUES (15, '2018-12-12');
+VALUES (15, '2016-12-12');
 INSERT INTO wages (hourlyWage, startDate)
-VALUES (15, '2018-12-12');
+VALUES (15, '2016-12-12');
 
 INSERT INTO employees_wages (employee_id, wages_id)
 VALUES (1, 1);
