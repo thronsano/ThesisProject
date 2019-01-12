@@ -52,8 +52,8 @@
             <form>
                 <table class="schedule">
                     <tbody>
-                    <tr th:each="j: ${#numbers.sequence(0, scheduleTable.height)}">
-                        <td th:each="i: ${#numbers.sequence(0, scheduleTable.width)}"
+                    <tr th:each="j: ${#numbers.sequence(0, scheduleTable.height - 1)}">
+                        <td th:each="i: ${#numbers.sequence(0, scheduleTable.width - 1)}"
                             th:style="(${scheduleTable.table[i][j]} == null and ${i}!=0) ? 'background:#782b0c; font-weight:bolder' : ''"
                             th:text="(${scheduleTable.table[i][j]} == null and ${i}!=0) ? 'NOT ENOUGH STAFF' : ${scheduleTable.table[i][j]}"
                         ></td>
@@ -69,6 +69,16 @@
                 </script>
                 <button class="btn-basic week-btn" type="submit">
                     ERASE
+                </button>
+            </form>
+            <br>
+            <form method="GET" th:action="@{/exportScheduleToExcel}">
+                <input id="offsetExport" name="offset" type="hidden">
+                <script>
+                    document.getElementById('offsetExport').value = getParametersValue('offset')
+                </script>
+                <button class="btn-basic week-btn" type="submit">
+                    EXPORT TO EXCEL
                 </button>
             </form>
         </div>

@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import static com.diamondLounge.MVC.controllers.Utils.ErrorHandlerForControllers.handleError;
+import static com.diamondLounge.MVC.controllers.utils.ErrorHandlerForControllers.handleError;
 import static java.time.LocalDateTime.now;
 import static java.time.LocalDateTime.of;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;

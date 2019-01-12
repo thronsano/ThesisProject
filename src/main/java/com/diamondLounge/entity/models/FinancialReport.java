@@ -1,5 +1,7 @@
 package com.diamondLounge.entity.models;
 
+import com.diamondLounge.entity.models.dbWrappers.EmployeeModel;
+
 import java.math.BigDecimal;
 
 public class FinancialReport {

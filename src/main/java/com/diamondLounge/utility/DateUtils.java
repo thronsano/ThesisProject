@@ -13,20 +13,14 @@ public class DateUtils {
     }
 
     public static LocalDateTime getEarlierDateTime(LocalDateTime candidateOne, LocalDateTime candidateTwo) {
-        if (candidateOne == null) {
+        if (candidateOne == null || candidateOne.isAfter(candidateTwo)) {
             return candidateTwo;
         }
-        if (candidateOne.isBefore(candidateTwo)) {
-            return candidateOne;
-        }
-        return candidateTwo;
+        return candidateOne;
     }
 
     public static LocalDateTime getLaterDateTime(LocalDateTime candidateOne, LocalDateTime candidateTwo) {
-        if (candidateOne == null) {
-            return candidateTwo;
-        }
-        if (candidateOne.isBefore(candidateTwo)) {
+        if (candidateOne == null || candidateOne.isBefore(candidateTwo)) {
             return candidateTwo;
         }
         return candidateOne;

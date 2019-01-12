@@ -1,4 +1,4 @@
-package com.diamondLounge.entity.models;
+package com.diamondLounge.entity.models.dbWrappers;
 
 import com.diamondLounge.entity.db.Shop;
 

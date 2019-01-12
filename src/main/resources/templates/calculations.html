@@ -16,7 +16,7 @@
         </section>
     </div>
     <div class="row" style="grid-row: 2">
-        <div class="columnHalfSpace">
+        <div class="columnThirdOfSpace">
             <h1>Calculations</h1>
             <h3>
                 <h4>DATE RANGE:</h4>
@@ -59,9 +59,28 @@
                 </table>
             </form>
         </div>
-        <div class="columnHalfSpace center-text">
+        <div class="columnThirdOfSpace center-text">
             <h1>Remaining wares value:</h1>
             <a class="emphasize-text" th:text="${waresValue}"></a>
+        </div>
+        <div class="columnThirdOfSpace">
+            <h1>Export detailed salary summary</h1>
+            <form method="GET" th:action="@{/exportSalaryToExcel}">
+                <div>For: <select class="input-field dropdown" name="employeeId">
+                    <option th:each="employee : ${employeeList}" th:text="${employee.name}" th:value="${employee.id}">
+
+                    </option>
+                </select></div>
+
+                <input id="offsetExport" name="offset" type="hidden">
+                <script>
+                    document.getElementById('offsetExport').value = getParametersValue('offset')
+                </script>
+
+                <button class="btn-basic week-btn" type="submit">
+                    EXPORT TO EXCEL
+                </button>
+            </form>
         </div>
     </div>
 </section>

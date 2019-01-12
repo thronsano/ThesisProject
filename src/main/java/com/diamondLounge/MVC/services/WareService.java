@@ -3,7 +3,7 @@ package com.diamondLounge.MVC.services;
 import com.diamondLounge.entity.db.Ware;
 import com.diamondLounge.entity.db.WarePart;
 import com.diamondLounge.entity.exceptions.DiamondLoungeException;
-import com.diamondLounge.entity.models.WarePartModel;
+import com.diamondLounge.entity.models.dbWrappers.WarePartModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

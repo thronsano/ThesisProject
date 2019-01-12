@@ -2,7 +2,7 @@ package com.diamondLounge.MVC.controllers;
 
 
 import com.diamondLounge.MVC.services.EmployeeService;
-import com.diamondLounge.entity.models.EmployeeModel;
+import com.diamondLounge.entity.models.dbWrappers.EmployeeModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 
-import static com.diamondLounge.MVC.controllers.Utils.ErrorHandlerForControllers.handleError;
+import static com.diamondLounge.MVC.controllers.utils.ErrorHandlerForControllers.handleError;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -32,7 +32,7 @@ public class EmployeeController {
         try {
             model.addAttribute("employeeList", employeeService.getAllEmployees());
             if (selectedEmployee != -1) {
-                EmployeeModel employee = employeeService.getEmployeeImplById(selectedEmployee);
+                EmployeeModel employee = employeeService.getEmployeeModelById(selectedEmployee);
                 model.addAttribute("selectedEmployee", employee);
             }
         } catch (Exception e) {

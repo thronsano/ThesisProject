@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.diamondLounge.MVC.controllers.Utils.ErrorHandlerForControllers.handleError;
+import static com.diamondLounge.MVC.controllers.utils.ErrorHandlerForControllers.handleError;
 
 @Controller
 public class PasswordController {

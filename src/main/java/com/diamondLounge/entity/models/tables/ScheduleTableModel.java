@@ -1,4 +1,4 @@
-package com.diamondLounge.entity.models;
+package com.diamondLounge.entity.models.tables;
 
 import com.diamondLounge.entity.db.Schedule;
 import com.diamondLounge.entity.db.Shop;
@@ -11,17 +11,14 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.ToIntFunction;
 
+import static com.google.common.collect.ImmutableSortedMap.copyOf;
 import static java.util.stream.Collectors.groupingBy;
 
-public class ScheduleTableModel {
-    private String[][] table;
-    private int width;
-    private int height;
-
+public class ScheduleTableModel extends TableModel {
 
     public ScheduleTableModel(List<Schedule> schedules, List<LocalDate> dateRange) {
         Ordering<Shop> shopOrdering = Ordering.natural().onResultOf(Shop::getName);
-        ImmutableSortedMap<Shop, List<Schedule>> sortedMap = ImmutableSortedMap.copyOf(schedules.stream().collect(groupingBy(Schedule::getShop)), shopOrdering);
+        ImmutableSortedMap<Shop, List<Schedule>> sortedMap = copyOf(schedules.stream().collect(groupingBy(Schedule::getShop)), shopOrdering);
 
         createEmptyTable(dateRange, sortedMap);
         addHeaders(dateRange);
@@ -69,8 +66,8 @@ public class ScheduleTableModel {
                 });
 
         table = new String[width][height.get()];
-        this.height = height.get() - 1;
-        this.width = width - 1;
+        this.height = height.get();
+        this.width = width;
     }
 
     private int considerShopNameRow(int maxAmountOfEmployees) {
@@ -85,20 +82,8 @@ public class ScheduleTableModel {
     }
 
     private void addHeaders(List<LocalDate> dateRange) {
-        for (int date = 0; date < dateRange.size(); date++) {
-            table[date + 1][0] = dateRange.get(date).toString();
+        for (int dayNo = 0; dayNo < dateRange.size(); dayNo++) {
+            table[dayNo + 1][0] = dateRange.get(dayNo).toString();
         }
-    }
-
-    public String[][] getTable() {
-        return table;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 }

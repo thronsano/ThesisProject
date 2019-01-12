@@ -1,4 +1,4 @@
-package com.diamondLounge.MVC.controllers.Utils;
+package com.diamondLounge.MVC.controllers.utils;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;

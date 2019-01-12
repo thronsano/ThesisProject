@@ -3,7 +3,7 @@ package com.diamondLounge.MVC.services;
 import com.diamondLounge.entity.db.Employee;
 import com.diamondLounge.entity.db.Wage;
 import com.diamondLounge.entity.exceptions.DiamondLoungeException;
-import com.diamondLounge.entity.models.EmployeeModel;
+import com.diamondLounge.entity.models.dbWrappers.EmployeeModel;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -32,7 +32,7 @@ public class EmployeeService extends PersistenceService<Employee> {
         return employeeList.stream().map(EmployeeModel::new).collect(Collectors.toList());
     }
 
-    public EmployeeModel getEmployeeImplById(int selectedEmployee) throws DiamondLoungeException {
+    public EmployeeModel getEmployeeModelById(int selectedEmployee) throws DiamondLoungeException {
         return new EmployeeModel(getEmployeeById(selectedEmployee));
     }
 

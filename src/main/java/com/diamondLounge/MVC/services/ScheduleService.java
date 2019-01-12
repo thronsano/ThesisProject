@@ -4,10 +4,12 @@ import com.diamondLounge.entity.db.Employee;
 import com.diamondLounge.entity.db.Schedule;
 import com.diamondLounge.entity.db.WorkDay;
 import com.diamondLounge.entity.exceptions.DiamondLoungeException;
-import com.diamondLounge.entity.models.EmployeeModel;
-import com.diamondLounge.entity.models.ScheduleTableModel;
-import com.diamondLounge.entity.models.ShopModel;
 import com.diamondLounge.entity.models.WeekDateRange;
+import com.diamondLounge.entity.models.dbWrappers.EmployeeModel;
+import com.diamondLounge.entity.models.dbWrappers.ShopModel;
+import com.diamondLounge.entity.models.tables.ScheduleTableModel;
+import com.diamondLounge.utility.ExcelConverter;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -134,5 +136,9 @@ public class ScheduleService extends PersistenceService<Schedule> {
     public ScheduleTableModel getScheduleTableForRange(WeekDateRange weekDateRange) {
         List<Schedule> schedules = getSchedules(weekDateRange.getWeekStart(), weekDateRange.getWeekEnd());
         return schedules.size() == 0 ? null : new ScheduleTableModel(schedules, weekDateRange.getDateRange());
+    }
+
+    public Workbook createScheduleExcelWorkbook(WeekDateRange dateRange) {
+        return ExcelConverter.convertToWorkbook(getScheduleTableForRange(dateRange), "Schedule");
     }
 }

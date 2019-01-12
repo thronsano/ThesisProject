@@ -1,4 +1,4 @@
-package com.diamondLounge.entity.models;
+package com.diamondLounge.entity.models.dbWrappers;
 
 import com.diamondLounge.entity.db.Employee;
 import com.diamondLounge.entity.db.Wage;
@@ -28,7 +28,10 @@ public class EmployeeModel {
         this.wages = employee.getWages();
         this.workDays = employee.getWorkDays();
 
-        currentWage = wages.stream().filter(x -> x.getEndDate() == null).findAny().orElse(new Wage());
+        currentWage = wages.stream()
+                           .filter(x -> x.getEndDate() == null)
+                           .findAny()
+                           .orElseGet(Wage::new);
     }
 
     public long getTimeInSecondsWorked() {
